@@ -6,6 +6,8 @@ GLPI Plugin to make PDF reports with user inventory.
 * Possibility to create different protocol templates
 * Templates have configurable name, font, logo image, city, content and footer
 * Possibility to make comments to any selected item
+* Showing Manufacturer (only first word to be clearly) and Model of item
+* Showing serial number of item or inventory number if serial number doesn't exist
 ## Instalation
 1. Download and extract package
 2. Copy protocolsmanager folder to GLPI plugins directory
