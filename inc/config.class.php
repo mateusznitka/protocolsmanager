@@ -1,9 +1,35 @@
 <?php
 
-class PluginProtocolsmanagerConfig extends CommonDBTM
-{
+class PluginProtocolsmanagerConfig extends CommonDBTM {
+	
 	
 	function showFormProtocolsmanager() {
+		global $CFG_GLPI, $DB;
+		$plugin_conf = self::checkRights();
+		if ($plugin_conf == 'w') {	
+			self::displayContent();	
+		} else {
+			echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__("Access denied")."</div>";
+		}
+	}
+	
+	
+	static function checkRights() {
+		global $DB;
+		$active_profile = $_SESSION['glpiactiveprofile']['id'];
+		$req = $DB->request('glpi_plugin_protocolsmanager_profiles',
+						['profile_id' => $active_profile]);
+						
+		if ($row = $req->next()) {
+			$plugin_conf = $row["plugin_conf"];
+		} else {
+			$plugin_conf = "";
+		}
+		return $plugin_conf;
+	}
+	
+	
+	static function displayContent() {
 		global $CFG_GLPI, $DB;
 		
 		if (isset($_POST["edit_id"])) {
@@ -24,8 +50,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM
 				$logo = $row["logo"];
 			}
 			
-		}
-		else {
+		} else {
 			$template_content = '';
 			$template_footer = '';
 			$template_name = '';
@@ -46,7 +71,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM
 		echo "<tr><th colspan='2'>".__('Create')." ".__('template')."</th></tr>";
 		echo "<tr><td>".__('Template name')."</td><td><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";
 		
-		if(!isset($font)) {
+		if (!isset($font)) {
 			$font='freesans';
 		}
 		
@@ -77,8 +102,10 @@ class PluginProtocolsmanagerConfig extends CommonDBTM
 			$base64 = 'data:image/'.$img_type.';base64,'.base64_encode($img_data);
 			echo "&nbsp&nbsp<img src = ".$base64." style='height:50px; width:auto;'>";
 		}
-		echo "</td></tr>";
-		echo "<td colspan='2' style='text-align:center;'><input type='submit' name='save' class='submit'></td></table>";
+		echo "</td></tr></table>";
+		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save' class='submit'></td>";
+		Html::closeForm();
+		echo "<form name='cancelform' action='config.form.php' method='post'><td style='text-align:left;'><input type='submit' class='submit' name='cancel' value=".__('Cancel')."></td></table>";
 		Html::closeForm();
 		echo "</div><br>";
 		self::showConfigs();
@@ -125,8 +152,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM
 						'id' => $mode
 					]
 				);
-			}
-			else {
+			} else {
 				
 				$DB->update('glpi_plugin_protocolsmanager_config', [
 						'name' => $template_name,
@@ -143,6 +169,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM
 			
 	}
 	
+
 	static function showConfigs() {
 		global $DB, $CFG_GLPI;
 		$configs = [];
