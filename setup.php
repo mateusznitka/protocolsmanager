@@ -1,29 +1,20 @@
 <?php
 
-
-/**
- * Get the name and the version of the plugin - Needed
- */
-function plugin_version_protocolsmanager() 
-{
+function plugin_version_protocolsmanager() {
 	return array('name'           => "Protocols manager",
-                'version'        => '0.8',
+                'version'        => '0.8.1',
                 'author'         => 'Mateusz Nitka',
                 'license'        => 'GPLv3+',
-                'homepage'       => 'https://github.com/mateusznitka',
+                'homepage'       => 'https://github.com/mateusznitka/protocolsmanager',
                 'minGlpiVersion' => '9.0');
 }
 
-function plugin_protocolsmanager_check_config() 
-{
+function plugin_protocolsmanager_check_config() {
     return true;
 }
  
-/**
- * Check if the prerequisites of the plugin are satisfied - Needed
- */
-function plugin_protocolsmanager_check_prerequisites() 
-{ 
+
+function plugin_protocolsmanager_check_prerequisites() { 
 		if (GLPI_VERSION>=9.0){
                 return true;
         } else {
@@ -31,8 +22,7 @@ function plugin_protocolsmanager_check_prerequisites()
         }
 }
 
-function plugin_init_protocolsmanager() 
-{
+function plugin_init_protocolsmanager() {
 	global $PLUGIN_HOOKS;
 
 	$PLUGIN_HOOKS['csrf_compliant']['protocolsmanager'] = true;
