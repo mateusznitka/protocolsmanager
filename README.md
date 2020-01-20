@@ -13,9 +13,11 @@ GLPI Plugin to make PDF reports with user inventory.
 2. Copy protocolsmanager folder to GLPI plugins directory
 3. Go to GLPI Plugin Menu and click 'install' and then 'activate'
 ## Preparing
-1. Go to Plugins -> Protocols manager
-2. Edit default or create new template: Fill all or some textboxes, choose your font and logo if you want
-3. Save template / templates
+1. Go to Profiles and click on profile you want to add permissions to plugin
+2. Select permissions and save
+3. Go to Plugins -> Protocols manager
+4. Edit default or create new template: Fill all or some textboxes, choose your font and logo if you want
+5. Save template / templates
 ## Using the plugin
 1. Go to Administration -> Users and click on user login
 2. Go to Protocols Manager tab
