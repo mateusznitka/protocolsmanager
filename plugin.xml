@@ -1,0 +1,53 @@
+         <root>
+            <name>Protocols Manager</name>
+            <key>protocolsmanager</key>
+            <state>stable</state> <!-- stable | unstable | beta | alpha -->
+            <logo>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/blob/master/pdf_ico.png</logo>
+            <description>
+               <short>
+                  <en>Plugin to make configurable PDF reports with selected user inventory</en>
+                  <pl>Wtyczka pozwala generować protokoły użycia sprzętu w PDF</pl>
+               </short>
+               <long>
+                  <en>Plugin to make configurable PDF reports with selected user inventory</en>
+                  <pl>Wtyczka pozwala generować protokoły użycia sprzętu w PDF</pl>
+               </long>
+            </description>
+            <homepage>https://github.com/mateusznitka/protocolsmanager</homepage>
+            <download>https://github.com/mateusznitka/protocolsmanager/releases</download>
+            <issues>https://github.com/mateusznitka/protocolsmanager/issues</issues>
+            <readme>https://github.com/mateusznitka/protocolsmanager/blob/master/README.md</readme>
+            <authors>
+               <author>Mateusz Nitka</author>
+            </authors>
+            <versions>
+               <version>
+                  <num>1.0</num>
+                  <compatibility>9.5</compatibility>
+                  <compatibility>9.4</compatibility>
+                  <compatibility>9.3</compatibility>
+                  <compatibility>9.2</compatibility>
+               </version>
+            </versions>
+            <langs>
+               <lang>en_GB</lang>
+               <lang>pl_PL</lang>
+            </langs>
+            <license>GPL v3</license>
+            <tags>
+               <en>
+                  <tag>pdf</tag>
+                  <tag>export</tag>
+                  <tag>useritems</tag>
+                  <tag>inventory</tag>
+               </en>
+               <pl>
+                  <tag>pdf</tag>
+                  <tag>export</tag>
+                  <tag>useritems</tag>
+                  <tag>inventory</tag>
+               </pl>
+            </tags>
+            <screenshots>
+            </screenshots>
+         </root>
