@@ -26,8 +26,5 @@ GLPI Plugin to make PDF reports with user inventory.
 5. Select your template from list and click "Create"
 6. Your protocol is on list above now, you can open it in new tab. It is available in Managament -> Documents too.
 7. You can delete all or some protocols by selecting them and click "Delete".
-## To do
-1. Possibility to delete logo image in edit template mode
 ## Notes
-* Plugin is not finished yet, it may contain some bugs
 * Contact: mateusznitka01@gmail.com
