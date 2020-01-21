@@ -1,5 +1,5 @@
- <?xml version="1.0" encoding="UTF-8"?>
- <root>
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
 	<name>Protocols Manager</name>
 	<key>protocolsmanager</key>
 	<state>stable</state> <!-- stable | unstable | beta | alpha -->
@@ -51,4 +51,4 @@
 	</tags>
 	<screenshots>
 	</screenshots>
- </root>
+</root>
