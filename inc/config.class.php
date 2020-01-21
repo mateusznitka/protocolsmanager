@@ -100,7 +100,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$img_type = pathinfo($full_img_name, PATHINFO_EXTENSION);
 			$img_data = file_get_contents($full_img_name);
 			$base64 = 'data:image/'.$img_type.';base64,'.base64_encode($img_data);
+			$img_delete = true;
 			echo "&nbsp&nbsp<img src = ".$base64." style='height:50px; width:auto;'>";
+			echo "&nbsp&nbsp<input type='checkbox' name='img_delete' value='$img_delete'>&nbsp ".__('Delete')." ".__('File');
 		}
 		echo "</td></tr></table>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save' class='submit'></td>";
@@ -122,6 +124,17 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$font = $_POST["font"];
 		$city = $_POST["city"];
 		$mode = $_POST["mode"];
+		
+		if (isset($_POST['img_delete'])) {
+			
+			$DB->update('glpi_plugin_protocolsmanager_config', [
+					'logo' => $full_img_name
+				], [
+					'id' => $mode
+				]
+			);
+		}
+		
 		$full_img_name = self::uploadImage();
 		
 		if ($mode == 0) {
@@ -201,20 +214,29 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		
 		if($_FILES['logo']['name']) {
 			
-			if (!$_FILES['logo']['error']) {
-				
-				if ($_FILES['logo']['type'] = 'image/jpeg' || $_FILES['logo']['type'] = 'image/png' || $_FILES['logo']['type'] = 'image/jpg') {
+			if($_FILES['logo']['error'] != UPLOAD_ERR_FORM_SIZE) {
+			
+				if (!$_FILES['logo']['error']) {
 					
-					$img_name = "logo".time();
-					$ext = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
-					$full_img_name = $img_name.'.'.$ext;
-					$img_path = GLPI_ROOT.'/files/_pictures/'.$full_img_name;
-					
-					move_uploaded_file($_FILES['logo']['tmp_name'], $img_path);
-					
-					return $full_img_name;
-					
+					if ($_FILES['logo']['type'] == 'image/jpeg' || $_FILES['logo']['type'] == 'image/png' || $_FILES['logo']['type'] == 'image/jpg') {
+						
+						$img_name = "logo".time();
+						$ext = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
+						$full_img_name = $img_name.'.'.$ext;
+						$img_path = GLPI_ROOT.'/files/_pictures/'.$full_img_name;
+						
+						move_uploaded_file($_FILES['logo']['tmp_name'], $img_path);
+						
+						return $full_img_name;
+						
+					} else {
+						Session::addMessageAfterRedirect('Wrong file type. Only .jpg and .png files accepted', 'WARNING', true);
+					}
+				} else {
+					Session::addMessageAfterRedirect(__('Unknown error'), 'WARNING', true);
 				}
+			} else {
+				Session::addMessageAfterRedirect('File size too large', 'WARNING', true);
 			}
 		}
 
