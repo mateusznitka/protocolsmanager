@@ -7,11 +7,11 @@
 	<description>
 	   <short>
 		  <en>Plugin to make configurable PDF reports with selected user inventory</en>
-		  <pl>Wtyczka pozwala generować protokoły użycia sprzętu w PDF</pl>
+		  <pl>Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF</pl>
 	   </short>
 	   <long>
 		  <en>Plugin to make configurable PDF reports with selected user inventory</en>
-		  <pl>Wtyczka pozwala generować protokoły użycia sprzętu w PDF</pl>
+		  <pl>Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF</pl>
 	   </long>
 	</description>
 	<homepage>https://github.com/mateusznitka/protocolsmanager</homepage>
