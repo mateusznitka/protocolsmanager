@@ -2,7 +2,7 @@
 
 function plugin_version_protocolsmanager() {
 	return array('name'           => "Protocols manager",
-                'version'        => '0.8.1',
+                'version'        => '1.0',
                 'author'         => 'Mateusz Nitka',
                 'license'        => 'GPLv3+',
                 'homepage'       => 'https://github.com/mateusznitka/protocolsmanager',
