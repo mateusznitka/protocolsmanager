@@ -12,6 +12,10 @@ GLPI Plugin to make PDF reports with user inventory.
 1. Download and extract package
 2. Copy protocolsmanager folder to GLPI plugins directory
 3. Go to GLPI Plugin Menu and click 'install' and then 'activate'
+## Updating
+1. Extract package and copy to plguins directory (replace old protocolsmanager folder)
+2. Go to GLPI Plugin Menu, you should see 'to update' status.
+3. Click on 'install' and then 'activate'
 ## Preparing
 1. Go to Profiles and click on profile you want to add permissions to plugin
 2. Select permissions and save
