@@ -11,24 +11,23 @@
 	   <long>
 		  <en><![CDATA[Plugin to make configurable PDF reports with selected user inventory. <br />
 			Features: <br />
-				* Making PDFs with all or selected user inventory <br />
-				* Saving protocols in GLPI Documents <br />
-				* Possibility to create different protocol templates <br />
-				* Templates have configurable name, font, logo image, city, content and footer <br />
-				* Possibility to make comments to any selected item <br />
-				* Showing Manufacturer (only first word to be clearly) and Model of item <br />
-				* Showing serial number of item or inventory number if serial number doesn't exist]]>
+			    1. Making PDFs with all or selected user inventory <br />
+			    2. Saving protocols in GLPI Documents <br />
+			    3. Possibility to create different protocol templates <br />
+			    4. Templates have configurable name, font, logo image, city, content and footer <br />
+			    5. Possibility to make comments to any selected item <br />
+			    6. Showing Manufacturer (only first word to be clearly) and Model of item <br />
+			    7. Showing serial number of item or inventory number if serial number doesn't exist]]>
 		  </en>
-		  <pl>Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF
-		  Features:
-		  
-			    1. Tworzenie PDF z całym lub wybranym wyposażeniem uzytkownika
-			    2. Zapisywanie protokołów w Dokumentach GLPI
-			    3. Możliwość tworzenia różnych szablonów (np. protokół zwrotu, protokół uszkodzenia itp.)
-			    4. Szablony mają konfigurowalną czcionkę, nazwę, tekst w środku, stopkę, miasto.
-			    5. Możliwość tworzenia komentarzy do każdego elementu
-			    6. Wyświetlanie Marki i modelu
-			    7. Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego
+		  <pl><![CDATA[Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF <br />
+		  Features: <br />		  
+			    1. Tworzenie PDF z całym lub wybranym wyposażeniem uzytkownika <br />
+			    2. Zapisywanie protokołów w Dokumentach GLPI <br />
+			    3. Możliwość tworzenia różnych szablonów (np. protokół zwrotu, protokół uszkodzenia itp.) <br />
+			    4. Szablony mają konfigurowalną czcionkę, nazwę, tekst w środku, stopkę, miasto. <br />
+			    5. Możliwość tworzenia komentarzy do każdego elementu <br /> 
+			    6. Wyświetlanie Marki i modelu <br />
+			    7. Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego]]>
 			</pl>
 	   </long>
 	</description>
