@@ -9,25 +9,29 @@
 		  <pl>Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF</pl>
 	   </short>
 	   <long>
-		  <en>Plugin to make configurable PDF reports with selected user inventory.
+		  <en><![CDATA[
+		  Plugin to make configurable PDF reports with selected user inventory.
 			Features:
-				*Making PDFs with all or selected user inventory
-				*Saving protocols in GLPI Documents
-				*Possibility to create different protocol templates
-				*Templates have configurable name, font, logo image, city, content and footer
-				*Possibility to make comments to any selected item
-				*Showing Manufacturer (only first word to be clearly) and Model of item
-				*Showing serial number of item or inventory number if serial number doesn't exist
+				* Making PDFs with all or selected user inventory
+				* Saving protocols in GLPI Documents
+				* Possibility to create different protocol templates
+				* Templates have configurable name, font, logo image, city, content and footer
+				* Possibility to make comments to any selected item
+				* Showing Manufacturer (only first word to be clearly) and Model of item
+				* Showing serial number of item or inventory number if serial number doesn't exist
+				]]>
 		  </en>
-		  <pl>Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF
+		  <pl><![CDATA[Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF
 		  Features:
-				*Tworzenie PDF z całym lub wybranym wyposażeniem uzytkownika
-				*Zapisywanie protokołów w Dokumentach GLPI
-				*Możliwość tworzenia różnych szablonów (np. protokół zwrotu, protokół uszkodzenia itp.)
-				*Szablony mają konfigurowalną czcionkę, nazwę, tekst w środku, stopkę, miasto.
-				*Możliwość tworzenia komentarzy do każdego elementu
-				*Wyświetlanie Marki i modelu
-				*Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego</pl>
+				* Tworzenie PDF z całym lub wybranym wyposażeniem uzytkownika
+				* Zapisywanie protokołów w Dokumentach GLPI
+				* Możliwość tworzenia różnych szablonów (np. protokół zwrotu, protokół uszkodzenia itp.)
+				* Szablony mają konfigurowalną czcionkę, nazwę, tekst w środku, stopkę, miasto.
+				* Możliwość tworzenia komentarzy do każdego elementu
+				* Wyświetlanie Marki i modelu
+				* Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego
+				]]>
+			</pl>
 	   </long>
 	</description>
 	<homepage>https://github.com/mateusznitka/protocolsmanager</homepage>
@@ -66,5 +70,9 @@
 	   </pl>
 	</tags>
 	<screenshots>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr1.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr2.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr3.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr4.png</screenshot>
 	</screenshots>
 </root>
