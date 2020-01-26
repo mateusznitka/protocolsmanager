@@ -31,4 +31,7 @@ GLPI Plugin to make PDF reports with user inventory.
 6. Your protocol is on list above now, you can open it in new tab. It is available in Managament -> Documents too.
 7. You can delete all or some protocols by selecting them and click "Delete".
 ## Notes
-* Contact: mateusznitka01@gmail.com
+1. Generated items depends on what you assign to the user in GLPI
+2. You can edit template core in HTML by editing template.php file in protocolsmanager/inc directory
+## Contact 
+mateusznitka01@gmail.com
