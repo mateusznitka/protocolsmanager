@@ -33,5 +33,10 @@ GLPI Plugin to make PDF reports with user inventory.
 ## Notes
 1. Generated items depends on what you assign to the user in GLPI
 2. You can edit template core in HTML by editing template.php file in protocolsmanager/inc directory
+## To do
+1. More customization
+2. Possibility to add custom row
+3. Possibility to change showing serial and inventory number in one or two columns
+4. Possibility to add custom columns
 ## Contact 
 mateusznitka01@gmail.com
