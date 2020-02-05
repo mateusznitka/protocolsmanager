@@ -8,6 +8,9 @@ GLPI Plugin to make PDF reports with user inventory.
 * Possibility to make comments to any selected item
 * Showing Manufacturer (only first word to be clearly) and Model of item
 * Showing serial number of item or inventory number if serial number doesn't exist
+## Compatibility
+GLPI 9.3 or higher
+NOTE: in GLPI 9.3.x, you have to modify /inc/generate.class.php - search and replace: GLPI_UPLOAD_DIR to GLPI_TMP_DIR.
 ## Instalation
 1. Download and extract package
 2. Copy protocolsmanager folder to GLPI plugins directory
