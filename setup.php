@@ -2,11 +2,11 @@
 
 function plugin_version_protocolsmanager() {
 	return array('name'           => "Protocols manager",
-                'version'        => '1.0',
+                'version'        => '1.1',
                 'author'         => 'Mateusz Nitka',
                 'license'        => 'GPLv3+',
                 'homepage'       => 'https://github.com/mateusznitka/protocolsmanager',
-                'minGlpiVersion' => '9.0');
+                'minGlpiVersion' => '9.3');
 }
 
 function plugin_protocolsmanager_check_config() {
@@ -15,10 +15,10 @@ function plugin_protocolsmanager_check_config() {
  
 
 function plugin_protocolsmanager_check_prerequisites() { 
-		if (GLPI_VERSION>=9.0){
+		if (GLPI_VERSION>=9.3){
                 return true;
         } else {
-                echo "GLPI version NOT compatible. Requires GLPI 9.0";
+                echo "GLPI version NOT compatible. Requires GLPI 9.3";
         }
 }
 

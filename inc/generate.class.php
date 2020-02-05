@@ -3,16 +3,14 @@
 $autoload = dirname(__DIR__) . '/vendor/autoload.php';
 require_once $autoload;
 
-
 use Spipu\Html2Pdf\Html2Pdf;
-
 
 class PluginProtocolsmanagerGenerate extends CommonDBTM {
 	
 		function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 			return self::createTabEntry('Protocols manager');
 		}
-		
+
 		
 		static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
 			global $DB, $CFG_GLPI;
@@ -51,10 +49,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$field_user  = 'users_id';
 			$rand = mt_rand();
 			
-			$counter=0;
+			$counter = 0;
+			
 			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand'	action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><td style ='width:30%'></td><td class='center' style ='width:20%'>";
-			echo "<select name='list'>";
+			echo "<select name='list' style='font-size:14px;'>";
 				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config', 
 				['FIELDS' => ['glpi_plugin_protocolsmanager_config' => ['id', 'name']]]) as $uid => $list) {
 					echo '<option value="';
@@ -66,8 +65,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "</select></td><td style='width:10%'>";
 			echo "<input type='submit' name='generate' class='submit' value='".__('Create')."'>";
 			echo "</td><td style='width:30%'></td></table>";
-			echo "<div class='spaced'><table class='tab_cadre_fixehov'>";
-			$header = "<th><input type='checkbox' class='checkall'></th>";
+			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
+			$header = "<th width='10'><input type='checkbox' class='checkall' style='height:16px; width: 16px;'></th>";
 			$header .= "<th>".__('Type')."</th>";
 			$header .= "<th>".__('Manufacturer');
 			$header .= " ".__('Model')."</th>";
@@ -114,7 +113,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							
 							echo "<tr class='tab_bg_1'>";
 							echo "<td width='10'>";
-							echo "<input type='checkbox' name='number[]' value='$counter' class='child'>";
+							echo "<input type='checkbox' name='number[]' value='$counter' class='child' style='height:16px; width: 16px;'>";
 							echo "</td>";	
 							echo "<td class='center'>$type_name</td>";
 							echo "<td class='center'>";
@@ -187,6 +186,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							$owner = $Owner->getRawName();
 							$author = $Author->getRawName();
 							
+							
+							
 							echo "<input type='hidden' name='owner' value ='$owner'>";
 							echo "<input type='hidden' name='author' value ='$author'>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
@@ -195,28 +196,29 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<input type='hidden' name='serial[]' value='$serial'>";
 							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
 							echo "<input type='hidden' name='user_id' value='$id'>";
-							
 							echo "</td>";
 							echo "<td class='center'><input type='text' name='comments[]'></td>";
-							echo "</tr>";  
+							echo "</tr>";
+
+							
 						$counter++;
 					}
 					
 				}
 				
-			}
-					
+			}				
+				
 				echo "</table>";
 				Html::closeForm();
-				echo "</div><br>";
-
+				echo "</div>";
+				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
 				echo "<div class='spaced'>";
 				echo "<form method='post' name='docs_form' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
 				echo "<table class='tab_cadre_fixe'><td style='width:5%'><img src='../pics/arrow-left-top.png'></td><td style='width:5%'>";
 				echo "<input type='submit' name='delete' class='submit' value=".__('Delete').">";
 				echo "</td><td style='width:90%'></table>";
 				echo "<table class='tab_cadre_fixehov'>";
-				echo "<th width='10'><input type='checkbox' class='checkalldoc'></th>";
+				echo "<th width='10'><input type='checkbox' class='checkalldoc' style='height:16px; width: 16px;'></th>";
 				$header2 = "<th>".__('Type')."</th>";
 				$header2 .= "<th>".__('Date');
 				$header2 .= "<th>".__('File')."</th>";
@@ -224,15 +226,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo $header2;
 				
 				self::getAllForUser($id);
-				
 				echo "</table>";
 				Html::closeForm();
 				echo "</div>";
 		  
-				return true;
-					
+				return array(true, $counter);
+	
 		}
-
+		
 		//show user's generated documents
 		static function getAllForUser($id) {
 			global $DB, $CFG_GLPI;
@@ -247,7 +248,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "<tr class='tab_bg_1'>";
 					
 					echo "<td class='center'>";
-					echo "<input type='checkbox' name='docnumber[]' value='".$exports['document_id']."' class='docchild'>";
+					echo "<input type='checkbox' name='docnumber[]' value='".$exports['document_id']."' class='docchild' style='height:16px; width: 16px;'>";
 					echo "</td>";
 					
 					echo "<td class='center'>";
@@ -412,6 +413,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 ?>
 
 <script>
+
 $(function(){
     $('.checkall').on('click', function() {
         $('.child').prop('checked', this.checked)
@@ -422,4 +424,36 @@ $(function(){
         $('.docchild').prop('checked', this.checked)
     });
 });
+
+$(function() {
+
+	var counter = $('.child').length;
+	
+	var ctr = 0;
+	
+	    $("#addNewRow").on("click", function () {
+        var newRow = $("<tr class='tab_bg_1'>");
+        var cols = "";
+		
+		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:10px;"></td>';
+        cols += '<td class="center"><input type="text" name="type_name[]"></td>';
+        cols += '<td class="center"><input type="text" name="man_name[]"></td>';
+        cols += '<td class="center"><input type="text" name="item_name[]"></td>';
+        cols += '<td class="center"><input type="text" name="serial[]"></td>';
+        cols += '<td class="center"><input type="text" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+
+        newRow.append(cols);
+        $("#additional_table").append(newRow);
+		counter++;
+        ctr++;
+    });
+	
+    $("#additional_table").on("click", ".ibtnDel", function (event) {
+        $(this).closest("tr").remove();       
+        ctr -= 1
+    });
+
+
+});
+
 </script>
