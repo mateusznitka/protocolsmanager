@@ -8,6 +8,9 @@ GLPI Plugin to make PDF reports with user inventory.
 * Possibility to make comments to any selected item
 * Showing Manufacturer (only first word to be clearly) and Model of item
 * Showing serial number of item or inventory number if serial number doesn't exist
+## Compatibility
+GLPI 9.3 or higher.  
+***NOTE:*** in GLPI 9.3.x, you have to modify /inc/generate.class.php - search and replace: **GLPI_UPLOAD_DIR** to **GLPI_TMP_DIR**.
 ## Instalation
 1. Download and extract package
 2. Copy protocolsmanager folder to GLPI plugins directory
@@ -31,4 +34,12 @@ GLPI Plugin to make PDF reports with user inventory.
 6. Your protocol is on list above now, you can open it in new tab. It is available in Managament -> Documents too.
 7. You can delete all or some protocols by selecting them and click "Delete".
 ## Notes
-* Contact: mateusznitka01@gmail.com
+1. Generated items depends on what you assign to the user in GLPI
+2. You can edit template core in HTML by editing template.php file in protocolsmanager/inc directory
+## To do
+1. More customization
+2. Possibility to add custom row
+3. Possibility to change showing serial and inventory number in one or two columns
+4. Possibility to add custom columns
+## Contact 
+mateusznitka01@gmail.com

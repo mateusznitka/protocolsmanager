@@ -44,7 +44,6 @@
 		  <compatibility>9.5</compatibility>
 		  <compatibility>9.4</compatibility>
 		  <compatibility>9.3</compatibility>
-		  <compatibility>9.2</compatibility>
 	   </version>
 	</versions>
 	<langs>
@@ -67,9 +66,9 @@
 	   </pl>
 	</tags>
 	<screenshots>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr1.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr4.png</screenshot>
 		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr2.png</screenshot>
 		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr3.png</screenshot>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr4.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr1.png</screenshot>
 	</screenshots>
 </root>
