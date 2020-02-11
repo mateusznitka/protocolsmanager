@@ -4,10 +4,18 @@ GLPI Plugin to make PDF reports with user inventory.
 * Making PDFs with all or selected user inventory
 * Saving protocols in GLPI Documents
 * Possibility to create different protocol templates
-* Templates have configurable name, font, logo image, city, content and footer
+* Templates have configurable name, font, orientation, logo image, city, content and footer
 * Possibility to make comments to any selected item
 * Showing Manufacturer (only first word to be clearly) and Model of item
-* Showing serial number of item or inventory number if serial number doesn't exist
+* Showing serial number or inventory number in one or two columns
+* Possibility to add custom rows
+* Possibility to add notes to export
+## What's new in 1.1.2?
+* Custom rows
+* Can change orientation
+* Can show serial number in different columns or in one column
+* Notes to export
+* Style changes - larger checkboxes, fonts
 ## Compatibility
 GLPI 9.3 or higher.  
 ***NOTE:*** in GLPI 9.3.x, you have to modify /inc/generate.class.php - search and replace: **GLPI_UPLOAD_DIR** to **GLPI_TMP_DIR**.
