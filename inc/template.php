@@ -1,7 +1,7 @@
 <style type="text/css">
 	
 </style>
-<page backtop="<?php echo $backtop; ?>" backleft="10mm" backright="10mm" backbottom="30mm">
+<page backtop="<?php echo $backtop; ?>" backleft="8mm" backright="8mm" backbottom="30mm">
 	<page_header style="font-family:<?php echo $font; ?>">
 		<?php 
 		if ($islogo == 1) {
@@ -29,69 +29,148 @@
 	</tr>
 </table>
 <br>
-<table id="items" style="border: solid 0.5px black; width: 100%; font-size: 10pt; position: relative;" cellspacing="0">
+<table id="items" style="border: solid 0.5px black; width:100%; font-size: 10pt; position: relative; word-wrap: break-word; word-break: break-all; table-layout: fixed;" cellspacing="0">
 <?php 
+	//if no comments, there is no comments column
 	if (empty(array_filter($comments))) {
-
-		echo "<tr>
-			<th style='width: 3%; border: solid 0.5px black;'></th>
-			<th style='width: 16%; border: solid 0.5px black;'>"; 
-			echo __('Type');
-			echo "</th><th style='width: 25%; border: solid 0.5px black;'>"; 
-			echo __('Model'); 
-			echo "</th><th style='width: 30%; border: solid 0.5px black;'>"; 
-			echo __('Serial number'); 
-			echo "</th><th style='width: 26%; border: solid 0.5px black;'>";
-			echo __('Name');
-			echo "</th>
-		</tr>";
 		
-		$lp = 1;
-		foreach ($number as $key){
-			if (isset($type_name[$key])){
-			echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
-			echo $lp . '</td><td style="width: 16%; border: solid 0.5px black;">' . $type_name[$key];
-			echo '</td><td style="width: 25%; border: solid 0.5px black;">';
-			echo $man_name[$key] .' '. $mod_name[$key]. '</td><td style="width: 30%; border: solid 0.5px black;">' . $serial[$key];
-			echo '</td><td style="width: 26%; border: solid 0.5px black;">';
-			echo $item_name[$key];
-			echo '</td></tr>';
+		//if serial and inventory in different columns
+		if ($serial_mode == 1) {
+			
+			echo "<tr>
+				<th style='width: 3%; border: solid 0.5px black;'></th>
+				<th style='width: 13%; border: solid 0.5px black;'>"; 
+				echo __('Type');
+				echo "</th><th style='width: 19%; border: solid 0.5px black;'>"; 
+				echo __('Model'); 
+				echo "</th><th style='width: 25%; border: solid 0.5px black;'>"; 
+				echo __('Serial number'); 
+				echo "</th><th style='width: 20%; border: solid 0.5px black;'>";
+				echo __('Inventory number'); 
+				echo "</th><th style='width: 20%; border: solid 0.5px black;'>";
+				echo __('Name'); 
+				echo "</th>
+			</tr>";
+			
+			$lp = 1;
+			foreach ($number as $key) {
+				if (isset($type_name[$key])) {
+				echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
+				echo $lp . '</td><td style="width: 13%; border: solid 0.5px black;">' . $type_name[$key];
+				echo '</td><td style="width: 19%; border: solid 0.5px black;">';
+				echo $man_name[$key] .' '. $mod_name[$key]. '</td><td style="width: 25%; border: solid 0.5px black;">' . $serial[$key];
+				echo '</td><td style="width: 20%; border: solid 0.5px black;">' . $otherserial[$key] .'</td><td style="width: 20%; border: solid 0.5px black;">';
+				echo $item_name[$key];
+				echo '</td></tr>';
+				}
+				$lp++;
 			}
-			$lp++;
+		}
+
+		//if serial and inventory in one column
+		if ($serial_mode == 2) {
+			
+			echo "<tr>
+				<th style='width: 3%; border: solid 0.5px black;'></th>
+				<th style='width: 16%; border: solid 0.5px black;'>"; 
+				echo __('Type');
+				echo "</th><th style='width: 25%; border: solid 0.5px black;'>"; 
+				echo __('Model'); 
+				echo "</th><th style='width: 30%; border: solid 0.5px black;'>"; 
+				echo __('Serial number'); 
+				echo "</th><th style='width: 26%; border: solid 0.5px black;'>";
+				echo __('Name');
+				echo "</th>
+			</tr>";
+			
+			$lp = 1;
+			foreach ($number as $key) {
+				if (isset($type_name[$key])){
+				echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
+				echo $lp . '</td><td style="width: 16%; border: solid 0.5px black;">' . $type_name[$key];
+				echo '</td><td style="width: 25%; border: solid 0.5px black;">';
+				echo $man_name[$key] .' '. $mod_name[$key]. '</td><td style="width: 30%; border: solid 0.5px black;">' . $serial[$key];
+				echo '</td><td style="width: 26%; border: solid 0.5px black;">';
+				echo $item_name[$key];
+				echo '</td></tr>';
+				}
+				$lp++;
+			}
 		}
 
 	}
 	else {
-		
-		echo "<tr>
-			<th style='width: 3%; border: solid 0.5px black;'></th>
-			<th style='width: 13%; border: solid 0.5px black;'>"; 
-			echo __('Type');
-			echo "</th><th style='width: 19%; border: solid 0.5px black;'>"; 
-			echo __('Model'); 
-			echo "</th><th style='width: 25%; border: solid 0.5px black;'>"; 
-			echo __('Serial number'); 
-			echo "</th><th style='width: 20%; border: solid 0.5px black;'>";
-			echo __('Name'); 
-			echo "</th><th style='width: 20%; border: solid 0.5px black;'>";
-			echo __('Comments'); 
-			echo "</th>
-		</tr>";
-		
-		$lp = 1;
-		foreach ($number as $key){
-			if (isset($type_name[$key])){
-			echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
-			echo $lp . '</td><td style="width: 13%; border: solid 0.5px black;">' . $type_name[$key];
-			echo '</td><td style="width: 19%; border: solid 0.5px black;">';
-			echo $man_name[$key] .' '. $mod_name[$key]. '</td><td style="width: 25%; border: solid 0.5px black;">' . $serial[$key];
-			echo '</td><td style="width: 20%; border: solid 0.5px black;">';
-			echo $item_name[$key];
-			echo '</td><td style="width: 20%; border: solid 0.5px black;">';
-			echo $comments[$key];
-			echo "</td></tr>";
+		//if at least one comment, there will be comment column
+		if ($serial_mode == 1) {
+			
+			echo "<tr>
+				<th style='width: 3%; border: solid 0.5px black;'></th>
+				<th style='width: 12%; border: solid 0.5px black;'>"; 
+				echo __('Type');
+				echo "</th><th style='width: 14%; border: solid 0.5px black;'>"; 
+				echo __('Model'); 
+				echo "</th><th style='width: 19%; border: solid 0.5px black;'>"; 
+				echo __('Serial number'); 
+				echo "</th><th style='width: 19%; border: solid 0.5px black;'>"; 
+				echo __('Inventory number'); 
+				echo "</th><th style='width: 17%; border: solid 0.5px black;'>";
+				echo __('Name'); 
+				echo "</th><th style='width: 16%; border: solid 0.5px black;'>";
+				echo __('Comments'); 
+				echo "</th>
+			</tr>";
+			
+			$lp = 1;
+			foreach ($number as $key){
+				if (isset($type_name[$key])){
+				echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
+				echo $lp . '</td><td style="width: 12%; border: solid 0.5px black;">' . $type_name[$key];
+				echo '</td><td style="width: 14%; border: solid 0.5px black;">';
+				echo $man_name[$key] .' '. $mod_name[$key]. '</td><td style="width: 19%; border: solid 0.5px black;">' . $serial[$key];
+				echo '</td><td style="width: 19%; border: solid 0.5px black;">';
+				echo $otherserial[$key];
+				echo '</td><td style="width: 17%; border: solid 0.5px black;">';
+				echo $item_name[$key];
+				echo '</td><td style="width: 16%; border: solid 0.5px black; word-wrap:break-word;">';
+				echo $comments[$key];
+				echo "</td></tr>";
+				}
+				$lp++;
 			}
-			$lp++;
+		}
+
+		if ($serial_mode == 2) {
+			
+			echo "<tr>
+				<th style='width: 3%; border: solid 0.5px black;'></th>
+				<th style='width: 13%; border: solid 0.5px black;'>"; 
+				echo __('Type');
+				echo "</th><th style='width: 19%; border: solid 0.5px black;'>"; 
+				echo __('Model'); 
+				echo "</th><th style='width: 25%; border: solid 0.5px black;'>"; 
+				echo __('Serial number'); 
+				echo "</th><th style='width: 20%; border: solid 0.5px black;'>";
+				echo __('Name'); 
+				echo "</th><th style='width: 20%; border: solid 0.5px black;'>";
+				echo __('Comments'); 
+				echo "</th>
+			</tr>";
+			
+			$lp = 1;
+			foreach ($number as $key){
+				if (isset($type_name[$key])){
+				echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
+				echo $lp . '</td><td style="width: 13%; border: solid 0.5px black;">' . $type_name[$key];
+				echo '</td><td style="width: 19%; border: solid 0.5px black;">';
+				echo $man_name[$key] .' '. $mod_name[$key]. '</td><td style="width: 25%; border: solid 0.5px black;">' . $serial[$key];
+				echo '</td><td style="width: 20%; border: solid 0.5px black;">';
+				echo $item_name[$key];
+				echo '</td><td style="width: 20%; border: solid 0.5px black;">';
+				echo $comments[$key];
+				echo "</td></tr>";
+				}
+				$lp++;
+			}
 		}
 
 	}

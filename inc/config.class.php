@@ -48,6 +48,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				$font = $row["font"];
 				$city = $row["city"];
 				$logo = $row["logo"];
+				$serial_mode = $row["serial_mode"];
+				$orientation = $row["orientation"];
 			}
 			
 		} else {
@@ -57,22 +59,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$font = '';
 			$city = '';
 			$mode = 0;
-		}
-			
-		echo "<div class='center'>";
-		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Templates')."</td>";
-		echo "</table>";
-		
-		echo "<form name='form' action='config.form.php' method='post'  enctype='multipart/form-data'>";
-		echo "<input type='hidden' name='MAX_FILE_SIZE' value=1948000>";
-		echo "<input type='hidden' name='mode' value='$mode'>";
-		echo "<table class='tab_cadre_fixe'>";
-		echo "<tr><th colspan='2'>".__('Create')." ".__('template')."</th></tr>";
-		echo "<tr><td>".__('Template name')."</td><td><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";
-		
-		if (!isset($font)) {
-			$font='freesans';
+			$serial_mode = 1;
+			$orientation = "p";
 		}
 		
 		$fonts = array('freesans' => 'Free Sans',
@@ -82,19 +70,54 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'dejavuserif' => 'Dejavuserif', 
 						'helvetica' => 'Helvetica');
 						
-		echo "<tr><td>Font</td><td><select name='font'>";
-				foreach($fonts as $code => $fontname) {
-					echo "<option value='".$code."' ";
-					if ($code == $font) {
-						echo " selected";
-					}
-					echo ">".$fontname."</option>";
+		$orientations = array('p' => 'Portrait',
+							'l' => 'Landscape');
+		
+		if (!isset($font)) {
+			$font='freesans';
+		}
+	
+		echo "<div class='center'>";
+		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
+		echo "<td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Templates')."</td>";
+		echo "</table>";
+		
+		echo "<form name='form' action='config.form.php' method='post'  enctype='multipart/form-data'>";
+		echo "<input type='hidden' name='MAX_FILE_SIZE' value=1948000>";
+		echo "<input type='hidden' name='mode' value='$mode'>";
+		echo "<table class='tab_cadre_fixe'>";
+		echo "<tr><th colspan='3'>".__('Create')." ".__('template')."</th></tr>";
+		echo "<tr><td>".__('Template name')."</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
+		echo "<tr><td>Font</td><td colspan='2'><select name='font' style='width:150px'>";
+			foreach($fonts as $code => $fontname) {
+				echo "<option value='".$code."' ";
+				if ($code == $font) {
+					echo " selected";
 				}
+				echo ">".$fontname."</option>";
+			}
 		echo "</select></td></tr>";
-		echo "<tr><td>".__('City')."</td><td><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
-		echo "<tr><td>".__('Content')."</td><td class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".$template_content."</textarea></td></tr>";
-		echo "<tr><td>".__('Footer')."</td><td><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
-		echo "<tr><td>".__('Logo')."</td><td><input type='file' name='logo' accept='image/png, image/jpeg'>";
+		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
+		echo "<tr><td>".__('Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".$template_content."</textarea></td></tr>";
+		echo "<tr><td>".__('Footer')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
+		echo "<tr><td>".__('Orientation')."</td><td colspan='2'><select name='orientation' style='width:150px'>";
+			foreach($orientations as $vals => $valname) {
+				echo "<option value='".$vals."' ";
+				if ($vals == $orientation) {
+					echo " selected";
+				}
+				echo ">".$valname."</option>";
+			}	
+		echo "</select></td></tr>";
+		echo "<tr><td>".__('Serial number')."</td><td><input type='radio' name='serial_mode' value='1' ";
+		if ($serial_mode == 1)
+			echo "checked='checked'";
+		echo "> serial and inventory number in separate columns</td>";
+		echo "<td><input type='radio' name='serial_mode' value='2' ";
+		if ($serial_mode == 2)
+			echo "checked='checked'";
+		echo "> serial or inventory number if serial doesn't exists</td></tr>";
+		echo "<tr><td>".__('Logo')."</td><td colspan='2'><input type='file' name='logo' accept='image/png, image/jpeg'>";
 		if (isset($logo)) {
 			$full_img_name = GLPI_ROOT.'/files/_pictures/'.$logo;
 			$img_type = pathinfo($full_img_name, PATHINFO_EXTENSION);
@@ -124,6 +147,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$font = $_POST["font"];
 		$city = $_POST["city"];
 		$mode = $_POST["mode"];
+		$serial_mode = $_POST["serial_mode"];
+		$orientation = $_POST["orientation"];
 		
 		if (isset($_POST['img_delete'])) {
 			
@@ -137,6 +162,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		
 		$full_img_name = self::uploadImage();
 		
+		//if new template
 		if ($mode == 0) {
 			
 			$DB->insert('glpi_plugin_protocolsmanager_config', [
@@ -145,13 +171,17 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				'footer' => $template_footer,
 				'logo' => $full_img_name,
 				'font' => $font,
-				'city' => $city
+				'city' => $city,
+				'serial_mode' => $serial_mode,
+				'orientation' => $orientation
 				]
 			);
 		}
 		
+		//if edit template
 		if ($mode != 0) {
 			
+			//if logo is uploaded
 			if (isset($full_img_name)) {
 				
 				$DB->update('glpi_plugin_protocolsmanager_config', [
@@ -160,7 +190,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'footer' => $template_footer,
 						'logo' => $full_img_name,
 						'font' => $font,
-						'city' => $city
+						'city' => $city,
+						'serial_mode' => $serial_mode,
+						'orientation' => $orientation
 					], [
 						'id' => $mode
 					]
@@ -172,7 +204,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'content' => $template_content,
 						'footer' => $template_footer,
 						'font' => $font,
-						'city' => $city
+						'city' => $city,
+						'serial_mode' => $serial_mode,
+						'orientation' => $orientation
 					], [
 						'id' => $mode
 					]
