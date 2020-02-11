@@ -14,20 +14,26 @@
 			    1. Making PDFs with all or selected user inventory <br />
 			    2. Saving protocols in GLPI Documents <br />
 			    3. Possibility to create different protocol templates <br />
-			    4. Templates have configurable name, font, logo image, city, content and footer <br />
+			    4. Templates have configurable name, font, orientation, logo image, city, content and footer <br />
 			    5. Possibility to make comments to any selected item <br />
 			    6. Showing Manufacturer (only first word to be clearly) and Model of item <br />
-			    7. Showing serial number of item or inventory number if serial number doesn't exist]]>
+			    7. Showing serial number of item or inventory number if serial number doesn't exist or Serial and Inventory in separate columns
+				8. Possibility to change orientation to landscape
+				9. Possibility to add additional rows
+				10. Possibility to make notes to export]]>
 		  </en>
 		  <pl><![CDATA[Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF <br />
-		  Features: <br />		  
+		  Cechy: <br />		  
 			    1. Tworzenie PDF z całym lub wybranym wyposażeniem uzytkownika <br />
 			    2. Zapisywanie protokołów w Dokumentach GLPI <br />
 			    3. Możliwość tworzenia różnych szablonów (np. protokół zwrotu, protokół uszkodzenia itp.) <br />
-			    4. Szablony mają konfigurowalną czcionkę, nazwę, tekst w środku, stopkę, miasto. <br />
+			    4. Szablony mają konfigurowalną czcionkę, orientację, nazwę, tekst w środku, stopkę, miasto. <br />
 			    5. Możliwość tworzenia komentarzy do każdego elementu <br /> 
 			    6. Wyświetlanie Marki i modelu <br />
-			    7. Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego]]>
+			    7. Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego lub obydwie kolumny oddzielnie
+				8. Możliwość zmiany orientacji na poziomą
+				9. Możliwość dodania dodatkowych wierszy (ręcznie wpisywanych)
+				10. Możliwość dodania notatek do każdego eksportu]]>
 			</pl>
 	   </long>
 	</description>
@@ -40,7 +46,7 @@
 	</authors>
 	<versions>
 	   <version>
-		  <num>1.0</num>
+		  <num>1.1.2</num>
 		  <compatibility>9.5</compatibility>
 		  <compatibility>9.4</compatibility>
 		  <compatibility>9.3</compatibility>
@@ -66,6 +72,7 @@
 	   </pl>
 	</tags>
 	<screenshots>
+		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr5.png</screenshot>
 		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr4.png</screenshot>
 		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr2.png</screenshot>
 		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr3.png</screenshot>

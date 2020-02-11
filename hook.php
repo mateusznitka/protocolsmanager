@@ -61,6 +61,10 @@ function plugin_protocolsmanager_install() {
 				  content text,
 				  footer text,
 				  city varchar(255),
+				  serial_mode int(2),
+				  column1 varchar(255),
+				  column2 varchar(255),
+				  orientation varchar(10),
 				  PRIMARY KEY (id)
 			   ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 			   
@@ -76,6 +80,29 @@ function plugin_protocolsmanager_install() {
 							
 		$DB->queryOrDie($query2, $DB->error());
 	}
+	
+		//update config table if upgrading from 1.0
+	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'orientation')) {
+		
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
+					ADD serial_mode int(2)
+						AFTER city,
+					ADD column1 varchar(255)
+						AFTER serial_mode,
+					ADD column2 varchar(255)
+						AFTER column1,
+					ADD orientation varchar(10)
+						AFTER column2";
+		
+		$DB->queryOrDie($query, $DB->error());
+		
+		$query = "UPDATE glpi_plugin_protocolsmanager_config
+					SET serial_mode=1, orientation='p'";
+		
+		$DB->queryOrDie($query, $DB->error());
+		
+	}
+		
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
       

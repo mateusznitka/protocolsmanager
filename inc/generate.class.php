@@ -52,8 +52,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$counter = 0;
 			
 			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand'	action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
-			echo "<table class='tab_cadre_fixe'><td style ='width:30%'></td><td class='center' style ='width:20%'>";
-			echo "<select name='list' style='font-size:14px;'>";
+			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
+			echo "<td class='center' style ='width:25%'>";
+			echo "<select name='list' style='font-size:14px; width:95%'>";
 				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config', 
 				['FIELDS' => ['glpi_plugin_protocolsmanager_config' => ['id', 'name']]]) as $uid => $list) {
 					echo '<option value="';
@@ -62,9 +63,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo $list["name"];
 					echo '</option>';
 				}
-			echo "</select></td><td style='width:10%'>";
-			echo "<input type='submit' name='generate' class='submit' value='".__('Create')."'>";
-			echo "</td><td style='width:30%'></td></table>";
+			echo "</select></td>";
+			echo "<td style='width:10%'><input type='submit' name='generate' class='submit' value='".__('Create')."'></td>";
+			echo "<td style='width:30%'></td></tr>";
+			echo "<tr><td></td><td colspan='2'><input type='text' name='notes' placeholder='".__('Note')."' style='width:89%; font-size:14px; padding: 2px'></td><td></td></tr>";
+			echo "</table>";
 			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
 			$header = "<th width='10'><input type='checkbox' class='checkall' style='height:16px; width: 16px;'></th>";
 			$header .= "<th>".__('Type')."</th>";
@@ -72,6 +75,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$header .= " ".__('Model')."</th>";
 			$header .= "<th>".__('Name')."</th>";
 			$header .= "<th>".__('Serial number')."</th>";
+			$header .= "<th>".__('Inventory number')."</th>";
 			$header .= "<th>".__('Comments')."</th></tr>";
 			echo $header;
 			
@@ -164,14 +168,22 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								$serial = $data["serial"];
 								echo $serial;
 							} else {
-								if (isset($data["otherserial"]) && !empty($data["otherserial"])) {
-									$serial = $data["otherserial"];
-									echo $serial;
-								} else {
-									echo '&nbsp;';
-									$serial = '';
-								}
+								echo '&nbsp;';
+								$serial = '';
 							}
+							
+							echo "</td>";
+							echo "<td class='center'>";
+							
+							if (isset($data["otherserial"]) && !empty($data["otherserial"])) {
+								$otherserial = $data["otherserial"];
+								echo $otherserial;
+							} else {
+								echo '&nbsp;';
+								$otherserial = '';
+							}
+							
+							echo "</td>";
 							
 							if (isset($data["name"]) && !empty($data["name"])) {
 								$item_name = $data["name"];
@@ -194,9 +206,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<input type='hidden' name='man_name[]' value='$man_name'>";
 							echo "<input type='hidden' name='mod_name[]' value='$mod_name'>";
 							echo "<input type='hidden' name='serial[]' value='$serial'>";
+							echo "<input type='hidden' name='otherserial[]' value='$otherserial'>";
 							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
 							echo "<input type='hidden' name='user_id' value='$id'>";
-							echo "</td>";
+							
 							echo "<td class='center'><input type='text' name='comments[]'></td>";
 							echo "</tr>";
 
@@ -219,10 +232,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</td><td style='width:90%'></table>";
 				echo "<table class='tab_cadre_fixehov'>";
 				echo "<th width='10'><input type='checkbox' class='checkalldoc' style='height:16px; width: 16px;'></th>";
-				$header2 = "<th>".__('Type')."</th>";
-				$header2 .= "<th>".__('Date');
+				$header2 = "<th>".__('Name')."</th>";
+				$header2 .= "<th>".__('Type')."</th>";
+				$header2 .= "<th>".__('Date')."</th>";
 				$header2 .= "<th>".__('File')."</th>";
-				$header2 .= "<th>".__('Creator')."</th></tr>";
+				$header2 .= "<th>".__('Creator')."</th>";
+				$header2 .= "<th>".__('Comment')."</th></tr>";
 				echo $header2;
 				
 				self::getAllForUser($id);
@@ -230,7 +245,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				Html::closeForm();
 				echo "</div>";
 		  
-				return array(true, $counter);
+				return true;
 	
 		}
 		
@@ -252,6 +267,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "</td>";
 					
 					echo "<td class='center'>";
+					$Doc = new Document();
+					$Doc->getFromDB($exports['document_id']);
+					echo $Doc->getLink();
+					echo "</td>";
+					
+					echo "<td class='center'>";
 					echo $exports['document_type'];
 					echo "</td>";
 					
@@ -259,14 +280,16 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo $exports['gen_date'];
 					echo "</td>";
 					
-					$Doc = new Document();
-					$Doc->getFromDB($exports['document_id']);
 					echo "<td class='center'>";
 					echo $Doc->getDownloadLink();
 					echo "</td>";
 					
 					echo "<td class='center'>";
 					echo $exports['author'];
+					echo "</td>";
+					
+					echo "<td class='center'>";
+					echo $Doc->getField("comment");
 					echo "</td>";
 					
 					echo "</tr>";
@@ -286,11 +309,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$man_name = $_POST['man_name'];
 			$mod_name = $_POST['mod_name'];
 			$serial = $_POST['serial'];
+			$otherserial = $_POST['otherserial'];
 			$item_name = $_POST['item_name'];
 			$owner = $_POST['owner'];
 			$author = $_POST['author'];
 			$doc_no = $_POST['list'];
 			$id = $_POST['user_id'];
+			$notes = $_POST['notes'];
 			
 			$prot_num = self::getDocNumber();
 			
@@ -305,6 +330,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$full_img_name = $row["logo"];
 				$font = $row["font"];
 				$city = $row["city"];
+				$serial_mode = $row["serial_mode"];
+				$orientation = $row["orientation"];
 			}
 			
 			$comments = $_POST['comments'];
@@ -331,13 +358,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();
 
-			$html2pdf = new Html2Pdf('P', 'A4');
+			$html2pdf = new Html2Pdf($orientation, 'A4');
 			$html2pdf->setDefaultFont($font);
 			$html2pdf->writeHTML($html);
 			$doc_name = $prot_num."-".date('mdY').'.pdf';			
 			$html2pdf->Output(GLPI_UPLOAD_DIR .'/'.$doc_name, 'F');
 			
-			$doc_id = self::createDoc($doc_name);
+			$doc_id = self::createDoc($doc_name, $notes);
 			
 			$gen_date = date('Y-m-d H:i:s');
 			
@@ -372,7 +399,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		}
 		
 		//create GLPI document
-		static function createDoc($doc_name) {
+		static function createDoc($doc_name, $notes) {
 			$input = [];
 			$doc = new Document();
 			$input["entities_id"] = $_SESSION['glpiactive_entity'];
@@ -382,6 +409,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$input["mime"] = "application/pdf";
 			$input["date_mod"] = date("Y-m-d H:i:s");
 			$input["users_id"] = Session::getLoginUserID();
+			$input["comment"] = $notes;
 			$doc->check(-1, CREATE, $input);
 			$document_id = $doc->add($input);
 			return $document_id;
@@ -435,12 +463,13 @@ $(function() {
         var newRow = $("<tr class='tab_bg_1'>");
         var cols = "";
 		
-		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:10px;"></td>';
-        cols += '<td class="center"><input type="text" name="type_name[]"></td>';
-        cols += '<td class="center"><input type="text" name="man_name[]"></td>';
-        cols += '<td class="center"><input type="text" name="item_name[]"></td>';
-        cols += '<td class="center"><input type="text" name="serial[]"></td>';
-        cols += '<td class="center"><input type="text" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:9px;"></td>';
+        cols += '<td class="center"><input type="text" style="width:80% " name="type_name[]"></td>';
+        cols += '<td class="center"><input type="text" style="width:90% "name="man_name[]"></td>';
+        cols += '<td class="center"><input type="text" style="width:90% "name="item_name[]"></td>';
+        cols += '<td class="center"><input type="text" style="width:90% "name="serial[]"></td>';
+        cols += '<td class="center"><input type="text" style="width:90% "name="otherserial[]"></td>';
+        cols += '<td class="center"><input type="text" style="width:90% "name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
 
         newRow.append(cols);
         $("#additional_table").append(newRow);
