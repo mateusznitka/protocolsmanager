@@ -13,7 +13,7 @@ GLPI Plugin to make PDF reports with user inventory.
 ## What's new in 1.1.2?
 * Custom rows
 * You can change orientation
-* You can show serial number in different columns or in one column
+* You can show serial and inventory number in one or separate columns
 * Notes to export
 * Style changes - larger checkboxes, fonts
 ## Compatibility
