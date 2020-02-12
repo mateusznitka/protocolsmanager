@@ -12,8 +12,8 @@ GLPI Plugin to make PDF reports with user inventory.
 * Possibility to add notes to export
 ## What's new in 1.1.2?
 * Custom rows
-* Can change orientation
-* Can show serial number in different columns or in one column
+* You can change orientation
+* You can show serial number in different columns or in one column
 * Notes to export
 * Style changes - larger checkboxes, fonts
 ## Compatibility
@@ -37,9 +37,9 @@ GLPI 9.3 or higher.
 1. Go to Administration -> Users and click on user login
 2. Go to Protocols Manager tab
 3. Select some or all items
-4. Write a comment to an item if you want
-5. Add and fill custom rows if you want
-6. Write a note to export if you want
+4. Write a comment to an item (optional)
+5. Add and fill custom rows (optional)
+6. Write a note to export (optional)
 7. Select your template from list and click "Create"
 8. Your protocol is on list above now, you can open it in new tab. It is available in Managament -> Documents too.
 9. You can delete all or some protocols by selecting them and click "Delete".
