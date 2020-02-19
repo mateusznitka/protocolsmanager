@@ -85,6 +85,9 @@
 			
 			$lp = 1;
 			foreach ($number as $key) {
+				if (empty($serial[$key])) {
+					$serial[$key]=$otherserial[$key];
+				} //if no serial, get inventory number
 				if (isset($type_name[$key])){
 				echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
 				echo $lp . '</td><td style="width: 16%; border: solid 0.5px black;">' . $type_name[$key];
@@ -158,6 +161,9 @@
 			
 			$lp = 1;
 			foreach ($number as $key){
+				if (empty($serial[$key])) {
+					$serial[$key]=$otherserial[$key];
+				} //if no serial, get inventory number
 				if (isset($type_name[$key])){
 				echo '<tr><td style="width: 3%; border: solid 0.5px black;">';
 				echo $lp . '</td><td style="width: 13%; border: solid 0.5px black;">' . $type_name[$key];
