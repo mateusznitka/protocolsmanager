@@ -17,9 +17,9 @@
 			    4. Templates have configurable name, font, orientation, logo image, city, content and footer <br />
 			    5. Possibility to make comments to any selected item <br />
 			    6. Showing Manufacturer (only first word to be clearly) and Model of item <br />
-			    7. Showing serial number of item or inventory number if serial number doesn't exist or Serial and Inventory in separate columns
-				8. Possibility to change orientation to landscape
-				9. Possibility to add additional rows
+			    7. Showing serial number of item or inventory number if serial number doesn't exist or Serial and Inventory in separate columns <br />
+				8. Possibility to change orientation to landscape <br />
+				9. Possibility to add additional rows <br />
 				10. Possibility to make notes to export]]>
 		  </en>
 		  <pl><![CDATA[Wtyczka pozwala generowac protokoly uzycia sprzetu w PDF <br />
@@ -30,9 +30,9 @@
 			    4. Szablony mają konfigurowalną czcionkę, orientację, nazwę, tekst w środku, stopkę, miasto. <br />
 			    5. Możliwość tworzenia komentarzy do każdego elementu <br /> 
 			    6. Wyświetlanie Marki i modelu <br />
-			    7. Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego lub obydwie kolumny oddzielnie
-				8. Możliwość zmiany orientacji na poziomą
-				9. Możliwość dodania dodatkowych wierszy (ręcznie wpisywanych)
+			    7. Wyświetlanie numeru seryjnego, a jeśli jest pusty - numeru inwentarzowego lub obydwie kolumny oddzielnie <br />
+				8. Możliwość zmiany orientacji na poziomą <br />
+				9. Możliwość dodania dodatkowych wierszy (ręcznie wpisywanych) <br />
 				10. Możliwość dodania notatek do każdego eksportu]]>
 			</pl>
 	   </long>
