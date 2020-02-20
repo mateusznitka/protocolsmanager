@@ -10,15 +10,14 @@ GLPI Plugin to make PDF reports with user inventory.
 * Showing serial number or inventory number in one or two columns
 * Possibility to add custom rows
 * Possibility to add notes to export
-## What's new in 1.1.2?
-* Custom rows
-* You can change orientation
-* You can show serial and inventory number in one or separate columns
-* Notes to export
-* Style changes - larger checkboxes, fonts
+## What's new in 1.2?
+* Fixed bug with not showing inventory number if serial doesn't exist in one column mode.
+* Created [Wiki](https://github.com/mateusznitka/protocolsmanager/wiki/) with detailed documentation.
 ## Compatibility
 GLPI 9.3 or higher.  
 ***NOTE:*** in GLPI 9.3.x, you have to modify /inc/generate.class.php - search and replace: **GLPI_UPLOAD_DIR** to **GLPI_TMP_DIR**.
+## Documentation
+There is [Wiki](https://github.com/mateusznitka/protocolsmanager/wiki/) available with detailed instructions about installation, using and configuration of plugin.
 ## Instalation
 1. Download and extract package
 2. Copy protocolsmanager folder to GLPI plugins directory
@@ -50,5 +49,7 @@ GLPI 9.3 or higher.
 1. More customization
 2. Possibility to add custom columns
 3. Word-breaking or auto-column size
+## Known bugs
+* No permission error if you have a lot of items (more than 100?) and try to generate protocols.
 ## Contact 
 mateusznitka01@gmail.com
