@@ -57,6 +57,7 @@ function plugin_protocolsmanager_install() {
 				  id INT(11) NOT NULL auto_increment,
 				  name VARCHAR(255),
 				  font varchar(255),
+				  fontsize varchar(255),
 				  logo varchar(255),
 				  content text,
 				  footer text,
@@ -65,18 +66,23 @@ function plugin_protocolsmanager_install() {
 				  column1 varchar(255),
 				  column2 varchar(255),
 				  orientation varchar(10),
+				  breakword int(2),
 				  PRIMARY KEY (id)
 			   ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 			   
 		$DB->queryOrDie($query, $DB->error());
 	  
 		$query2 = "INSERT INTO glpi_plugin_protocolsmanager_config (
-					name, font, content, footer, city)
+					name, font, fontsize, content, footer, city, serial_mode, orientation, breakword)
 					VALUES ('Equipment report',
-							'freesans',
+							'Roboto',
+							'9',
 							'User: \n I have read the terms of use of IT equipment in the Example Company.',
 							'Example Company \n Example Street 21 \n 01-234 Example City',
-							'Example city')";
+							'Example city',
+							1,
+							'Portrait',
+							1)";
 							
 		$DB->queryOrDie($query2, $DB->error());
 	}
@@ -96,8 +102,21 @@ function plugin_protocolsmanager_install() {
 		
 		$DB->queryOrDie($query, $DB->error());
 		
+	}
+	
+		//update config table if upgrading from 1.2
+	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'fontsize')) {
+		
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
+					ADD fontsize varchar(255)
+						AFTER font,
+					ADD breakword int(2)
+						AFTER fontsize";
+		
+		$DB->queryOrDie($query, $DB->error());
+		
 		$query = "UPDATE glpi_plugin_protocolsmanager_config
-					SET serial_mode=1, orientation='p'";
+					SET serial_mode=1, orientation='p', fontsize='9', breakword=1";
 		
 		$DB->queryOrDie($query, $DB->error());
 		
