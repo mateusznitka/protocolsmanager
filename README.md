@@ -11,7 +11,7 @@ GLPI Plugin to make PDF reports with user inventory.
 * Possibility to add custom rows
 * Possibility to add notes to export
 ## What's new in 1.3?
-* Changed PDF library to domPDF
+* Changed PDF library to [domPDF](https://github.com/dompdf/dompdf)
 * Possibility to change font size
 * Auto column width
 * Word breaking
