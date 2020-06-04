@@ -1,9 +1,12 @@
 <?php
 
-$autoload = dirname(__DIR__) . '/vendor/autoload.php';
-require_once $autoload;
+//$autoload = dirname(__DIR__) . '/vendor/autoload.php';
+//require_once $autoload;
 
-use Spipu\Html2Pdf\Html2Pdf;
+//use Spipu\Html2Pdf\Html2Pdf;
+require_once dirname(__DIR__) . '/dompdf/autoload.inc.php';
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PluginProtocolsmanagerGenerate extends CommonDBTM {
 	
@@ -329,16 +332,22 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$title = $row["name"];
 				$full_img_name = $row["logo"];
 				$font = $row["font"];
+				$fontsize = $row["fontsize"];
 				$city = $row["city"];
 				$serial_mode = $row["serial_mode"];
 				$orientation = $row["orientation"];
+				$breakword = $row["breakword"];
 			}
 			
 			$comments = $_POST['comments'];
 		
 			if (!isset($font) || empty($font)) {
 				$font = 'dejavusans';
-			}	
+			}
+
+			if (!isset($fontsize) || empty($fontsize)) {
+				$fontsize = '9';
+			}				
 			
 			if (!isset($city) || empty($city)) {
 				$city = '';
@@ -354,15 +363,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$islogo = 1;
 			}
 			
+			
 			ob_start();
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();
-
-			$html2pdf = new Html2Pdf($orientation, 'A4');
-			$html2pdf->setDefaultFont($font);
-			$html2pdf->writeHTML($html);
-			$doc_name = $prot_num."-".date('mdY').'.pdf';			
-			$html2pdf->Output(GLPI_UPLOAD_DIR .'/'.$doc_name, 'F');
+			$options = new Options();
+			$options -> set('defaultFont', $font);
+			$html2pdf = new Dompdf($options);
+			$html2pdf->loadHtml($html);
+			$html2pdf->setPaper('A4', $orientation);
+			$html2pdf->render();
+			
+			$doc_name = $prot_num."-".date('mdY').'.pdf';	
+			$output = $html2pdf->output();
+			file_put_contents(GLPI_UPLOAD_DIR .'/'.$doc_name, $output);
 			
 			$doc_id = self::createDoc($doc_name, $notes);
 			

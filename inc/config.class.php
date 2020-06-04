@@ -46,10 +46,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				$template_footer = $row["footer"];
 				$template_name = $row["name"];
 				$font = $row["font"];
+				$fontsize = $row["fontsize"];
 				$city = $row["city"];
 				$logo = $row["logo"];
 				$serial_mode = $row["serial_mode"];
 				$orientation = $row["orientation"];
+				$breakword = $row["breakword"];
 			}
 			
 		} else {
@@ -57,21 +59,33 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$template_footer = '';
 			$template_name = '';
 			$font = '';
+			$fontsize = '9';
 			$city = '';
 			$mode = 0;
 			$serial_mode = 1;
 			$orientation = "p";
+			$breakword = 1;
 		}
 		
-		$fonts = array('freesans' => 'Free Sans',
-						'freemono' => 'Free Mono', 
-						'freeserif' => 'Free Serif', 
-						'dejavusans' => 'Dejavusans', 
-						'dejavuserif' => 'Dejavuserif', 
-						'helvetica' => 'Helvetica');
+		$fonts = array('Courier' => 'Courier',
+						'Helvetica' => 'Helvetica', 
+						'Times' => 'Times',
+						'Istok' => 'Istok',
+						'UbuntuMono' => 'UbuntuMono',
+						'Roboto' => 'Roboto',
+						'Liberation-Sans' => 'Liberation-Sans',
+						'DroidSerif' => 'DroidSerif',
+						'DejaVu Sans' => 'DejaVu Sans');
 						
-		$orientations = array('p' => 'Portrait',
-							'l' => 'Landscape');
+		$fontsizes = array('7' => '7',
+							'8' => '8',
+							'9' => '9',
+							'10' => '10',
+							'11' => '11',
+							'12' => '12');
+						
+		$orientations = array('Portrait' => 'Portrait',
+							'Landscape' => 'Landscape');
 		
 		if (!isset($font)) {
 			$font='freesans';
@@ -97,6 +111,25 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				echo ">".$fontname."</option>";
 			}
 		echo "</select></td></tr>";
+		
+		echo "<tr><td>Font size</td><td colspan='2'><select name='fontsize' style='width:150px'";
+			foreach($fontsizes as $fsize => $fsizes) {
+				echo "<option value='".$fsize."' ";
+				if ($fsize == $fontsize) {
+					echo " selected";
+				}
+				echo ">".$fsizes."</option>";
+			}
+			
+		echo "<tr><td>Word breaking</td><td><input type='radio' name='breakword' value=1 ";
+		if ($breakword == 1)
+			echo "checked='checked'";
+		echo "> On</td>";
+		echo "<td><input type='radio' name='breakword' value=0 ";
+		if ($breakword == 0)
+			echo "checked='checked'";
+		echo "> Off</td></tr>";
+		
 		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
 		echo "<tr><td>".__('Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".$template_content."</textarea></td></tr>";
 		echo "<tr><td>".__('Footer')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
@@ -145,10 +178,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$template_content = $_POST['template_content'];
 		$template_footer = $_POST['footer_text'];
 		$font = $_POST["font"];
+		$fontsize = $_POST["fontsize"];
 		$city = $_POST["city"];
 		$mode = $_POST["mode"];
 		$serial_mode = $_POST["serial_mode"];
 		$orientation = $_POST["orientation"];
+		$breakword = $_POST["breakword"];
 		
 		if (isset($_POST['img_delete'])) {
 			
@@ -171,9 +206,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				'footer' => $template_footer,
 				'logo' => $full_img_name,
 				'font' => $font,
+				'fontsize' => $fontsize,
 				'city' => $city,
 				'serial_mode' => $serial_mode,
-				'orientation' => $orientation
+				'orientation' => $orientation,
+				'breakword' => $breakword
 				]
 			);
 		}
@@ -190,9 +227,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'footer' => $template_footer,
 						'logo' => $full_img_name,
 						'font' => $font,
+						'fontsize' => $fontsize,
 						'city' => $city,
 						'serial_mode' => $serial_mode,
-						'orientation' => $orientation
+						'orientation' => $orientation,
+						'breakword' => $breakword
 					], [
 						'id' => $mode
 					]
@@ -204,9 +243,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'content' => $template_content,
 						'footer' => $template_footer,
 						'font' => $font,
+						'fontsize' => $fontsize,
 						'city' => $city,
 						'serial_mode' => $serial_mode,
-						'orientation' => $orientation
+						'orientation' => $orientation,
+						'breakword' => $breakword
 					], [
 						'id' => $mode
 					]
