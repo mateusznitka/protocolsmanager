@@ -52,6 +52,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				$serial_mode = $row["serial_mode"];
 				$orientation = $row["orientation"];
 				$breakword = $row["breakword"];
+				$email_mode = $row["email_mode"];
+				$send_user = $row["send_user"];
+				$email_subject = $row["email_subject"];
+				$email_content = $row["email_content"];
+				$recipients = $row["recipients"];
 			}
 			
 		} else {
@@ -65,6 +70,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$serial_mode = 1;
 			$orientation = "p";
 			$breakword = 1;
+			$email_mode = 2;
+			$send_user = 2;
+			$email_subject = '';
+			$email_content = '';
+			$recipients = '';
 		}
 		
 		$fonts = array('Courier' => 'Courier',
@@ -93,7 +103,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
 		echo "<div class='center'>";
 		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Templates')."</td>";
+		echo "<tr><td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Templates')."</td></tr>";
 		echo "</table>";
 		
 		echo "<form name='form' action='config.form.php' method='post'  enctype='multipart/form-data'>";
@@ -160,7 +170,27 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "&nbsp&nbsp<img src = ".$base64." style='height:50px; width:auto;'>";
 			echo "&nbsp&nbsp<input type='checkbox' name='img_delete' value='$img_delete'>&nbsp ".__('Delete')." ".__('File');
 		}
-		echo "</td></tr></table>";
+		echo "</td></tr>";
+		echo "<tr><td>".__('Enable email sending')."</td><td><input type='radio' name='email_mode' value='1'";
+		if ($email_mode == 1)
+			echo "checked='checked'";
+		echo "> ON</td>";
+		echo "<td><input type='radio' name='email_mode' value='2'";
+		if ($email_mode == 2)
+			echo "checked='checked'";
+		echo "> OFF</td></tr>";
+		echo "<tr><td>".__('Send to user')."</td><td><input type='radio' name='send_user' value='1' class='eboxes' ";
+		if ($send_user == 1)
+			echo "checked='checked'";
+		echo "> send to user</td>";
+		echo "<td><input type='radio' name='send_user' value='2' class='eboxes' ";
+		if ($send_user == 2)
+			echo "checked='checked'";
+		echo "> don't send to user</td></tr>";
+		echo "<tr><td>".__('Email content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows'8' name='email_content'>".$email_content."</textarea></td></tr>";
+		echo "<tr><td>".__('Email subject')."</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='email_subject' style='width:80%;' value='$email_subject'></td></tr>";
+		echo "<tr><td>".__('Add emails - use ; to separate')."</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='recipients' style='width:80%;' value='$recipients'></td></tr>";
+		echo "</table>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save' class='submit'></td>";
 		Html::closeForm();
 		echo "<form name='cancelform' action='config.form.php' method='post'><td style='text-align:left;'><input type='submit' class='submit' name='cancel' value=".__('Cancel')."></td></table>";
@@ -184,6 +214,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$serial_mode = $_POST["serial_mode"];
 		$orientation = $_POST["orientation"];
 		$breakword = $_POST["breakword"];
+		$email_mode = $_POST["email_mode"];
+		$send_user = $_POST["send_user"];
+		$email_subject = $_POST["email_subject"];
+		$email_content = $_POST["email_content"];
+		$recipients = $_POST["recipients"];
 		
 		if (isset($_POST['img_delete'])) {
 			
@@ -210,7 +245,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				'city' => $city,
 				'serial_mode' => $serial_mode,
 				'orientation' => $orientation,
-				'breakword' => $breakword
+				'breakword' => $breakword,
+				'email_mode' => $email_mode,
+				'send_user' => $send_user,
+				'email_subject' => $email_subject,
+				'email_content' => $email_content,
+				'recipients' => $recipients
 				]
 			);
 		}
@@ -231,7 +271,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'city' => $city,
 						'serial_mode' => $serial_mode,
 						'orientation' => $orientation,
-						'breakword' => $breakword
+						'breakword' => $breakword,
+						'email_mode' => $email_mode,
+						'send_user' => $send_user,
+						'email_subject' => $email_subject,
+						'email_content' => $email_content,
+						'recipients' => $recipients
 					], [
 						'id' => $mode
 					]
@@ -247,7 +292,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'city' => $city,
 						'serial_mode' => $serial_mode,
 						'orientation' => $orientation,
-						'breakword' => $breakword
+						'breakword' => $breakword,
+						'email_mode' => $email_mode,
+						'send_user' => $send_user,
+						'email_subject' => $email_subject,
+						'email_content' => $email_content,
+						'recipients' => $recipients
 					], [
 						'id' => $mode
 					]
@@ -285,7 +335,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	}
 	
 	static function uploadImage() {
-		global $DB, $CFG_GLPI;;
+		global $DB, $CFG_GLPI;
 		
 		if($_FILES['logo']['name']) {
 			

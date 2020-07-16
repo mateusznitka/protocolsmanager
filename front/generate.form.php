@@ -12,4 +12,9 @@ if (isset($_REQUEST['delete'])) {
 	Html::back();
 }
 
+if (isset($_REQUEST['send'])) {
+	$PluginProtocolsmanagerGenerate::sendOneMail();
+	Html::back();
+}
+
 ?>
