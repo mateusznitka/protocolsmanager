@@ -202,7 +202,6 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							$author = $Author->getRawName();
 							
 							
-							
 							echo "<input type='hidden' name='owner' value ='$owner'>";
 							echo "<input type='hidden' name='author' value ='$author'>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
@@ -227,27 +226,56 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</table>";
 				Html::closeForm();
 				echo "</div>";
+				
+				
+				//send email popup
+				echo "<div class='dialog' title='".__('Send')." email'><p>Select recipients from template or enter manually to send email</p><br><br>";	
+				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
+				
+				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
+				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'> Enter recipients manually (use ; to separate emails)<br>";
+				echo "<input type='text' style='width:90%' name='e_list' id='man_recs'><br><br>";
+				
+				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'> Select recipients from template<br>";
+				
+				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
+
+				foreach ($DB->request('glpi_plugin_protocolsmanager_config') as $uid => $list) {
+					echo '<option value="';
+					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"];
+					echo '">';
+					echo $list["recipients"];
+					echo '</option>';
+				}
+
+				echo "</select><br><br><input type='submit' name='send' class='submit' value=".__('Send').">";
+				Html::closeForm();
+				echo "</div>"; 
+				
+				
 				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
+				
 				echo "<div class='spaced'>";
 				echo "<form method='post' name='docs_form' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
 				echo "<table class='tab_cadre_fixe'><td style='width:5%'><img src='../pics/arrow-left-top.png'></td><td style='width:5%'>";
 				echo "<input type='submit' name='delete' class='submit' value=".__('Delete').">";
 				echo "</td><td style='width:90%'></table>";
-				echo "<table class='tab_cadre_fixehov'>";
+				echo "<table class='tab_cadre_fixehov' id='myTable'>";
 				echo "<th width='10'><input type='checkbox' class='checkalldoc' style='height:16px; width: 16px;'></th>";
 				$header2 = "<th>".__('Name')."</th>";
 				$header2 .= "<th>".__('Type')."</th>";
 				$header2 .= "<th>".__('Date')."</th>";
 				$header2 .= "<th>".__('File')."</th>";
 				$header2 .= "<th>".__('Creator')."</th>";
-				$header2 .= "<th>".__('Comment')."</th></tr>";
+				$header2 .= "<th>".__('Comment')."</th>";
+				$header2 .= "<th>".__('Send email')."</th></tr>";
 				echo $header2;
 				
 				self::getAllForUser($id);
 				echo "</table>";
 				Html::closeForm();
 				echo "</div>";
-		  
+				
 				return true;
 	
 		}
@@ -255,6 +283,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		//show user's generated documents
 		static function getAllForUser($id) {
 			global $DB, $CFG_GLPI;
+			
 			$exports = [];
 			$doc_counter = 0;
 			
@@ -293,14 +322,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					echo "<td class='center'>";
 					echo $Doc->getField("comment");
+					echo "</td>";					
+					
+					echo "<td class='center'>";
+					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
+					echo "<a class='openDialog' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
 					echo "</td>";
+
 					
 					echo "</tr>";
 
 					$doc_counter++;
 				}
 		}
-		
+
 		
 		//make PDF and save to DB
 		static function makeProtocol() {
@@ -337,6 +372,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$serial_mode = $row["serial_mode"];
 				$orientation = $row["orientation"];
 				$breakword = $row["breakword"];
+				$email_mode = $row["email_mode"];
+				$send_user = $row["send_user"];
+				$email_subject = $row["email_subject"];
+				$email_content = $row["email_content"];
+				$recipients = $row["recipients"];
 			}
 			
 			$comments = $_POST['comments'];
@@ -351,7 +391,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			if (!isset($city) || empty($city)) {
 				$city = '';
+			}			
+			
+			if (!isset($email_content) || empty($email_content)) {
+				$email_content = '';
 			}
+			
+			if (!isset($email_subject) || empty($email_subject)) {
+				$email_subject = '';
+			}	
+
+			if (!isset($recipients) || empty($recipients)) {
+				$recipients = '';
+			}			
 			
 			//change margin if no image
 			if (!isset($full_img_name) || empty($full_img_name)) {
@@ -380,8 +432,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$doc_id = self::createDoc($doc_name, $notes);
 			
-			$gen_date = date('Y-m-d H:i:s');
+			if ($email_mode == 1) {
+				
+				self::sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id);
+				
+			}
 			
+			$gen_date = date('Y-m-d H:i:s');
 			
 			$DB->insert('glpi_plugin_protocolsmanager_protocols', [
 				'name' => $doc_name,
@@ -448,6 +505,97 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$doc->delete(['id' => $del_key], true);
 			}
 		}
+		
+		//send mail notification
+		static function sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id) {
+			
+			global $CFG_GLPI, $DB;
+			$nmail = new GLPIMailer();
+			
+			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			
+			$recipients_array = explode(';',$recipients);
+			
+			$req = $DB->request(
+					'glpi_documents',
+					['id' => $doc_id ]);
+			
+			if ($row = $req->next()) {
+				$path = $row["filepath"];
+				$filename = $row["filename"];
+			}
+			
+			$fullpath = GLPI_ROOT."/files/".$path;
+			
+			$req2 = $DB->request(
+					'glpi_useremails',
+					['users_id' => $id, 'is_default' => 1]);
+					
+			if ($row2 = $req2->next()) {
+				$owner_email = $row2["email"];
+			}
+			
+			if ($send_user == 1) {
+				$nmail->AddAddress($owner_email);
+			}			
+			
+			foreach($recipients_array as $recipient) {
+				
+				$nmail->AddAddress($recipient); //do konfiguracji
+			}
+			
+			$nmail->Subject = $email_subject; //do konfiguracji
+			$nmail->addAttachment($fullpath, $filename);
+			$nmail->Body = $email_content;
+			
+			if (!$nmail->Send()) {
+				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				GLPINetwork::addErrorMessageAfterRedirect();
+				return false;
+			} else {
+				Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+				return true;
+			}
+			
+			
+		}
+		
+		static function sendOneMail() {
+			
+			global $CFG_GLPI, $DB;
+			
+			$nmail = new GLPIMailer();
+			
+			$doc_id = $_POST["doc_id"];
+			$e_list = $_POST["e_list"];
+			
+			$result = explode('|', $e_list);
+			$recipients = $result[0];
+			$email_subject = $result[1];
+			$email_content =  $result[2];
+			
+			Session::addMessageAfterRedirect("Test git ".$doc_id." ".$recipients);
+			
+			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			
+			//$recipients_array = explode(';',$recipients);
+			
+			$req = $DB->request(
+					'glpi_documents',
+					['id' => $doc_id ]);
+			
+			if ($row = $req->next()) {
+				$path = $row["filepath"];
+				$filename = $row["filename"];
+			}
+			
+			$fullpath = GLPI_ROOT."/files/".$path;
+			
+			//tutaj dac po prostu odbiorce ale juz z inputa
+			
+			
+		}
+		
 
 }
 
@@ -456,11 +604,43 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 <script>
 
+
+$(function(){
+	$("#man_recs").prop('disabled', true);
+	$('.send_type').click(function(){
+		if($(this).prop('id') == "manually"){
+			$("#man_recs").prop('disabled', false);
+			$("#auto_recs").prop('disabled', true);
+		}else{
+			$("#man_recs").prop('disabled', true);
+			$("#auto_recs").prop('disabled', false);
+		}
+	});
+});
+
+$(function(){
+	
+	$(".dialog").dialog({ autoOpen: false, modal: true, height: 500, width: 500 });
+ 
+	$("#myTable").on('click','.openDialog',function(){
+         // get the current row
+        var currentRow=$(this).closest("tr"); 
+         
+        var docid=currentRow.find(".docid").html(); // get current row 1st table cell TD value
+
+		$('#dialogVal').val(docid);
+		$(".dialog").dialog('open');
+		
+		});        
+ 
+});
+
 $(function(){
     $('.checkall').on('click', function() {
         $('.child').prop('checked', this.checked)
     });
 });
+
 $(function(){
     $('.checkalldoc').on('click', function() {
         $('.docchild').prop('checked', this.checked)
@@ -498,5 +678,7 @@ $(function() {
 
 
 });
+
+
 
 </script>

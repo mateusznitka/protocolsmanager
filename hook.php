@@ -67,6 +67,11 @@ function plugin_protocolsmanager_install() {
 				  column2 varchar(255),
 				  orientation varchar(10),
 				  breakword int(2),
+				  email_mode int(2),
+				  send_user int(2),
+				  email_content varchar(255),
+				  email_subject varchar(255),
+				  recipients varchar(255),
 				  PRIMARY KEY (id)
 			   ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 			   
@@ -111,12 +116,22 @@ function plugin_protocolsmanager_install() {
 					ADD fontsize varchar(255)
 						AFTER font,
 					ADD breakword int(2)
-						AFTER fontsize";
+						AFTER fontsize,
+					ADD email_mode int(2)
+						AFTER breakword,
+					ADD send_user int(2)
+						AFTER email_mode,
+					ADD email_content varchar(255)
+						AFTER send_user,
+					ADD email_subject varchar(255)
+						AFTER email_content,
+					ADD recipients varchar(255)
+						AFTER email_subject";
 		
 		$DB->queryOrDie($query, $DB->error());
 		
 		$query = "UPDATE glpi_plugin_protocolsmanager_config
-					SET serial_mode=1, orientation='p', fontsize='9', breakword=1";
+					SET serial_mode=1, orientation='p', fontsize='9', breakword=1, email_mode=2";
 		
 		$DB->queryOrDie($query, $DB->error());
 		
