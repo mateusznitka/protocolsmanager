@@ -68,10 +68,7 @@ function plugin_protocolsmanager_install() {
 				  orientation varchar(10),
 				  breakword int(2),
 				  email_mode int(2),
-				  send_user int(2),
-				  email_content varchar(255),
-				  email_subject varchar(255),
-				  recipients varchar(255),
+				  email_template int(2),
 				  PRIMARY KEY (id)
 			   ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 			   
@@ -119,14 +116,8 @@ function plugin_protocolsmanager_install() {
 						AFTER fontsize,
 					ADD email_mode int(2)
 						AFTER breakword,
-					ADD send_user int(2)
-						AFTER email_mode,
-					ADD email_content varchar(255)
-						AFTER send_user,
-					ADD email_subject varchar(255)
-						AFTER email_content,
-					ADD recipients varchar(255)
-						AFTER email_subject";
+					ADD email_template int(2)
+						AFTER email_mode";
 		
 		$DB->queryOrDie($query, $DB->error());
 		
@@ -136,7 +127,23 @@ function plugin_protocolsmanager_install() {
 		$DB->queryOrDie($query, $DB->error());
 		
 	}
+	
+	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
 		
+		$query = "CREATE TABLE glpi_plugin_protocolsmanager_emailconfig (
+					id INT(11) NOT NULL auto_increment,
+					tname varchar(255),
+					send_user int(2),
+					email_content varchar(255),
+					email_subject varchar(255),
+					email_footer varchar(255),
+					recipients varchar(255),
+					PRIMARY KEY (id)
+					) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+					
+		$DB->queryOrDie($query, $DB->error());
+
+	}		
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
       
@@ -173,7 +180,7 @@ function plugin_protocolsmanager_uninstall() {
 
 	global $DB;
 	
-	$tables = array("glpi_plugin_protocolsmanager_protocols", "glpi_plugin_protocolsmanager_config", "glpi_plugin_protocolsmanager_profiles");
+	$tables = array("glpi_plugin_protocolsmanager_protocols", "glpi_plugin_protocolsmanager_config", "glpi_plugin_protocolsmanager_profiles", "glpi_plugin_protocolsmanager_emailconfig");
 
 	foreach($tables as $table) 
 		{$DB->query("DROP TABLE IF EXISTS `$table`;");}

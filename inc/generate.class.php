@@ -240,7 +240,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
 
-				foreach ($DB->request('glpi_plugin_protocolsmanager_config') as $uid => $list) {
+				foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 					echo '<option value="';
 					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"];
 					echo '">';
@@ -373,6 +373,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$orientation = $row["orientation"];
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];
+				$email_template = $row["email_template"];
+			}
+			
+			$req = $DB->request(
+				'glpi_plugin_protocolsmanager_emailconfig',
+				['id' => $email_template ]);
+				
+			if ($row = $req->next()) {
 				$send_user = $row["send_user"];
 				$email_subject = $row["email_subject"];
 				$email_content = $row["email_content"];
@@ -560,11 +568,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 		}
 		
-		static function sendOneMail() {
+		static function sendOneMail($id) {
 			
 			global $CFG_GLPI, $DB;
 			
 			$nmail = new GLPIMailer();
+			
+			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 			
 			$doc_id = $_POST["doc_id"];
 			$e_list = $_POST["e_list"];
@@ -574,11 +584,24 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$email_subject = $result[1];
 			$email_content =  $result[2];
 			
-			Session::addMessageAfterRedirect("Test git ".$doc_id." ".$recipients);
+			$recipients_array = explode(';',$recipients);
 			
-			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$req2 = $DB->request(
+					'glpi_useremails',
+					['users_id' => $id, 'is_default' => 1]);
+					
+			if ($row2 = $req2->next()) {
+				$owner_email = $row2["email"];
+			}
 			
-			//$recipients_array = explode(';',$recipients);
+			if ($send_user == 1) {
+				$nmail->AddAddress($owner_email);
+			}			
+			
+			foreach($recipients_array as $recipient) {
+				
+				$nmail->AddAddress($recipient); //do konfiguracji
+			}			
 			
 			$req = $DB->request(
 					'glpi_documents',
@@ -591,8 +614,21 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$fullpath = GLPI_ROOT."/files/".$path;
 			
-			//tutaj dac po prostu odbiorce ale juz z inputa
+			$nmail->Subject = $email_subject; //do konfiguracji
+			$nmail->addAttachment($fullpath, $filename);
+			$nmail->Body = $email_content;
 			
+			if (!$nmail->Send()) {
+				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				GLPINetwork::addErrorMessageAfterRedirect();
+				return false;
+			} else {
+				Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+				return true;
+			}
+			
+			//tutaj dac po prostu odbiorce ale juz z inputa
+			Session::addMessageAfterRedirect("Test git ".$doc_id." ".$recipients." ".$email_subject);
 			
 		}
 		

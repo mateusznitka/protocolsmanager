@@ -17,6 +17,16 @@
 	if (isset($_REQUEST['delete'])) {
 		$PluginProtocolsmanagerConfig::deleteConfigs();
 		Html::back();
+	}
+
+	if (isset($_REQUEST['save_email'])) {
+		$PluginProtocolsmanagerConfig::saveEmailConfigs();
+		Html::back();
+	}	
+	
+	if (isset($_REQUEST['delete_email'])) {
+		$PluginProtocolsmanagerConfig::deleteEmailConfigs();
+		Html::back();
 	}	
 	
 	if (isset($_REQUEST['cancel'])) {
@@ -26,4 +36,22 @@
 	$PluginProtocolsmanagerConfig->showFormProtocolsmanager();
 	
 ?>
-	
+
+<script>
+
+$(function(){
+	$("#template_button").click(function(){
+		$("#template_settings").show();
+		$("#show_configs").show();
+		$("#email_settings").hide();
+		$("#show_emailconfigs").hide();
+	});	
+	$("#email_button").click(function(){
+		$("#template_settings").hide();
+		$("#show_configs").hide();
+		$("#email_settings").show();
+		$("#show_emailconfigs").show();
+	});
+});	
+
+</script>
