@@ -13,7 +13,7 @@ if (isset($_REQUEST['delete'])) {
 }
 
 if (isset($_REQUEST['send'])) {
-	$PluginProtocolsmanagerGenerate::sendOneMail();
+	$PluginProtocolsmanagerGenerate::sendOneMail($id);
 	Html::back();
 }
 
