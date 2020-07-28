@@ -2,7 +2,7 @@
 
 function plugin_version_protocolsmanager() {
 	return array('name'           => "Protocols manager",
-                'version'        => '1.3.1',
+                'version'        => '1.3.3',
                 'author'         => 'Mateusz Nitka',
                 'license'        => 'GPLv3+',
                 'homepage'       => 'https://github.com/mateusznitka/protocolsmanager',
@@ -34,6 +34,8 @@ function plugin_init_protocolsmanager() {
 	Plugin::registerClass('PluginProtocolsmanagerProfile', array('addtabon' => array('Profile')));
 	
 	Plugin::registerClass('PluginProtocolsmanagerConfig', array('addtabon' => array('Config')));
+	
+	$PLUGIN_HOOKS['add_css']['protocolsmanager'] = 'css/styles.css';
 	
 }
 

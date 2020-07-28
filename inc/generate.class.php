@@ -234,7 +234,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
 				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'> Enter recipients manually (use ; to separate emails)<br>";
-				echo "<input type='text' style='width:90%' name='e_list' id='man_recs'><br><br>";
+				echo "<input type='text' style='width:90%' name='em_list' id='man_recs'><br><br>";
 				
 				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'> Select recipients from template<br>";
 				
@@ -577,12 +577,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 			
 			$doc_id = $_POST["doc_id"];
-			$e_list = $_POST["e_list"];
+			//$e_list = $_POST["e_list"];
 			
-			$result = explode('|', $e_list);
-			$recipients = $result[0];
-			$email_subject = $result[1];
-			$email_content =  $result[2];
+			if (isset($_POST["em_list"])) {
+				$recipients = $_POST["em_list"];
+				$email_subject = "GLPI Protocols Manager mail";
+				$email_content = " ";
+			}
+			
+			if (isset($_POST["e_list"])) {
+				$result = explode('|', $_POST["e_list"]);
+				$recipients = $result[0];
+				$email_subject = $result[1];
+				$email_content =  $result[2];
+			}
 			
 			$recipients_array = explode(';',$recipients);
 			
@@ -620,15 +628,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
-				GLPINetwork::addErrorMessageAfterRedirect();
 				return false;
 			} else {
 				Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
 				return true;
 			}
-			
-			//tutaj dac po prostu odbiorce ale juz z inputa
-			Session::addMessageAfterRedirect("Test git ".$doc_id." ".$recipients." ".$email_subject);
 			
 		}
 		
