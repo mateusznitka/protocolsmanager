@@ -121,8 +121,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		
 		echo "<div class='center'>";
 		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<tr><td style='text-align:center'><button id='template_button' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Template settings</button></td>";
-		echo "<td style='text-align:center'><button id='email_button' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Email settings</button></td></tr>";
+		echo "<tr><td style='text-align:center'><a href='#template_settings'><button id='template_button' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Template settings</button></a></td>";
+		echo "<td style='text-align:center'><a href='#email_settings'><button id='email_button' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Email settings</button></a></td></tr>";
 		echo "</table>";
 		echo "</div>";
 	
@@ -131,7 +131,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<tr><td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Templates')."</td></tr>";
 		echo "</table>";
 		
-		echo "<form name='form' action='config.form.php' method='post'  enctype='multipart/form-data'>";
+		echo "<form name='form' action='config.form.php#template_settings' method='post'  enctype='multipart/form-data'>";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value=1948000>";
 		echo "<input type='hidden' name='mode' value='$mode'>";
 		echo "<table class='tab_cadre_fixe'>";
@@ -217,15 +217,17 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "</table>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save' class='submit'></td>";
 		Html::closeForm();
-		echo "<form name='cancelform' action='config.form.php' method='post'><td style='text-align:left;'><input type='submit' class='submit' name='cancel' value=".__('Cancel')."></td></table>";
+		echo "<form name='cancelform' action='config.form.php#template_settings' method='post'><td style='text-align:left;'><input type='submit' class='submit' name='cancel' value=".__('Cancel')."></td></table>";
 		Html::closeForm();
-		echo "</div><br>";
+		//echo "</div>";
+		echo "<br>";
 		self::showConfigs();
 		
 		
+		
 		//email template edit
-		echo "<div class='center' id='email_settings' style='display:none'>";
-		echo "<form name ='email_template_edit' action='config.form.php' method='post' enctype='multipart/form-data'>";
+		echo "<div class='center' id='email_settings'>";
+		echo "<form name ='email_template_edit' action='config.form.php#email_settings' method='post' enctype='multipart/form-data'>";
 		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
 		echo "<tr><td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Email')." ".__('Configuration')."</td></tr>";
 		echo "</table>";
@@ -247,10 +249,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<input type='hidden' name='email_edit_id' value=$email_edit_id>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save_email' class='submit' id='email_submit'></td>";
 		Html::closeForm();
-		echo "<form name='cancelform' action='config.form.php' method='post'><td style='text-align:left;'><input type='submit' class='submit' name='cancel' value=".__('Cancel')."></td></table>";
+		echo "<form name='cancelform' action='config.form.php#email_settings' method='post'><td style='text-align:left;'><input type='submit' class='submit' name='cancel' value=".__('Cancel')."></td></table>";
 		Html::closeForm();
-		echo "</div><br>";
+		//echo "</div>";
+		echo "<br>";
 		self::showEmailConfigs();
+		
 
 		
 	}
@@ -394,7 +398,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		global $DB, $CFG_GLPI;
 		$configs = [];
 		
-		echo "<div class='spaced' id='show_configs'>";
+		//echo "<div class='spaced' id='show_configs'>";
 		echo "<table class='tab_cadre_fixehov' style='width:90%;'>";
 		echo "<tr class='tab_bg_1'><th colspan='3'>".__('Templates')."</th></tr>";
 		echo "<tr class='tab_bg_1'><td class='center'><b>".__('Name')."</b></td>";
@@ -408,9 +412,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				echo "</td>";
 				$conf_id = $configs['id'];
 				echo "<td class='center' width='7%'>
-						<form method='post' action='config.form.php'><input type='hidden' value='$conf_id' name='edit_id'><input type='submit' name='edit' value=".__('Edit')." class='submit'></td>";
+						<form method='post' action='config.form.php#template_settings'><input type='hidden' value='$conf_id' name='edit_id'><input type='submit' name='edit' value=".__('Edit')." class='submit'></td>";
 						Html::closeForm();	
-						echo "<td class='center' width='7%'><form method='post' action='config.form.php'><input type='hidden' value='$conf_id' name='conf_id'><input type='submit' name='delete' value=".__('Delete')." class='submit'></td></tr>";
+						echo "<td class='center' width='7%'><form method='post' action='config.form.php#template_settings'><input type='hidden' value='$conf_id' name='conf_id'><input type='submit' name='delete' value=".__('Delete')." class='submit'></td></tr>";
 						Html::closeForm();				
 			}
 		echo "</table></div>";
@@ -420,7 +424,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		global $DB, $CFG_GLPI;
 		$emailconfigs = [];
 		
-		echo "<div class='spaced' id='show_emailconfigs' style='display:none'>";
+		//echo "<div class='spaced' id='show_emailconfigs'>";
 		echo "<table class='tab_cadre_fixehov' style='width:90%;'>";
 		echo "<tr class='tab_bg_1'><th colspan='3'>".__('Templates')."</th></tr>";
 		echo "<tr class='tab_bg_1'><td class='center'><b>".__('Name')."</b></td>";
@@ -438,9 +442,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				echo "</td>";
 				$email_conf_id = $emailconfigs['id'];
 				echo "<td class='center' width='7%'>
-						<form method='post' action='config.form.php'><input type='hidden' value='$email_conf_id' name='email_edit_id'><input type='submit' name='email_edit' value=".__('Edit')." class='submit'></td>";
+						<form method='post' action='config.form.php#email_settings'><input type='hidden' value='$email_conf_id' name='email_edit_id'><input type='submit' name='email_edit' value=".__('Edit')." class='submit'></td>";
 						Html::closeForm();	
-						echo "<td class='center' width='7%'><form method='post' action='config.form.php'><input type='hidden' value='$email_conf_id' name='email_conf_id'><input type='submit' name='delete_email' value=".__('Delete')." class='submit'></td></tr>";
+						echo "<td class='center' width='7%'><form method='post' action='config.form.php#email_settings'><input type='hidden' value='$email_conf_id' name='email_conf_id'><input type='submit' name='delete_email' value=".__('Delete')." class='submit'></td></tr>";
 						Html::closeForm();				
 			}
 		echo "</table></div>";

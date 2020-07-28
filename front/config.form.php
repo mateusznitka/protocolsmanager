@@ -39,7 +39,7 @@
 
 <script>
 
-$(function(){
+/* $(function(){
 	$("#template_button").click(function(){
 		$("#template_settings").show();
 		$("#show_configs").show();
@@ -52,6 +52,6 @@ $(function(){
 		$("#email_settings").show();
 		$("#show_emailconfigs").show();
 	});
-});	
+});	*/
 
 </script>
