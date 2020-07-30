@@ -233,10 +233,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
 				
 				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
-				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'> Enter recipients manually (use ; to separate emails)<br>";
-				echo "<input type='text' style='width:90%' name='em_list' id='man_recs'><br><br>";
+				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'><b> Enter recipients manually </b><br><br>";
+				echo "<input type='text' style='width:90%' name='em_list' class='man_recs' placeholder='Recipients (use ; to separate emails)'><br><br>";
+				echo "<input type='text' style='width:90%' name='email_subject' class='man_recs' placeholder='Subject'><br><br>";
+				echo "<textarea style='width:90%; height:80px' name='email_content' class='man_recs' placeholder='Content'></textarea><br><br>";
+
 				
-				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'> Select recipients from template<br>";
+				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'><b> Select recipients from template</b><br><br>";
 				
 				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
 
@@ -244,7 +247,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo '<option value="';
 					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"];
 					echo '">';
-					echo $list["recipients"];
+					echo $list["tname"]." - ".$list["recipients"];
 					echo '</option>';
 				}
 
@@ -577,16 +580,27 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 			
 			$doc_id = $_POST["doc_id"];
-			//$e_list = $_POST["e_list"];
 			
+			//if email is filled manually
 			if (isset($_POST["em_list"])) {
 				$recipients = $_POST["em_list"];
-				$email_subject = "GLPI Protocols Manager mail";
-				$email_content = " ";
 			}
 			
-			if (isset($_POST["e_list"])) {
-				$result = explode('|', $_POST["e_list"]);
+			if (isset($_POST["email_subject"])) {
+				$email_subject = $_POST["email_subject"];
+			} else {
+				$email_subject = "GLPI Protocols Manager mail";
+			}
+			
+			if (isset($_POST['email_content'])) {
+				$email_content = $_POST['email_content'];
+			} else {
+				$email_content = ' ';
+			}
+			
+			//if email is from template
+			if (isset($_POST['e_list'])) {
+				$result = explode('|', $_POST['e_list']);
 				$recipients = $result[0];
 				$email_subject = $result[1];
 				$email_content =  $result[2];
@@ -622,9 +636,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$fullpath = GLPI_ROOT."/files/".$path;
 			
+			$nmail->IsHtml(true);
+			
 			$nmail->Subject = $email_subject; //do konfiguracji
 			$nmail->addAttachment($fullpath, $filename);
-			$nmail->Body = $email_content;
+			$nmail->Body = nl2br(stripcslashes($email_content));
 			
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
@@ -646,13 +662,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 
 $(function(){
-	$("#man_recs").prop('disabled', true);
+	$(".man_recs").prop('disabled', true);
 	$('.send_type').click(function(){
 		if($(this).prop('id') == "manually"){
-			$("#man_recs").prop('disabled', false);
+			$(".man_recs").prop('disabled', false);
 			$("#auto_recs").prop('disabled', true);
 		}else{
-			$("#man_recs").prop('disabled', true);
+			$(".man_recs").prop('disabled', true);
 			$("#auto_recs").prop('disabled', false);
 		}
 	});
