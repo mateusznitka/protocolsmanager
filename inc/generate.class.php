@@ -234,7 +234,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
 				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'><b> Enter recipients manually </b><br><br>";
-				echo "<input type='text' style='width:90%' name='em_list' class='man_recs' placeholder='Recipients (use ; to separate emails)'><br><br>";
+				echo "<textarea style='width:90%; height:30px' name='em_list' class='man_recs' placeholder='Recipients (use ; to separate emails)'></textarea><br><br>";
 				echo "<input type='text' style='width:90%' name='email_subject' class='man_recs' placeholder='Subject'><br><br>";
 				echo "<textarea style='width:90%; height:80px' name='email_content' class='man_recs' placeholder='Content'></textarea><br><br>";
 

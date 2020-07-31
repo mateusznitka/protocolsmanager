@@ -286,7 +286,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "> don't send to user</td></tr>";
 		echo "<tr><td>".__('Email content')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows'8' name='email_content'>".$email_content."</textarea></td></tr>";
 		echo "<tr><td>".__('Email subject')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='email_subject' style='width:80%;' value='$email_subject'></td></tr>";
-		echo "<tr><td>".__('Add emails - use ; to separate')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='recipients' style='width:80%;' value='$recipients'></td></tr>";
+		echo "<tr><td>".__('Add emails - use ; to separate')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows '8' name='recipients'>".$recipients."</textarea></td></tr>";
 		echo "</table>";
 		echo "<input type='hidden' name='email_edit_id' value=$email_edit_id>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save_email' class='submit' id='email_submit'></td>";
