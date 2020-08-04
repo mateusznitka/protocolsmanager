@@ -245,7 +245,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 				foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 					echo '<option value="';
-					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"];
+					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"]."|".$list["send_user"];
 					echo '">';
 					echo $list["tname"]." - ".$list["recipients"];
 					echo '</option>';
@@ -564,8 +564,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				GLPINetwork::addErrorMessageAfterRedirect();
 				return false;
 			} else {
-				Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
-				return true;
+				
+				if ($send_user == 1) {
+					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+					return true;
+				} else {
+					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array));
+					return true;
+				}
 			}
 			
 			
@@ -604,6 +610,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$recipients = $result[0];
 				$email_subject = $result[1];
 				$email_content =  $result[2];
+				$send_user =  $result[3];
 			}
 			
 			$recipients_array = explode(';',$recipients);
