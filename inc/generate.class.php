@@ -366,6 +366,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 			if ($row = $req->next()) {
 				$content = nl2br($row["content"]);
+				$content = str_replace("{cur_date}", date("d.m.Y"), $content);
+				$content = str_replace("{owner}", $owner, $content);
 				$footer = nl2br($row["footer"]);
 				$title = $row["name"];
 				$full_img_name = $row["logo"];
@@ -653,8 +655,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
 				return false;
 			} else {
-				Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
-				return true;
+				
+				if ($send_user == 1) {
+					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+					return true;
+				} else {
+					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array));
+					return true;
+				}
 			}
 			
 		}
