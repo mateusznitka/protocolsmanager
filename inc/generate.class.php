@@ -252,10 +252,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				}
 
 				echo "</select><br><br><input type='submit' name='send' class='submit' value=".__('Send').">";
+				echo "<input type='hidden' name='author' value='$author'>";
+				echo "<input type='hidden' name='owner' value='$owner'>";
 				Html::closeForm();
 				echo "</div>"; 
 				
-				
+				//add custom row
 				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
 				
 				echo "<div class='spaced'>";
@@ -368,6 +370,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$content = nl2br($row["content"]);
 				$content = str_replace("{cur_date}", date("d.m.Y"), $content);
 				$content = str_replace("{owner}", $owner, $content);
+				$content = str_replace("{admin}", $author, $content);
 				$footer = nl2br($row["footer"]);
 				$title = $row["name"];
 				$full_img_name = $row["logo"];
@@ -409,10 +412,17 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if (!isset($email_content) || empty($email_content)) {
 				$email_content = '';
 			}
+			$email_content = str_replace("{owner}", $owner, $email_content);
+			$email_content = str_replace("{admin}", $author, $email_content);
+			$email_content = str_replace("{cur_date}", date("d.m.Y"), $email_content);
 			
 			if (!isset($email_subject) || empty($email_subject)) {
 				$email_subject = '';
-			}	
+			}
+			
+			$email_subject = str_replace("{owner}", $owner, $email_subject);
+			$email_subject = str_replace("{admin}", $author, $email_subject);
+			$email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
 
 			if (!isset($recipients) || empty($recipients)) {
 				$recipients = '';
@@ -614,6 +624,17 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$email_content =  $result[2];
 				$send_user =  $result[3];
 			}
+			
+			$owner = $_POST["owner"];
+			$author = $_POST["author"];
+			
+			$email_content = str_replace("{owner}", $owner, $email_content);
+			$email_content = str_replace("{admin}", $author, $email_content);
+			$email_content = str_replace("{cur_date}", date("d.m.Y"), $email_content);
+			
+			$email_subject = str_replace("{owner}", $owner, $email_subject);
+			$email_subject = str_replace("{admin}", $author, $email_subject);
+			$email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
 			
 			$recipients_array = explode(';',$recipients);
 			
