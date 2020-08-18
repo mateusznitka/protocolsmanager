@@ -128,6 +128,17 @@ function plugin_protocolsmanager_install() {
 		
 	}
 	
+		//update config table if upgrading from 1.3
+	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'upper_content')) {
+		
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
+					ADD upper_content text
+						AFTER email_mode";
+		
+		$DB->queryOrDie($query, $DB->error());
+	}
+	
+	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
 		
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_emailconfig (
