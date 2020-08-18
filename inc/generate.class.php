@@ -371,6 +371,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$content = str_replace("{cur_date}", date("d.m.Y"), $content);
 				$content = str_replace("{owner}", $owner, $content);
 				$content = str_replace("{admin}", $author, $content);
+				$upper_content = nl2br($row["upper_content"]);
+				$upper_content = str_replace("{cur_date}", date("d.m.Y"), $upper_content);
+				$upper_content = str_replace("{owner}", $owner, $upper_content);
+				$upper_content = str_replace("{admin}", $author, $upper_content);
 				$footer = nl2br($row["footer"]);
 				$title = $row["name"];
 				$full_img_name = $row["logo"];

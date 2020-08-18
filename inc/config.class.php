@@ -57,6 +57,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				['id' => $edit_id ]);
 				
 			if ($row = $req->next()) {
+				$template_uppercontent = $row["upper_content"];
 				$template_content = $row["content"];
 				$template_footer = $row["footer"];
 				$template_name = $row["name"];
@@ -72,6 +73,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			}
 			
 		} else {
+			$template_uppercontent = '';
 			$template_content = '';
 			$template_footer = '';
 			$template_name = '';
@@ -124,16 +126,13 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		Html::closeForm();
 		echo "</div>";
 	
-		echo "<div class='center'>";
-		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<tr><td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Templates')."</td></tr>";
-		echo "</table>";
 		
 		echo "<form name='form' action='config.form.php' method='post'  enctype='multipart/form-data'>";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value=1948000>";
 		echo "<input type='hidden' name='mode' value='$mode'>";
 		echo "<table class='tab_cadre_fixe'>";
-		echo "<tr><th colspan='3'>".__('Create')." ".__('template')."</th></tr>";
+		//echo "<tr><th></th>";
+		echo "<tr><th colspan='3'>".__('Create')." ".__('template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='25px' height='25px' align='right'></a></th></tr>";
 		echo "<tr><td>".__('Template name')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
 		echo "<tr><td>Font</td><td colspan='2'><select name='font' style='width:150px'>";
 			foreach($fonts as $code => $fontname) {
@@ -164,6 +163,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "> Off</td></tr>";
 		
 		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
+		echo "<tr><td>".__('Upper Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_uppercontent'>".$template_uppercontent."</textarea></td></tr>";
 		echo "<tr><td>".__('Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".$template_content."</textarea></td></tr>";
 		echo "<tr><td>".__('Footer')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
 		echo "<tr><td>".__('Orientation')."</td><td colspan='2'><select name='orientation' style='width:150px'>";
@@ -269,12 +269,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		//email template edit
 		echo "<div class='center'>";
 		echo "<form name ='email_template_edit' action='config.form.php' method='post' enctype='multipart/form-data'>";
-		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<tr><td style='font-size:12pt; font-weight:bold; text-align:center;'>Protocols Manager - ".__('Email')." ".__('Configuration')."</td></tr>";
-		echo "</table>";
 		
 		echo "<table class='tab_cadre_fixe'>";
-		echo "<tr><th colspan='3'>".__('Create')." ".__('email template')."</th></tr>";
+		echo "<tr><th colspan='3'>".__('Create')." ".__('email template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Email-sending-configuration' target='_blank'><img src='../img/help.png' width='25px' height='25px' align='right'></a></th></tr>";
 		echo "<tr><td>".__('Template name')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='tname' style='width:80%;' value='$tname'></td></tr>";
 		echo "<tr><td>".__('Send to user')."</td><td><input type='radio' name='send_user' value='1' class='eboxes' ";
 		if ($send_user == 1)
@@ -306,6 +303,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		} else {
 		
 			$template_name = $_POST['template_name'];
+			$template_uppercontent = $_POST['template_uppercontent'];
 			$template_content = $_POST['template_content'];
 			$template_footer = $_POST['footer_text'];
 			$font = $_POST["font"];
@@ -336,6 +334,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				
 				$DB->insert('glpi_plugin_protocolsmanager_config', [
 					'name' => $template_name,
+					'upper_content' => $template_uppercontent,
 					'content' => $template_content,
 					'footer' => $template_footer,
 					'logo' => $full_img_name,
@@ -360,6 +359,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 					$DB->update('glpi_plugin_protocolsmanager_config', [
 							'name' => $template_name,
 							'content' => $template_content,
+							'upper_content' => $template_uppercontent,
 							'footer' => $template_footer,
 							'logo' => $full_img_name,
 							'font' => $font,
@@ -379,6 +379,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 					$DB->update('glpi_plugin_protocolsmanager_config', [
 							'name' => $template_name,
 							'content' => $template_content,
+							'upper_content' => $template_uppercontent,
 							'footer' => $template_footer,
 							'font' => $font,
 							'fontsize' => $fontsize,

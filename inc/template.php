@@ -18,12 +18,12 @@ footer
 
 #items th
 {
-	border: solid 0.5px black;
+	border: solid 0.5px black; padding: 2px;
 }
 
 #items td
 {
-	border: solid 0.5px black;
+	border: solid 0.5px black; padding: 2px;
 	<?php 
 	if ($breakword == 1) {
 		echo 'word-wrap: break-word;';
@@ -55,6 +55,14 @@ footer
 			</td>
 		</tr>
 	</table>
+<br>
+<table>
+	<tr>
+		<td style="weight:100%;">
+<?php echo $upper_content; ?>
+		</td>
+	</tr>
+</table>
 <br>
 <table id="items" cellspacing="0">
 <?php 
