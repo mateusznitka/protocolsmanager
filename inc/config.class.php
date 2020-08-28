@@ -132,7 +132,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<input type='hidden' name='mode' value='$mode'>";
 		echo "<table class='tab_cadre_fixe'>";
 		//echo "<tr><th></th>";
-		echo "<tr><th colspan='3'>".__('Create')." ".__('template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='25px' height='25px' align='right'></a></th></tr>";
+		echo "<tr><th colspan='3'>".__('Create')." ".__('template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
 		echo "<tr><td>".__('Template name')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
 		echo "<tr><td>Font</td><td colspan='2'><select name='font' style='width:150px'>";
 			foreach($fonts as $code => $fontname) {
@@ -194,7 +194,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "&nbsp&nbsp<input type='checkbox' name='img_delete' value='$img_delete'>&nbsp ".__('Delete')." ".__('File');
 		}
 		echo "</td></tr>";
-		echo "<tr><td>".__('Enable email sending')."</td><td><input type='radio' name='email_mode' value='1'";
+		echo "<tr><td>".__('Enable email autosending')."</td><td><input type='radio' name='email_mode' value='1'";
 		if ($email_mode == 1)
 			echo "checked='checked'";
 		echo "> ON</td>";
@@ -271,7 +271,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<form name ='email_template_edit' action='config.form.php' method='post' enctype='multipart/form-data'>";
 		
 		echo "<table class='tab_cadre_fixe'>";
-		echo "<tr><th colspan='3'>".__('Create')." ".__('email template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Email-sending-configuration' target='_blank'><img src='../img/help.png' width='25px' height='25px' align='right'></a></th></tr>";
+		echo "<tr><th colspan='3'>".__('Create')." ".__('email template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Email-sending-configuration' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
 		echo "<tr><td>".__('Template name')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='tname' style='width:80%;' value='$tname'></td></tr>";
 		echo "<tr><td>".__('Send to user')."</td><td><input type='radio' name='send_user' value='1' class='eboxes' ";
 		if ($send_user == 1)
