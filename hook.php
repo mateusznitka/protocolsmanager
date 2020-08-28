@@ -106,14 +106,29 @@ function plugin_protocolsmanager_install() {
 		
 	}
 	
-		//update config table if upgrading from 1.2
+		//update config table if upgrading from 1.1.2
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'fontsize')) {
 		
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
 					ADD fontsize varchar(255)
 						AFTER font,
 					ADD breakword int(2)
-						AFTER fontsize,
+						AFTER fontsize";
+		
+		$DB->queryOrDie($query, $DB->error());
+		
+		$query = "UPDATE glpi_plugin_protocolsmanager_config
+					SET serial_mode=1, orientation='p', fontsize='9', breakword=1";
+		
+		$DB->queryOrDie($query, $DB->error());
+		
+	}
+
+	
+	//update config table if upgrading from 1.2		
+	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'email_mode')) {
+		
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
 					ADD email_mode int(2)
 						AFTER breakword,
 					ADD email_template int(2)
@@ -122,7 +137,7 @@ function plugin_protocolsmanager_install() {
 		$DB->queryOrDie($query, $DB->error());
 		
 		$query = "UPDATE glpi_plugin_protocolsmanager_config
-					SET serial_mode=1, orientation='p', fontsize='9', breakword=1, email_mode=2";
+					SET email_mode=2";
 		
 		$DB->queryOrDie($query, $DB->error());
 		
