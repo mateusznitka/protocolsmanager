@@ -457,7 +457,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$output = $html2pdf->output();
 			file_put_contents(GLPI_UPLOAD_DIR .'/'.$doc_name, $output);
 			
-			$doc_id = self::createDoc($doc_name, $notes);
+			$doc_id = self::createDoc($doc_name, $notes, $id);
 			
 			if ($email_mode == 1) {
 				
@@ -497,10 +497,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		}
 		
 		//create GLPI document
-		static function createDoc($doc_name, $notes) {
+		static function createDoc($doc_name, $notes, $id) {
+			global $DB, $CFG_GLPI;
+			
+			$req = $DB->request(
+					'glpi_users',
+					['id' => $id ]);
+			
+			if ($row = $req->next()) {
+				$entity = $row["entities_id"];
+			}
+			
 			$input = [];
 			$doc = new Document();
-			$input["entities_id"] = $_SESSION['glpiactive_entity'];
+			$input["entities_id"] = $entity;
 			$input["name"] = date('mdY_Hi');
 			$input["upload_file"] = $doc_name;
 			$input["documentcategories_id"] = 0;
