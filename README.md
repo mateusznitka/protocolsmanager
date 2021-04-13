@@ -15,6 +15,9 @@ GLPI Plugin to make PDF reports with user inventory.
 * New text field in template above the table
 * Now you can use fields: Owner name - {owner}, current date - {cur_date} and admin name - {admin} in template text fields and email content and subject.
 * Fixed some bugs
+## In 1.4.2:
+* Fixed one column mode in serial number
+* Document is now assigned to default user's entity
 
 ## Compatibility
 GLPI 9.3 or higher
