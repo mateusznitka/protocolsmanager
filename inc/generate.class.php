@@ -566,6 +566,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if ($row = $req->next()) {
 				$entity = $row["entities_id"];
 			}
+
+			if (!Session::haveAccessToEntity($entity)) {
+				$entity = Session::getActiveEntity();
+			}
 			
 			$input = [];
 			$doc = new Document();
