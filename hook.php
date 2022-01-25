@@ -152,7 +152,14 @@ function plugin_protocolsmanager_install() {
 		
 		$DB->queryOrDie($query, $DB->error());
 	}
-	
+
+		//update email_content field
+	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
+
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_emailconfig MODIFY COLUMN email_content TEXT";
+
+		$DB->queryOrDie($query, $DB->error());
+	}
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
 		
@@ -160,7 +167,7 @@ function plugin_protocolsmanager_install() {
 					id INT(11) NOT NULL auto_increment,
 					tname varchar(255),
 					send_user int(2),
-					email_content varchar(255),
+					email_content text,
 					email_subject varchar(255),
 					email_footer varchar(255),
 					recipients varchar(255),
