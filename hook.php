@@ -153,14 +153,7 @@ function plugin_protocolsmanager_install() {
 		$DB->queryOrDie($query, $DB->error());
 	}
 
-		//update email_content field
-	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
 
-		$query = "ALTER TABLE glpi_plugin_protocolsmanager_emailconfig MODIFY COLUMN email_content TEXT";
-
-		$DB->queryOrDie($query, $DB->error());
-	}
-	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
 		
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_emailconfig (
@@ -176,7 +169,16 @@ function plugin_protocolsmanager_install() {
 					
 		$DB->queryOrDie($query, $DB->error());
 
-	}		
+	}	
+	
+	//update email_content field
+	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
+
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_emailconfig MODIFY COLUMN email_content TEXT";
+
+		$DB->queryOrDie($query, $DB->error());
+	}
+	
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
       
