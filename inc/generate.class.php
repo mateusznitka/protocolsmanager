@@ -1,5 +1,7 @@
 <?php
-
+if (!defined('GLPI_ROOT')) {
+	die("Sorry. You can't access directly to this file");
+ }
 //$autoload = dirname(__DIR__) . '/vendor/autoload.php';
 //require_once $autoload;
 
@@ -20,9 +22,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$tab_access = self::checkRights();
 		
-			if ($tab_access == 'w') {	
+			if ($tab_access == 'w') {
 				$PluginProtocolsmanagerGenerate = new self();
-				$PluginProtocolsmanagerGenerate->showContent($item);	
+				$PluginProtocolsmanagerGenerate->showContent($item);
 			} else {
 				echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__("Access denied")."</div>";
 			}
@@ -49,16 +51,55 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			global $DB, $CFG_GLPI;
 			$id = $item->getField('id');
 			$type_user   = $CFG_GLPI['linkuser_types'];
-			$field_user  = 'users_id';
+			# TODO: check for fields plugin
+			$fieldsitemtableprefix = 'glpi_plugin_fields_';
 			$rand = mt_rand();
-			
 			$counter = 0;
 			
-			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand'	action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+			#TODO - validate user field name
+			if (isset($_SESSION['userfield'])) {
+				$field_user = $_SESSION['userfield'];
+			}
+			else {
+				$field_user = 'users_id';
+			}
+
+			$User_Fields = $DB->request(['glpi_plugin_fields_fields','glpi_plugin_fields_containers'],
+				['FIELDS' => ['glpi_plugin_fields_fields' => ['name AS fieldname' ,'label'],
+				 			 'glpi_plugin_fields_containers' => ['name AS containername']],
+				['FKEY' => ['glpi_plugin_fields_fields' => 'plugin_fields_containers_id',
+							'glpi_plugin_fields_containers'  => 'id']],
+				['AND' => [ 'glpi_plugin_fields_fields.type' => "dropdownuser"]]
+				]);
+		/*  SELECT glpi_plugin_fields_fields.name AS fieldname,
+			glpi_plugin_fields_fields.label,
+			glpi_plugin_fields_containers.name AS containername
+			FROM glpi_plugin_fields_fields,glpi_plugin_fields_containers
+			where  glpi_plugin_fields_fields.plugin_fields_containers_id=glpi_plugin_fields_containers.id
+			AND glpi_plugin_fields_fields.type="dropdownuser"
+		*/
+			echo "<form method='post' name='user_field$rand' id='user_field$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+			echo "<table class='tab_cadre_fixe'>";
+			echo "<tr><td style ='width:25%'></td>";
+			echo "<td class='center' style ='width:25%'>";
+			echo "<select name='userfield' style='font-size:14px; width:95%'>";
+				foreach ($User_Fields as $fuid => $userfield) {
+					echo '<option value="'.$userfield["fieldname"].'" '.($userfield["fieldname"] == $field_user ? 'selected' : '').'>'.__($userfield["label"],'fields').'</option>';
+					$containerName = ($userfield["fieldname"] == $field_user ? $userfield["containername"] : '');
+				}
+			echo "<option value='users_id' ".('users_id' == $field_user ? 'selected' : '').">".__('User')."</option>";
+			echo "<option value='users_id_tech' ".('users_id_tech' == $field_user ? 'selected' : '').">".__('Technician')."</option>";
+			echo "</select></td>";
+			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field')."'></td>";
+			echo "<td style='width:30%'></td></tr>";
+			echo "</table>";
+			Html::closeForm();
+			
+			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
 			echo "<select name='list' style='font-size:14px; width:95%'>";
-				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config', 
+				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config',
 				['FIELDS' => ['glpi_plugin_protocolsmanager_config' => ['id', 'name']]]) as $uid => $list) {
 					echo '<option value="';
 					echo $list["id"];
@@ -70,6 +111,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<td style='width:10%'><input type='submit' name='generate' class='submit' value='".__('Create')."'></td>";
 			echo "<td style='width:30%'></td></tr>";
 			echo "<tr><td></td><td colspan='2'><input type='text' name='notes' placeholder='".__('Note')."' style='width:89%; font-size:14px; padding: 2px'></td><td></td></tr>";
+			//TODO - preety look
+			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Curent Fields container: " . $containerName . "</td><td style='width:10%'></td><td style='width:10%'></td></tr>";
 			echo "</table>";
 			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
 			$header = "<th width='10'><input type='checkbox' class='checkall' style='height:16px; width: 16px;'></th>";
@@ -81,35 +124,51 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$header .= "<th>".__('Inventory number')."</th>";
 			$header .= "<th>".__('Comments')."</th></tr>";
 			echo $header;
-			
+				
 			foreach ($type_user as $itemtype) {
 				if (!($item = getItemForItemtype($itemtype))) {
 					continue;
 				}
 				if ($item->canView()) {
 					$itemtable = getTableForItemType($itemtype);
-					$iterator_params = [
-					   'FROM'   => $itemtable,
-					   'WHERE'  => [$field_user => $id]
-					];
+					$fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$itemtype" . "$containerName" .'s');
+					if (("$field_user" == 'users_id') or ("$field_user" == 'users_id_tech')) {
+						$iterator_params = [
+							'FROM' => $itemtable,
+							'WHERE' => [$field_user => $id]
+						];
+					}
+					else {
+						$sub_query = new QuerySubQuery([
+							'SELECT' => 'items_id',
+							'FROM' => $fieldsitemtablewithuser,
+							'WHERE' => ['itemtype' => $itemtype, $field_user => $id]
+							]);
+							
+							$iterator_params = [
+							'FROM' => $itemtable,
+							'WHERE' => ['id' => $sub_query]
+							];
+					}
+					
 					if ($item->maybeTemplate()) {
-					   $iterator_params['WHERE']['is_template'] = 0;
+						$iterator_params['WHERE']['is_template'] = 0;
 					}
 					
 					if ($item->maybeDeleted()) {
-					   $iterator_params['WHERE']['is_deleted'] = 0;
+						$iterator_params['WHERE']['is_deleted'] = 0;
 					}
 					
 					$item_iterator = $DB->request($iterator_params);
 					$type_name = $item->getTypeName();
 					
 					while ($data = $item_iterator->next()) {
-						$cansee = $item->can($data["id"], READ);
-						   $link   = $data["name"];
+							$cansee = $item->can($data["id"], READ);
+							$link  = $data["name"];
 							if ($cansee) {
 								$link_item = $item::getFormURLWithID($data['id']);
 								if ($_SESSION["glpiis_ids_visible"] || empty($link)) {
-								 $link = sprintf(__('%1$s (%2$s)'), $link, $data["id"]);
+									$link = sprintf(__('%1$s (%2$s)'), $link, $data["id"]);
 								}
 								$link = "<a href='".$link_item."'>".$link."</a>";
 							}
@@ -121,14 +180,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<tr class='tab_bg_1'>";
 							echo "<td width='10'>";
 							echo "<input type='checkbox' name='number[]' value='$counter' class='child' style='height:16px; width: 16px;'>";
-							echo "</td>";	
+							echo "</td>";
 							echo "<td class='center'>$type_name</td>";
 							echo "<td class='center'>";
 							
 							if (isset($data["manufacturers_id"]) && !empty($data["manufacturers_id"])) {
 								
 								$man_id = $data["manufacturers_id"];
-														
+								
 								$req = $DB->request(
 									'glpi_manufacturers',
 									['id' => $man_id ]);
@@ -157,7 +216,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								$man_name = explode(' ',trim($man_name))[0];
 								echo $man_name.' '.$mod_name;
 								
-							} 
+							}
 							else {
 								echo '&nbsp;';
 								$man_name = '';
@@ -214,14 +273,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							
 							echo "<td class='center'><input type='text' name='comments[]'></td>";
 							echo "</tr>";
-
+							
 							
 						$counter++;
 					}
 					
 				}
 				
-			}				
+			}
 				
 				echo "</table>";
 				Html::closeForm();
@@ -229,7 +288,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 				
 				//send email popup
-				echo "<div class='dialog' title='".__('Send')." email'><p>Select recipients from template or enter manually to send email</p><br><br>";	
+				echo "<div class='dialog' title='".__('Send')." email'><p>Select recipients from template or enter manually to send email</p><br><br>";
 				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
 				
 				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
@@ -237,12 +296,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "<textarea style='width:90%; height:30px' name='em_list' class='man_recs' placeholder='Recipients (use ; to separate emails)'></textarea><br><br>";
 				echo "<input type='text' style='width:90%' name='email_subject' class='man_recs' placeholder='Subject'><br><br>";
 				echo "<textarea style='width:90%; height:80px' name='email_content' class='man_recs' placeholder='Content'></textarea><br><br>";
-
+				
 				
 				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'><b> Select recipients from template</b><br><br>";
-				
-				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
 
+				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
+				
 				foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 					echo '<option value="';
 					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"]."|".$list["send_user"];
@@ -250,12 +309,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo $list["tname"]." - ".$list["recipients"];
 					echo '</option>';
 				}
-
+				
 				echo "</select><br><br><input type='submit' name='send' class='submit' value=".__('Send').">";
 				echo "<input type='hidden' name='author' value='$author'>";
 				echo "<input type='hidden' name='owner' value='$owner'>";
 				Html::closeForm();
-				echo "</div>"; 
+				echo "</div>";
 				
 				//add custom row
 				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
@@ -282,7 +341,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>";
 				
 				return true;
-	
+			
 		}
 		
 		//show user's generated documents
@@ -327,20 +386,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					echo "<td class='center'>";
 					echo $Doc->getField("comment");
-					echo "</td>";					
+					echo "</td>";
 					
 					echo "<td class='center'>";
 					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
 					echo "<a class='openDialog' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
 					echo "</td>";
-
+					
 					
 					echo "</tr>";
 
 					$doc_counter++;
 				}
 		}
-
+		
 		
 		//make PDF and save to DB
 		static function makeProtocol() {
@@ -400,18 +459,18 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 			
 			$comments = $_POST['comments'];
-		
+			
 			if (!isset($font) || empty($font)) {
 				$font = 'dejavusans';
 			}
 
 			if (!isset($fontsize) || empty($fontsize)) {
 				$fontsize = '9';
-			}				
+			}
 			
 			if (!isset($city) || empty($city)) {
 				$city = '';
-			}			
+			}
 			
 			if (!isset($email_content) || empty($email_content)) {
 				$email_content = '';
@@ -430,7 +489,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 			if (!isset($recipients) || empty($recipients)) {
 				$recipients = '';
-			}			
+			}
 			
 			//change margin if no image
 			if (!isset($full_img_name) || empty($full_img_name)) {
@@ -453,7 +512,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$html2pdf->setPaper('A4', $orientation);
 			$html2pdf->render();
 			
-			$doc_name = $prot_num."-".date('mdY').'.pdf';	
+			$doc_name = $prot_num."-".date('mdY').'.pdf';
 			$output = $html2pdf->output();
 			file_put_contents(GLPI_UPLOAD_DIR .'/'.$doc_name, $output);
 			
@@ -506,6 +565,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			if ($row = $req->next()) {
 				$entity = $row["entities_id"];
+			}
+
+			if (!Session::haveAccessToEntity($entity)) {
+				$entity = Session::getActiveEntity();
 			}
 			
 			$input = [];
@@ -574,7 +637,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			if ($send_user == 1) {
 				$nmail->AddAddress($owner_email);
-			}			
+			}
 			
 			foreach($recipients_array as $recipient) {
 				
@@ -662,12 +725,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			if ($send_user == 1) {
 				$nmail->AddAddress($owner_email);
-			}			
+			}
 			
 			foreach($recipients_array as $recipient) {
 				
 				$nmail->AddAddress($recipient); //do konfiguracji
-			}			
+			}
 			
 			$req = $DB->request(
 					'glpi_documents',
@@ -702,7 +765,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 		}
 		
-
+	
 }
 
 
@@ -727,60 +790,60 @@ $(function(){
 $(function(){
 	
 	$(".dialog").dialog({ autoOpen: false, modal: true, height: 500, width: 500 });
- 
+	
 	$("#myTable").on('click','.openDialog',function(){
-         // get the current row
-        var currentRow=$(this).closest("tr"); 
-         
-        var docid=currentRow.find(".docid").html(); // get current row 1st table cell TD value
-
+		// get the current row
+		var currentRow=$(this).closest("tr");
+		
+		var docid=currentRow.find(".docid").html(); // get current row 1st table cell TD value
+		
 		$('#dialogVal').val(docid);
 		$(".dialog").dialog('open');
 		
-		});        
- 
+		});
+		
 });
 
 $(function(){
-    $('.checkall').on('click', function() {
-        $('.child').prop('checked', this.checked)
-    });
+	$('.checkall').on('click', function() {
+	$('.child').prop('checked', this.checked)
+	});
 });
 
 $(function(){
-    $('.checkalldoc').on('click', function() {
-        $('.docchild').prop('checked', this.checked)
-    });
+	$('.checkalldoc').on('click', function() {
+		$('.docchild').prop('checked', this.checked)
+	});
 });
 
 $(function() {
 
-	var counter = $('.child').length;
-	
-	var ctr = 0;
-	
-	    $("#addNewRow").on("click", function () {
-        var newRow = $("<tr class='tab_bg_1'>");
-        var cols = "";
+		var counter = $('.child').length;
+		
+		var ctr = 0;
+		
+		$("#addNewRow").on("click", function () {
+			var newRow = $("<tr class='tab_bg_1'>");
+		var cols = "";
 		
 		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:9px;"></td>';
-        cols += '<td class="center"><input type="text" style="width:80% " name="type_name[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="man_name[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="item_name[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="serial[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="otherserial[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
-
-        newRow.append(cols);
-        $("#additional_table").append(newRow);
+		cols += '<td class="center"><input type="text" style="width:80% " name="type_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90% "name="man_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90% "name="item_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90% "name="serial[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90% "name="otherserial[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90% "name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+		
+		newRow.append(cols);
+		$("#additional_table").append(newRow);
 		counter++;
-        ctr++;
-    });
+		ctr++;
+	});
 	
-    $("#additional_table").on("click", ".ibtnDel", function (event) {
-        $(this).closest("tr").remove();       
-        ctr -= 1
-    });
+	$("#additional_table").on("click", ".ibtnDel", function (event) {
+		$(this).closest("tr").remove();
+		ctr -= 1
+	});
 
 
 });
