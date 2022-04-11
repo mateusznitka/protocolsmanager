@@ -1,3 +1,5 @@
+# ***END OF SUPPORT***
+Unfortunately, I don't have time to develop this project anymore. Feel free to fork it and develop it by yourself. Hope this functionality will be in GLPI core someday.
 # Protocols Manager
 GLPI Plugin to make PDF reports with user inventory.
 ## Features
