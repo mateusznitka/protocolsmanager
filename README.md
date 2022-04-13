@@ -2,6 +2,7 @@
 GLPI Plugin to make PDF reports with user inventory.
 ## Features
 * Making PDFs with all or selected user inventory
+* Choice between fields in the asset item - user, technician, or any user field added to the asset items by the "Fields" plugin.
 * Saving protocols in GLPI Documents
 * Possibility to create different protocol templates
 * Templates have configurable name, font, orientation, logo image, city, content and footer
