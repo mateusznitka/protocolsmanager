@@ -117,8 +117,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
 			$header = "<th width='10'><input type='checkbox' class='checkall' style='height:16px; width: 16px;'></th>";
 			$header .= "<th>".__('Type')."</th>";
-			$header .= "<th>".__('Manufacturer');
-			$header .= " ".__('Model')."</th>";
+			$header .= "<th>".__('Manufacturer')."</th>";
+			$header .= "<th>".__('Model')."</th>";
 			$header .= "<th>".__('Name')."</th>";
 			$header .= "<th>".__('Serial number')."</th>";
 			$header .= "<th>".__('Inventory number')."</th>";
@@ -195,32 +195,36 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								if ($row = $req->next()) {
 									$man_name = $row["name"];
 								}
-								
-								$modeltypes = ["computer", "phone", "monitor", "networkequipment", "printer", "peripheral"];
-								$mod_name = '';
-								
-								foreach($modeltypes as $prefix) {
-									if(isset($data[$prefix.'models_id']) && !empty($data[$prefix.'models_id'])) {
-										$mod_id = $data[$prefix.'models_id'];
-										
-										$req2 = $DB->request(
-											'glpi_'.$prefix.'models',
-											['id' => $mod_id ]);
-											
-										if ($row2 = $req2->next()) {
-											$mod_name = $row2["name"];
-										}
-									}
-								}
-								
 								$man_name = explode(' ',trim($man_name))[0];
-								echo $man_name.' '.$mod_name;
-								
+								echo $man_name;
 							}
 							else {
 								echo '&nbsp;';
 								$man_name = '';
-								$mod_name = '';
+							}
+							echo "</td>";
+							echo "<td class='center'>";
+							
+							$modeltypes = ["computer", "phone", "monitor", "networkequipment", "printer", "peripheral"];
+							$mod_name = '';
+							
+							foreach($modeltypes as $prefix) {
+								if(isset($data[$prefix.'models_id']) && !empty($data[$prefix.'models_id'])) {
+									$mod_id = $data[$prefix.'models_id'];
+									
+									$req2 = $DB->request(
+										'glpi_'.$prefix.'models',
+										['id' => $mod_id ]);
+										
+									if ($row2 = $req2->next()) {
+										$mod_name = $row2["name"];
+									}
+									echo $mod_name;
+								}
+								else {
+									echo '&nbsp;';
+									$mod_name = '';
+								}
 							}
 							echo "</td>";
 							echo "<td class='center'>$link</td>";
