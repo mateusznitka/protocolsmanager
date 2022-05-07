@@ -37,7 +37,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$req = $DB->request('glpi_plugin_protocolsmanager_profiles',
 							['profile_id' => $active_profile]);
 							
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$tab_access = $row["tab_access"];
 			} else {
 				$tab_access = "";
@@ -162,7 +162,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					$item_iterator = $DB->request($iterator_params);
 					$type_name = $item->getTypeName();
 					
-					while ($data = $item_iterator->next()) {
+					while ($data = $item_iterator->current()) {
 							$cansee = $item->can($data["id"], READ);
 							$link  = $data["name"];
 							if ($cansee) {
@@ -192,7 +192,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 									'glpi_manufacturers',
 									['id' => $man_id ]);
 								
-								if ($row = $req->next()) {
+								if ($row = $req->current()) {
 									$man_name = $row["name"];
 								}
 								$man_name = explode(' ',trim($man_name))[0];
@@ -216,7 +216,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 										'glpi_'.$prefix.'models',
 										['id' => $mod_id ]);
 										
-									if ($row2 = $req2->next()) {
+									if ($row2 = $req2->current()) {
 										$mod_name = $row2["name"];
 									}
 									echo $mod_name;
@@ -254,15 +254,17 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							if (isset($data["name"]) && !empty($data["name"])) {
 								$item_name = $data["name"];
 							}
-							else
+							else {
+								echo '&nbsp;';
 								$item_name = '';
-							
+							}
+
 							$Owner = new User();
 							$Owner->getFromDB($id);
 							$Author = new User();
 							$Author->getFromDB(Session::getLoginUserID());
-							$owner = $Owner->getRawName();
-							$author = $Author->getRawName();
+							$owner = $Owner->getNameField();
+							$author = $Author->getNameField();
 							
 							
 							echo "<input type='hidden' name='owner' value ='$owner'>";
@@ -274,16 +276,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<input type='hidden' name='otherserial[]' value='$otherserial'>";
 							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
 							echo "<input type='hidden' name='user_id' value='$id'>";
-							
 							echo "<td class='center'><input type='text' name='comments[]'></td>";
 							echo "</tr>";
 							
-							
 						$counter++;
+						$item_iterator->next();
 					}
-					
 				}
-				
 			}
 				
 				echo "</table>";
@@ -429,7 +428,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'glpi_plugin_protocolsmanager_config',
 				['id' => $doc_no ]);
 				
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$content = nl2br($row["content"]);
 				$content = str_replace("{cur_date}", date("d.m.Y"), $content);
 				$content = str_replace("{owner}", $owner, $content);
@@ -455,7 +454,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'glpi_plugin_protocolsmanager_emailconfig',
 				['id' => $email_template ]);
 				
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$send_user = $row["send_user"];
 				$email_subject = $row["email_subject"];
 				$email_content = $row["email_content"];
@@ -547,7 +546,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			global $DB;
 			
 			$req = $DB->request('SELECT MAX(id) as max FROM glpi_plugin_protocolsmanager_protocols');
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$nextnum = $row["max"];
 				if (!$nextnum) {
 					return 1;
@@ -567,7 +566,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					'glpi_users',
 					['id' => $id ]);
 			
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$entity = $row["entities_id"];
 			}
 
@@ -624,7 +623,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					'glpi_documents',
 					['id' => $doc_id ]);
 			
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$path = $row["filepath"];
 				$filename = $row["filename"];
 			}
@@ -635,7 +634,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					'glpi_useremails',
 					['users_id' => $id, 'is_default' => 1]);
 					
-			if ($row2 = $req2->next()) {
+			if ($row2 = $req2->current()) {
 				$owner_email = $row2["email"];
 			}
 			
@@ -723,7 +722,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					'glpi_useremails',
 					['users_id' => $id, 'is_default' => 1]);
 					
-			if ($row2 = $req2->next()) {
+			if ($row2 = $req2->current()) {
 				$owner_email = $row2["email"];
 			}
 			
@@ -740,7 +739,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					'glpi_documents',
 					['id' => $doc_id ]);
 			
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$path = $row["filepath"];
 				$filename = $row["filename"];
 			}

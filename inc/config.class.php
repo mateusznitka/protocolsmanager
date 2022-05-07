@@ -20,7 +20,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$req = $DB->request('glpi_plugin_protocolsmanager_profiles',
 						['profile_id' => $active_profile]);
 						
-		if ($row = $req->next()) {
+		if ($row = $req->current()) {
 			$plugin_conf = $row["plugin_conf"];
 		} else {
 			$plugin_conf = "";
@@ -56,7 +56,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				'glpi_plugin_protocolsmanager_config',
 				['id' => $edit_id ]);
 				
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$template_uppercontent = $row["upper_content"];
 				$template_content = $row["content"];
 				$template_footer = $row["footer"];
@@ -250,7 +250,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				'glpi_plugin_protocolsmanager_emailconfig',
 				['id' => $email_edit_id ]);
 				
-			if ($row = $req->next()) {
+			if ($row = $req->current()) {
 				$tname = $row["tname"];
 				$send_user = $row["send_user"];
 				$email_subject = $row["email_subject"];
