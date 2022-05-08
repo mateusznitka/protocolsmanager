@@ -161,8 +161,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					$item_iterator = $DB->request($iterator_params);
 					$type_name = $item->getTypeName();
+					$item_iterator->current();
 					
-					while ($data = $item_iterator->current()) {
+					foreach ($item_iterator as $data) {
 							$cansee = $item->can($data["id"], READ);
 							$link  = $data["name"];
 							if ($cansee) {
@@ -263,10 +264,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							$Owner->getFromDB($id);
 							$Author = new User();
 							$Author->getFromDB(Session::getLoginUserID());
-							$owner = $Owner->getNameField();
-							$author = $Author->getNameField();
-							
-							
+							$owner = $Owner->getFriendlyName();
+							$author = $Author->getFriendlyName();
+                            
 							echo "<input type='hidden' name='owner' value ='$owner'>";
 							echo "<input type='hidden' name='author' value ='$author'>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
@@ -280,7 +280,6 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "</tr>";
 							
 						$counter++;
-						$item_iterator->next();
 					}
 				}
 			}
