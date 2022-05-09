@@ -154,7 +154,7 @@ function plugin_protocolsmanager_install() {
 	}
 
 		//update email_content field
-	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
+	if ($DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
 
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_emailconfig MODIFY COLUMN email_content TEXT";
 

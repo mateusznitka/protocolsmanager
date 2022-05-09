@@ -21,7 +21,7 @@ class PluginProtocolsmanagerProfile extends CommonDBTM
 			'glpi_plugin_protocolsmanager_profiles',
 			['profile_id' => $profile_id]);
 			
-		if ($row = $req->next()) {
+		if ($row = $req->current()) {
 			$plugin_conf = $row['plugin_conf'];
 			$tab_access = $row['tab_access'];
 		}
