@@ -6,8 +6,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	function showFormProtocolsmanager() {
 		global $CFG_GLPI, $DB;
 		$plugin_conf = self::checkRights();
-		if ($plugin_conf == 'w') {	
-			self::displayContent();	
+		if ($plugin_conf == 'w') {
+			self::displayContent();
 		} else {
 			echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__("Access denied")."</div>";
 		}
@@ -565,15 +565,10 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			'glpi_plugin_protocolsmanager_emailconfig', [
 				'id' => $email_conf_id
 			]
-		);	
-		
-		
-		
+		);
 	}
 	
 	
-
-
 }
 
 ?>

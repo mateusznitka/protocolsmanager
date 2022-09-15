@@ -95,7 +95,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "</table>";
 			Html::closeForm();
 			
-			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+			echo "<form method='post' name='protocolsmanager_form$rand'
+					id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
 			echo "<select name='list' style='font-size:14px; width:95%'>";
@@ -259,14 +260,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								echo '&nbsp;';
 								$item_name = '';
 							}
-
+						
 							$Owner = new User();
 							$Owner->getFromDB($id);
 							$Author = new User();
 							$Author->getFromDB(Session::getLoginUserID());
 							$owner = $Owner->getFriendlyName();
 							$author = $Author->getFriendlyName();
-                            
+							
 							echo "<input type='hidden' name='owner' value ='$owner'>";
 							echo "<input type='hidden' name='author' value ='$author'>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
@@ -357,7 +358,6 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'glpi_plugin_protocolsmanager_protocols',
 				['user_id' => $id ]) as $export_data => $exports) {
 					
-					
 					echo "<tr class='tab_bg_1'>";
 					
 					echo "<td class='center'>";
@@ -397,7 +397,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					
 					echo "</tr>";
-
+				
 					$doc_counter++;
 				}
 		}
@@ -465,7 +465,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if (!isset($font) || empty($font)) {
 				$font = 'dejavusans';
 			}
-
+			
 			if (!isset($fontsize) || empty($fontsize)) {
 				$fontsize = '9';
 			}
@@ -488,7 +488,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$email_subject = str_replace("{owner}", $owner, $email_subject);
 			$email_subject = str_replace("{admin}", $author, $email_subject);
 			$email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
-
+			
 			if (!isset($recipients) || empty($recipients)) {
 				$recipients = '';
 			}
@@ -537,7 +537,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'document_type' => $title
 				]
 			);
-				
+			
 		}
 		
 		
@@ -568,7 +568,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if ($row = $req->current()) {
 				$entity = $row["entities_id"];
 			}
-
+			
 			if (!Session::haveAccessToEntity($entity)) {
 				$entity = Session::getActiveEntity();
 			}
@@ -767,7 +767,6 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 		}
 		
-	
 }
 
 
