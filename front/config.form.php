@@ -1,6 +1,7 @@
 <?php
 	
 	include ('../../../inc/includes.php');
+	require_once dirname(__DIR__) . '/inc/mailReminder.php';
 	
 	Session::haveRight("config", UPDATE);
 	
@@ -14,7 +15,7 @@
 		$_SESSION['menu_mode'] = 't';
 		Html::back();
 		unset($_SESSION["menu_mode"]);
-	}	
+	}
 	
 	if (isset($_REQUEST['delete'])) {
 		$PluginProtocolsmanagerConfig::deleteConfigs();
@@ -28,20 +29,20 @@
 		$_SESSION['menu_mode'] = 'e';
 		Html::back();
 		unset($_SESSION["menu_mode"]);
-	}	
+	}
 	
 	if (isset($_REQUEST['delete_email'])) {
 		$PluginProtocolsmanagerConfig::deleteEmailConfigs();
 		$_SESSION['menu_mode'] = 'e';
 		Html::back();
 		unset($_SESSION["menu_mode"]);
-	}	
+	}
 	
 	if (isset($_REQUEST['cancel'])) {
 		$_SESSION['menu_mode'] = 't';
 		Html::back();
 		unset($_SESSION["menu_mode"]);
-	}	
+	}
 	
 	if (isset($_REQUEST['cancel_email'])) {
 		$_SESSION['menu_mode'] = 'e';

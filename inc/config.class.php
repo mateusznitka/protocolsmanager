@@ -517,6 +517,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "</table></div>";
 	}
 	
+	
 	static function setEmailsToSendReminder(){
 		$formData = self::getDataSettings();
 		$formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
@@ -643,7 +644,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 										<input type='hidden' name='witch_field_settings' value='how_often_remind' >
 										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
 									</td>
-							   </tr>";
+								</tr>";
 						Html::closeForm();
 					echo "
 					</div>

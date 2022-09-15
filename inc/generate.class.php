@@ -96,7 +96,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			Html::closeForm();
 			
 			echo "<form method='post' name='protocolsmanager_form$rand'
-					id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+					id='protocolsmanager_form$rand'
+					action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
 			echo "<select name='list' style='font-size:14px; width:95%'>";
@@ -260,7 +261,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								echo '&nbsp;';
 								$item_name = '';
 							}
-						
+							
 							$Owner = new User();
 							$Owner->getFromDB($id);
 							$Author = new User();

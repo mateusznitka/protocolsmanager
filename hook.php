@@ -1,6 +1,5 @@
 <?php
 
-
 function plugin_protocolsmanager_redefine_menus($menu) {
 	global $DB;
 	if (empty($menu)) {
@@ -13,6 +12,7 @@ function plugin_protocolsmanager_redefine_menus($menu) {
 		$query2 = 'SELECT * FROM `glpi_plugin_protocolsmanager_settings` WHERE id = 1';
 		$result = $DB->request($query)->current();
 		$result2 = $DB->request($query2)->current();
+		
 		if($result['field_count'] > 0 && $result2['protocols_save_on']){
 			$menu['protocols'] = [
 				'default' => '/plugins/protocolsmanager/front/protocols.form.php',
@@ -25,11 +25,17 @@ function plugin_protocolsmanager_redefine_menus($menu) {
 	return $menu;
 }
 
-
 function plugin_protocolsmanager_install() {
 	global $DB, $CFG_GLPI;
 	$version = plugin_version_protocolsmanager();
 	$migration = new Migration($version['version']);
+	
+	if (!countElementsInTable('glpi_crontasks', ['name' => 'PluginProtocolsmanagerReminder'])) {
+		Crontask::Register('PluginProtocolsmanagerReminder', 'PluginProtocolsmanagerReminder', DAY_TIMESTAMP, [
+			'param' => '',
+			'mode'  => CronTask::MODE_EXTERNAL
+		]);
+	}
 	
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_settings")) {
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_settings (
@@ -57,7 +63,7 @@ function plugin_protocolsmanager_install() {
 		
 		$DB->queryOrDie($query2, $DB->error());
 	}
-
+	
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_receipt")) {
 	
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_receipt (
@@ -71,7 +77,7 @@ function plugin_protocolsmanager_install() {
 		
 		$DB->query($query) or die($DB->error());
 	}
-
+	
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_confirm")) {
 		
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_confirm (
@@ -122,17 +128,18 @@ function plugin_protocolsmanager_install() {
 					delete_access char(1) collate utf8_unicode_ci default NULL,
 					PRIMARY KEY  (`id`)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-
+		
 		$DB->query($query) or die($DB->error());
-
+		
 		$id = $_SESSION['glpiactiveprofile']['id'];
 		$query = "INSERT INTO glpi_plugin_protocolsmanager_profiles (profile_id, plugin_conf, tab_access, make_access, delete_access) VALUES ('$id','w', 'w', 'w', 'w')";
-
+		
 		$DB->query($query) or die($DB->error());
 	}
 	
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_config')) {
+		
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_config (
 					id INT(11) NOT NULL auto_increment,
 					name VARCHAR(255),
@@ -203,7 +210,7 @@ function plugin_protocolsmanager_install() {
 		$DB->queryOrDie($query, $DB->error());
 		
 	}
-
+	
 	
 	//update config table if upgrading from 1.2
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'email_mode')) {
@@ -232,12 +239,12 @@ function plugin_protocolsmanager_install() {
 		
 		$DB->queryOrDie($query, $DB->error());
 	}
-
+	
 		//update email_content field
 	if ($DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
-
+		
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_emailconfig MODIFY COLUMN email_content TEXT";
-
+		
 		$DB->queryOrDie($query, $DB->error());
 	}
 	
@@ -255,7 +262,7 @@ function plugin_protocolsmanager_install() {
 					) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 					
 		$DB->queryOrDie($query, $DB->error());
-
+	
 	}
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
@@ -281,7 +288,7 @@ function plugin_protocolsmanager_install() {
 	if ($DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
 		return true;
 	}
-
+	
 	//execute the whole migration
 	$migration->executeMigration();
 	
@@ -293,15 +300,15 @@ function plugin_protocolsmanager_uninstall() {
 	
 	global $DB;
 	
-	$tables = array("glpi_plugin_protocolsmanager_receipt",
-					"glpi_plugin_protocolsmanager_settings",
-					"glpi_plugin_protocolsmanager_confirm",
-					"glpi_plugin_protocolsmanager_protocols",
+	$tables = array("glpi_plugin_protocolsmanager_protocols",
 					"glpi_plugin_protocolsmanager_config",
 					"glpi_plugin_protocolsmanager_profiles",
-					"glpi_plugin_protocolsmanager_emailconfig"
+					"glpi_plugin_protocolsmanager_emailconfig",
+					"glpi_plugin_protocolsmanager_receipt",
+					"glpi_plugin_protocolsmanager_settings",
+					"glpi_plugin_protocolsmanager_confirm"
 				);
-
+	
 	foreach($tables as $table)
 		{$DB->query("DROP TABLE IF EXISTS `$table`;");}
 	

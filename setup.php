@@ -12,9 +12,9 @@ function plugin_version_protocolsmanager() {
 function plugin_protocolsmanager_check_config() {
     return true;
 }
- 
 
-function plugin_protocolsmanager_check_prerequisites() { 
+
+function plugin_protocolsmanager_check_prerequisites() {
 		if (GLPI_VERSION>=10.0){
 			return true;
 		} else {
@@ -38,6 +38,8 @@ function plugin_init_protocolsmanager() {
 	Plugin::registerClass('PluginProtocolsmanagerProfile', array('addtabon' => array('Profile')));
 	
 	Plugin::registerClass('PluginProtocolsmanagerConfig', array('addtabon' => array('Config')));
+	
+	Plugin::registerClass('PluginProtocolsmanagerReminder');
 	
 	$PLUGIN_HOOKS['add_css']['protocolsmanager'] = 'css/styles.css';
 	
