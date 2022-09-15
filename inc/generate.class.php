@@ -95,7 +95,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "</table>";
 			Html::closeForm();
 			
-			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+			echo "<form method='post' name='protocolsmanager_form$rand'
+					id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
 			echo "<select name='list' style='font-size:14px; width:95%'>";
@@ -259,14 +260,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								echo '&nbsp;';
 								$item_name = '';
 							}
-
+						
 							$Owner = new User();
 							$Owner->getFromDB($id);
 							$Author = new User();
 							$Author->getFromDB(Session::getLoginUserID());
 							$owner = $Owner->getFriendlyName();
 							$author = $Author->getFriendlyName();
-                            
 							echo "<input type='hidden' name='owner' value ='$owner'>";
 							echo "<input type='hidden' name='author' value ='$author'>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
@@ -334,6 +334,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$header2 .= "<th>".__('File')."</th>";
 				$header2 .= "<th>".__('Creator')."</th>";
 				$header2 .= "<th>".__('Comment')."</th>";
+				if(self::checkSignProtocolsOn()) {
+					$header2 .= "<th>" . __('Status') . "</th>";
+				}
 				$header2 .= "<th>".__('Send email')."</th></tr>";
 				echo $header2;
 				
@@ -356,8 +359,6 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			foreach ($DB->request(
 				'glpi_plugin_protocolsmanager_protocols',
 				['user_id' => $id ]) as $export_data => $exports) {
-					
-					
 					echo "<tr class='tab_bg_1'>";
 					
 					echo "<td class='center'>";
@@ -389,6 +390,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "<td class='center'>";
 					echo $Doc->getField("comment");
 					echo "</td>";
+					if(self::checkSignProtocolsOn()){
+						echo "<td class='center'>";
+						echo $exports["confirmed"] == 0 ? __('No signed'): __('Signed') ;
+						echo "</td>";
+					}
 					
 					echo "<td class='center'>";
 					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
@@ -408,6 +414,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			global $DB, $CFG_GLPI;
 			
+			$protocolsSignOn = false;
 			$number = $_POST['number'];
 			$type_name = $_POST['type_name'];
 			$man_name = $_POST['man_name'];
@@ -537,7 +544,16 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'document_type' => $title
 				]
 			);
-				
+			
+			if(self::checkSignProtocolsOn()){
+				$DB->insert('glpi_plugin_protocolsmanager_receipt', [
+						'profile_id' => $id,
+						'confirmed' => 0,
+						'protocol_id' => $doc_id,
+						'modified' => $gen_date
+					]
+				);
+			}
 		}
 		
 		
@@ -767,7 +783,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 		}
 		
-	
+		static function checkSignProtocolsOn() {
+			global $DB;
+			$query = (['FROM' => 'glpi_plugin_protocolsmanager_settings', 'WHERE' => ['id' => 1]]);
+			return $DB->request($query)->next()['protocols_save_on'];
+		}
 }
 
 

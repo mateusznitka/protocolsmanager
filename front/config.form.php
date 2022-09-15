@@ -5,8 +5,8 @@
 	Session::haveRight("config", UPDATE);
 	
 	Html::header(PluginProtocolsmanagerConfig::getTypeName(1),
-               $_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");
-			   
+		$_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");
+		
 	$PluginProtocolsmanagerConfig = new PluginProtocolsmanagerConfig();
 	
 	if (isset($_REQUEST['save'])) {
@@ -49,7 +49,10 @@
 		unset($_SESSION["menu_mode"]);
 	}
 	
-
+	if (isset($_REQUEST['service_settings'])){
+		$PluginProtocolsmanagerConfig::setSettingsData($_POST);
+		Html::back();
+	}
 	
 	$PluginProtocolsmanagerConfig->showFormProtocolsmanager();
 	unset($_SESSION["menu_mode"]);

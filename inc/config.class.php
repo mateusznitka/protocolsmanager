@@ -6,8 +6,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	function showFormProtocolsmanager() {
 		global $CFG_GLPI, $DB;
 		$plugin_conf = self::checkRights();
-		if ($plugin_conf == 'w') {	
-			self::displayContent();	
+		if ($plugin_conf == 'w') {
+			self::displaySettings();
+			self::displayContent();
 		} else {
 			echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__("Access denied")."</div>";
 		}
@@ -28,6 +29,10 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		return $plugin_conf;
 	}
 	
+	static function displaySettings(){
+		self::setEmailsToSendReminder();
+	}
+
 	static function displayContent() {
 		global $CFG_GLPI, $DB;
 		
@@ -401,6 +406,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
 	}
 	
+	//new changes function
+	static function saveSettingsData() {
+		
+	}
+	
 	static function saveEmailConfigs() {
 		global $DB, $CFG_GLPI;
 		
@@ -507,6 +517,140 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "</table></div>";
 	}
 	
+	static function setEmailsToSendReminder(){
+		$formData = self::getDataSettings();
+		$formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
+		$formData['mail_confirm_on'] == 1 ? $emailConfirmationOn = 'checked' : $emailConfirmationOff = 'checked';
+		$formData['reminder_on'] == 1 ? $serviceReminderOn = 'checked' : $serviceReminderOff = 'checked';
+		($formData['reminder_on'] == 1 && $formData['protocols_save_on'] == 1) ? $emailSettings = '' : $emailSettings = 'display:none';
+		$formData['first_emial_reminder'] =  $formData['first_emial_reminder'] ?? ' - ';
+		$formData['second_emial_reminder'] =  $formData['second_emial_reminder'] ?? ' - ';
+		
+		//Array ( [id] => 1 [protocols_save_on] => 0 [reminder_on] => 0 [first_emial_reminder] => [second_emial_reminder] => [how_often_remind] => 0 )
+		echo "<div class='spaced'>
+				<table class='tab_cadre_fixehov'>
+				<div style='text-align:center;'><h2>ProtocolsManager Settings</h2></div>
+					<div>
+						<form method='post' action='config.form.php'>
+							<input type='hidden' name='menu_mode' value='e'>
+								<tr class='tab_bg_1' style='padding-top: 20px;'>
+									<td class='center' width='7%' style='padding-top: 20px;'>
+											". __('sign protococols service') . "
+									</td>
+									<td class='center' width='7%'>
+										" . __("on") . "
+										<input type='radio' name='protocols_save_on' value='1' ".$serviceSignOn.">
+									</td>
+									<td class='center' width='7%'>
+										" . __("off") . "
+										<input type='radio' name='protocols_save_on' value='0' ".$serviceSignOff.">
+									</td>
+									<td class='center' width='7%'>
+										<input type='hidden' name='witch_field_settings' value='protocols_save_on' >
+										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+									</td>
+							   </tr>";
+						Html::closeForm();
+				echo "<form method='post' action='config.form.php'>
+							   <input type='hidden' name='menu_mode' value='e'>
+							   <tr class='tab_bg_1' style='padding-top: 20px;'>
+									<td class='center' width='7%' style='padding-top: 20px;'>
+										". __('email confirmation') . "
+									</td>
+									<td class='center' width='7%'>
+										" . __("on") . "
+										<input type='radio' name='mail_confirm_on' value='1' ".$emailConfirmationOn.">
+									</td>
+									<td class='center' width='7%'>
+										" . __("off") . "
+									<input type='radio' name='mail_confirm_on' value='0' ".$emailConfirmationOff.">
+									</td>
+									<td class='center' width='7%'>
+										<input type='hidden' name='witch_field_settings' value='mail_confirm_on' >
+										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+									</td>
+							   </tr>";
+						Html::closeForm();
+				echo "<form method='post' action='config.form.php'>
+							   <input type='hidden' name='menu_mode' value='e'>
+							   <tr class='tab_bg_1' style='padding-top: 20px;'>
+									<td class='center' width='7%' style='padding-top: 20px;'>
+										". __('protococols reminder service') . "
+									</td>
+									<td class='center' width='7%'>
+										" . __("on") . "
+										<input type='radio' name='reminder_on' value='1' ".$serviceReminderOn.">
+									</td>
+									<td class='center' width='7%'>
+										" . __("off") . "
+									<input type='radio' name='reminder_on' value='0' ".$serviceReminderOff.">
+									</td>
+									<td class='center' width='7%'>
+										<input type='hidden' name='witch_field_settings' value='reminder_on' >
+										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+									</td>
+							   </tr>";
+						Html::closeForm();
+				echo "<form method='post' action='config.form.php' >
+							  <input type='hidden' name='menu_mode' value='e'>
+							   <tr class='tab_bg_1' style='padding-top: 20px;". $emailSettings ."' >
+									<td class='center' width='7%' style='padding-top: 20px;'>
+										". __('protococols first reminder email') . "
+									</td>
+									<td class='center' width='7%'>
+									   " . $formData['first_emial_reminder'] . "
+									</td>
+									<td class='center' width='7%'>
+									<input type='email' name='first_emial_reminder' >
+									</td>
+									<td class='center' width='7%'>
+										<input type='hidden' name='witch_field_settings' value='first_emial_reminder' >
+										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+									</td>
+							   </tr>";
+						Html::closeForm();
+					echo "<form method='post' action='config.form.php' >
+							  <input type='hidden' name='menu_mode' value='e'>
+							   <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;". $emailSettings ."' >
+									<td class='center' width='7%' style='padding-top: 20px;'>
+										". __('protococols second reminder email') . "
+									</td>
+									<td class='center' width='7%'>
+									   " . $formData['second_emial_reminder'] . "
+									</td>
+									<td class='center' width='7%'>
+									<input type='email' name='second_emial_reminder' >
+									</td>
+									<td class='center' width='7%'>
+										<input type='hidden' name='witch_field_settings' value='second_emial_reminder' >
+										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+									</td>
+							   </tr>";
+						Html::closeForm();
+					echo "<form method='post' action='config.form.php' >
+							  <input type='hidden' name='menu_mode' value='e'>
+							   <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;". $emailSettings ."'>
+									<td class='center' width='7%' style='padding-top: 20px;'>
+										". __('How long should one wait before sending a reminder') . "
+									</td>
+									<td class='center' width='7%'>
+									   " . $formData['how_often_remind'] . "
+									</td>
+									<td class='center' width='7%'>
+									<input type='number' name='how_often_remind' >
+									</td>
+									<td class='center' width='7%'>
+										<input type='hidden' name='witch_field_settings' value='how_often_remind' >
+										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+									</td>
+							   </tr>";
+						Html::closeForm();
+					echo "
+					</div>
+				</table>
+		</div><hr>";
+	}
+	
 	static function uploadImage() {
 		global $DB, $CFG_GLPI;
 		
@@ -565,15 +709,31 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			'glpi_plugin_protocolsmanager_emailconfig', [
 				'id' => $email_conf_id
 			]
-		);	
-		
-		
-		
+		);
 	}
 	
+	private static function getDataSettings(){
+		global $DB;
+		$query = (['FROM' => 'glpi_plugin_protocolsmanager_settings', 'WHERE' => ['id' => 1]]);
+		return $DB->request($query)->current();
+	}
 	
-
-
+	public static function setSettingsData($postData){
+		global $DB;
+		try{
+			$DB->update('glpi_plugin_protocolsmanager_settings',
+				[
+					$postData['witch_field_settings'] => $postData[$postData['witch_field_settings']],
+				],
+				[
+					'id' => 1
+				]
+			);
+			Session::addMessageAfterRedirect('Field '.$postData['witch_field_settings'].' updated');
+		}catch(Exception $e){
+			Session::addMessageAfterRedirect('Error - field not updated', 'ERROR', true);
+		}
+	}
 }
 
 ?>
