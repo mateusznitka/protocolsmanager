@@ -2,7 +2,7 @@
 	<name>Protocols Manager</name>
 	<key>protocolsmanager</key>
 	<state>stable</state> <!-- stable | unstable | beta | alpha -->
-	<logo>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/pdf_ico.png</logo>
+	<logo>https://raw.githubusercontent.com/Wolvverine/protocolsmanager/master/pdf_ico.png</logo>
 	<description>
 	   <short>
 		  <en>Plugin to make configurable PDF reports with selected user inventory</en>
@@ -39,10 +39,10 @@
 			</pl>
 	   </long>
 	</description>
-	<homepage>https://github.com/mateusznitka/protocolsmanager</homepage>
-	<download>https://github.com/mateusznitka/protocolsmanager/releases</download>
-	<issues>https://github.com/mateusznitka/protocolsmanager/issues</issues>
-	<readme>https://github.com/mateusznitka/protocolsmanager/blob/master/README.md</readme>
+	<homepage>https://github.com/Wolvverine/protocolsmanager</homepage>
+	<download>https://github.com/Wolvverine/protocolsmanager/releases</download>
+	<issues>https://github.com/Wolvverine/protocolsmanager/issues</issues>
+	<readme>https://github.com/Wolvverine/protocolsmanager/blob/master/README.md</readme>
 	<authors>
 	   <author>Mateusz Nitka</author>
 	</authors>
@@ -74,10 +74,10 @@
 	   </pl>
 	</tags>
 	<screenshots>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr5.png</screenshot>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr4.png</screenshot>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr2.png</screenshot>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr3.png</screenshot>
-		<screenshot>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/screenshots/scr1.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/Wolvverine/protocolsmanager/master/screenshots/scr5.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/Wolvverine/protocolsmanager/master/screenshots/scr4.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/Wolvverine/protocolsmanager/master/screenshots/scr2.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/Wolvverine/protocolsmanager/master/screenshots/scr3.png</screenshot>
+		<screenshot>https://raw.githubusercontent.com/Wolvverine/protocolsmanager/master/screenshots/scr1.png</screenshot>
 	</screenshots>
 </root>

@@ -7,6 +7,7 @@ if (!defined('GLPI_ROOT')) {
 
 //use Spipu\Html2Pdf\Html2Pdf;
 require_once dirname(__DIR__) . '/dompdf/autoload.inc.php';
+require_once dirname(__DIR__) . '/inc/Buttons.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -357,9 +358,25 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$exports = [];
 			$doc_counter = 0;
 			
-			foreach ($DB->request(
-				'glpi_plugin_protocolsmanager_protocols',
-				['user_id' => $id ]) as $export_data => $exports) {
+			$sql = [
+						'SELECT' => [
+							'glpi_plugin_protocolsmanager_protocols.*',
+							'glpi_plugin_protocolsmanager_receipt.confirmed'
+						],
+						'FROM' => 'glpi_plugin_protocolsmanager_protocols',
+						'LEFT JOIN' => [
+						'glpi_plugin_protocolsmanager_receipt' => [
+						['FKEY' => [
+							'glpi_plugin_protocolsmanager_protocols' => 'document_id',
+							'glpi_plugin_protocolsmanager_receipt' => 'protocol_id']]
+							],
+						],
+						'WHERE' => [
+							'user_id' => $id
+						],
+				];
+			foreach ($DB->request($sql) as $export_data => $exports) {
+					
 					echo "<tr class='tab_bg_1'>";
 					
 					echo "<td class='center'>";
@@ -766,6 +783,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$nmail->Subject = $email_subject; //do konfiguracji
 			$nmail->addAttachment($fullpath, $filename);
+            if(self::checkSignProtocolsOn()){
+                $button = new Buttons();
+                $email_content .= $button->createSignProtocolButton($CFG_GLPI);
+            }
 			$nmail->Body = nl2br(stripcslashes($email_content));
 			
 			if (!$nmail->Send()) {

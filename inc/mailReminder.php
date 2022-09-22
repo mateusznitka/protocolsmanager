@@ -1,6 +1,7 @@
 <?php
-class MailReminder
-{
+require_once dirname(__DIR__) . '/inc/Buttons.php';
+
+class MailReminder{
 
 	private $settingsInfo;
 
@@ -30,7 +31,7 @@ class MailReminder
 			$first_remind = [
 				'id_user' => '',
 				'email' => $this->settingsInfo['first_emial_reminder'],
-				'conntent' => $this->createBodyMessageForProtocolsList($firstReminder),
+				'conntent' => $this->createBodyMessageForProtocolsList($firstReminder)
 			];
 			array_push($result, $first_remind);
 		}
@@ -38,7 +39,7 @@ class MailReminder
 			$second_remind = [
 				'id_user' => '',
 				'email' => $this->settingsInfo['second_emial_reminder'],
-				'conntent' => $this->createBodyMessageForProtocolsList($secondReminder),
+				'conntent' => $this->createBodyMessageForProtocolsList($secondReminder)
 			];
 			array_push($result, $second_remind);
 		}
@@ -47,7 +48,7 @@ class MailReminder
 				$second_remind = [
 					'id_user' => $usr['profile_id'],
 					'email' => '',
-					'conntent' => $this->createBodyMessageForUser($usr),
+					'conntent' => $this->createBodyMessageForUser($usr)
 				];
 				array_push($result, $second_remind);
 			}
@@ -67,30 +68,30 @@ class MailReminder
 					'firstname',
 					'email',
 					'modified',
-					'glpi_plugin_protocolsmanager_protocols' => 'name AS protocol_name',
+					'glpi_plugin_protocolsmanager_protocols' => 'name AS protocol_name'
 				],
 				'FROM' => 'glpi_plugin_protocolsmanager_receipt',
 				'LEFT JOIN' => [
 					'glpi_users' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'profile_id',
-							'glpi_users' => 'id']],
+							'glpi_users' => 'id']]
 					],
 					'glpi_useremails' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'profile_id',
-							'glpi_useremails' => 'users_id']],
+                            'glpi_useremails' => 'users_id']]
 					],
 					'glpi_plugin_protocolsmanager_protocols' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'protocol_id',
-							'glpi_plugin_protocolsmanager_protocols' => 'document_id']],
+							'glpi_plugin_protocolsmanager_protocols' => 'document_id']]
 					],
 				],
 				'WHERE' =>
 				[
-					['modified' => ['>=', $dateFrom],
-						'AND' => ['modified' => ['<=', $dateTo]]],
+					['modified' => ['>=' , $dateFrom ],
+						'AND' => ['modified' => ['<=', $dateTo ]]],
 					'confirmed' => 0,
 				],
 
@@ -117,24 +118,24 @@ class MailReminder
 					'email',
 					'modified',
 					'glpi_plugin_protocolsmanager_protocols' => 'name AS protocol_name',
-					'profile_id',
+					'profile_id'
 				],
 				'FROM' => 'glpi_plugin_protocolsmanager_receipt',
 				'LEFT JOIN' => [
 					'glpi_users' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'profile_id',
-							'glpi_users' => 'id']],
+							'glpi_users' => 'id']]
 					],
 					'glpi_useremails' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'profile_id',
-							'glpi_useremails' => 'users_id']],
+							'glpi_useremails' => 'users_id']]
 					],
 					'glpi_plugin_protocolsmanager_protocols' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'protocol_id',
-							'glpi_plugin_protocolsmanager_protocols' => 'document_id']],
+							'glpi_plugin_protocolsmanager_protocols' => 'document_id']]
 					],
 				],
 				'WHERE' =>
@@ -142,12 +143,12 @@ class MailReminder
 					[
 						'OR' => [
 							[
-								'modified' => ['>=', $dates['first_remind_from']],
-								'AND' => ['modified' => ['<=', $dates['first_remind_to']]],
+								'modified' => ['>=' , $dates['first_remind_from']],
+								'AND' => ['modified' => ['<=', $dates['first_remind_to']]]
 							],
 							[
-								'modified' => ['>=', $dates['second_remind_from']],
-								'AND' => ['modified' => ['<=', $dates['second_remind_To']]],
+								'modified' => ['>=' , $dates['second_remind_from']],
+								'AND' => ['modified' => ['<=', $dates['second_remind_To']]]
 							],
 						],
 					],
@@ -196,11 +197,15 @@ class MailReminder
 	private function createBodyMessageForUser($data): string
 	{
 		global $CFG_GLPI;
+		$button = new Buttons();
+		$protocol_for_url = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
+		$link = $protocol_for_url.$_SERVER['HTTP_HOST'].$CFG_GLPI["root_doc"]."plugins/protocolsmanager/front/protocols.form.php";
 
 		$body = __('You have an unsigned protocol');
 		$body .= ' - ' . $data['protocol_name'];
 		$body .= __(' from') . ' ' . $data['modified'] . '<br>';
 		$body .= __('Go to GLPI and sign protocol');
+		$body .= $button->createSignProtocolButton($CFG_GLPI, 'reminder');
 		return $body;
 	}
 
