@@ -1,5 +1,6 @@
 <?php
 include ("../../../inc/includes.php");
+Session::checkCentralAccess();
 require_once dirname(__DIR__) . '/inc/sign.class.php';
 Html::header('Self-service');
 
