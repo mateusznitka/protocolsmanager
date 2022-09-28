@@ -140,4 +140,21 @@ class SignProtocol {
 			echo '<span style="color: red">' . __("wrong confirmation code") . '</span>';
 		}
 	}
+
+    public function signdocumentByEmail($idProtocol = null, $idUser = null)
+    {
+        global $DB;
+        $usID = $idUser == null ? $this->idUser : $idUser;
+        $prID = $idProtocol == null ? $this->idProtocol : $idProtocol;
+        $date = new DateTime();
+        $DB->update('glpi_plugin_protocolsmanager_receipt', [
+            'confirmed' => 1,
+            'modified' => $date->format('Y-m-d H:i:s')
+        ], [
+                'profile_id' => $usID,
+                'protocol_id' => $prID
+
+            ]
+        );
+    }
 }
