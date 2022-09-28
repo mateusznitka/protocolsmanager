@@ -39,8 +39,7 @@ function checkDocPermisions($docID){
 	$response = false;
 	if(isset($_SESSION['glpiID'])) {
 		$id = $_SESSION['glpiID'];
-//		$query = "SELECT count(*) as founded  FROM `glpi_plugin_protocolsmanager_receipt` where profile_id = " . $id . " AND protocol_id = ". $docID ;
-		$query = ['SELECT' => ['COUNT AS founded' => 'id'],
+        $query = ['SELECT' => ['COUNT' => 'id'],
 					'FROM' => 'glpi_plugin_protocolsmanager_receipt',
 					'WHERE' => [
 						'profile_id'=>$id,
@@ -48,7 +47,7 @@ function checkDocPermisions($docID){
 					]
 				];
 		$result = $DB->request($query)->current();
-		$result['founded'] ? $response = true : '';
+        $result['COUNT(`id`)'] ? $response = true : '';
 	}
 	return $response;
 }
