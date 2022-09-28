@@ -12,7 +12,8 @@ class MailReminder{
 
 	public function send()
 	{
-		if ($this->settingsInfo['reminder_on'] && $this->settingsInfo['how_often_remind']) {
+		if ($this->settingsInfo['reminder_on'] && $this->settingsInfo['how_often_remind'])
+        {
 			$data = $this->setDataToSendEmailReminderToAdmins();
 			foreach ($data as $dt) {
 				$this->sendMail($dt);
@@ -105,7 +106,6 @@ class MailReminder{
 	}
 
 	private function setDataForSendEmailToUSer($dates) //: array
-
 	{
 		global $DB;
 		$result = [];
@@ -168,7 +168,7 @@ class MailReminder{
 	{
 		global $DB;
 		$req = $DB->request('glpi_plugin_protocolsmanager_settings');
-		return $req->next();
+		return $req->current();
 
 	}
 
@@ -241,7 +241,7 @@ class MailReminder{
 			$req = $DB->request(
 				'glpi_useremails',
 				['users_id' => $this->idUser, 'is_default' => 1]);
-			$owner_email = $req->next()["email"];
+			$owner_email = $req->current()["email"];
 		} else {
 			$owner_email = $protocols["email"];
 		}
