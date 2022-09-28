@@ -405,12 +405,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		}		
 	
 	}
-	
-	//new changes function
-	static function saveSettingsData() {
-		
-	}
-	
+
 	static function saveEmailConfigs() {
 		global $DB, $CFG_GLPI;
 		
@@ -516,22 +511,44 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			}
 		echo "</table></div>";
 	}
-	
-	
-	static function setEmailsToSendReminder(){
-		$formData = self::getDataSettings();
-		$formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
-		$formData['mail_confirm_on'] == 1 ? $emailConfirmationOn = 'checked' : $emailConfirmationOff = 'checked';
-		$formData['reminder_on'] == 1 ? $serviceReminderOn = 'checked' : $serviceReminderOff = 'checked';
-		($formData['reminder_on'] == 1 && $formData['protocols_save_on'] == 1) ? $emailSettings = '' : $emailSettings = 'display:none';
-		$formData['first_emial_reminder'] =  $formData['first_emial_reminder'] ?? ' - ';
-		$formData['second_emial_reminder'] =  $formData['second_emial_reminder'] ?? ' - ';
-		
-		//Array ( [id] => 1 [protocols_save_on] => 0 [reminder_on] => 0 [first_emial_reminder] => [second_emial_reminder] => [how_often_remind] => 0 )
-		echo "<div class='spaced'>
-				<table class='tab_cadre_fixehov'>
-				<div style='text-align:center;'><h2>ProtocolsManager Settings</h2></div>
-					<div>
+
+
+    static function setEmailsToSendReminder(){
+        $formData = self::getDataSettings();
+        $formData['show_own_assets'] == 1 ? $showOwnAssetsOn = 'checked' : $showOwnAssetsOff = 'checked';
+        $formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
+        $formData['mail_confirm_on'] == 1 ? $emailConfirmationOn = 'checked' : $emailConfirmationOff = 'checked';
+        $formData['reminder_on'] == 1 ? $serviceReminderOn = 'checked' : $serviceReminderOff = 'checked';
+        ($formData['reminder_on'] == 1 && $formData['protocols_save_on'] == 1) ? $emailSettings = '' : $emailSettings = 'display:none';
+        $formData['first_emial_reminder'] =  $formData['first_emial_reminder'] ?? ' - ';
+        $formData['second_emial_reminder'] =  $formData['second_emial_reminder'] ?? ' - ';
+
+
+        echo "<div class='spaced'>
+                <table class='tab_cadre_fixehov'>
+                <div style='text-align:center;'><h2>ProtocolsManager Settings</h2></div>
+                    <div>
+                    <form method='post' action='config.form.php'>
+                               <input type='hidden' name='menu_mode' value='e'>
+                               <tr class='tab_bg_1' style='padding-top: 20px;'>
+                                    <td class='center' width='7%' style='padding-top: 20px;'>
+                                        ". __('Show user assets') . "
+                                    </td>
+                                    <td class='center' width='7%'>
+                                        " . __("on") . "
+                                        <input type='radio' name='show_own_assets' value='1' ".$showOwnAssetsOn.">
+                                    </td>
+                                    <td class='center' width='7%'>
+                                        " . __("off") . "
+                                        <input type='radio' name='show_own_assets' value='0' ".$showOwnAssetsOff .">
+                                    </td>
+                                    <td class='center' width='7%'>
+                                        <input type='hidden' name='witch_field_settings' value='show_own_assets' >
+                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                    </td>
+                               </tr>";
+        Html::closeForm();
+        echo "
 						<form method='post' action='config.form.php'>
 							<input type='hidden' name='menu_mode' value='e'>
 								<tr class='tab_bg_1' style='padding-top: 20px;'>
