@@ -7,7 +7,9 @@ if (!defined('GLPI_ROOT')) {
 
 //use Spipu\Html2Pdf\Html2Pdf;
 require_once dirname(__DIR__) . '/dompdf/autoload.inc.php';
+require_once dirname(__DIR__) . '/inc/SignProtocolByEmail.php';
 require_once dirname(__DIR__) . '/inc/Buttons.php';
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -808,7 +810,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		static function checkSignProtocolsOn() {
 			global $DB;
 			$query = (['FROM' => 'glpi_plugin_protocolsmanager_settings', 'WHERE' => ['id' => 1]]);
-			return $DB->request($query)->next()['protocols_save_on'];
+			return $DB->request($query)->current()['protocols_save_on'];
 		}
 }
 
