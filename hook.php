@@ -258,6 +258,17 @@ function plugin_protocolsmanager_install() {
 		
 		$DB->queryOrDie($query, $DB->error());
 	}
+
+	//add new column glpi_plugin_protocolsmanager_settings
+	if (($DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) &&
+		!$DB->FieldExists('glpi_plugin_protocolsmanager_settings', 'show_own_assets')) {
+
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_settings ADD COLUMN show_own_assets int(1)";
+		$query2 = "UPDATE glpi_plugin_protocolsmanager_settings SET show_own_assets = 0 WHERE id=1";
+
+		$DB->queryOrDie($query, $DB->error());
+		$DB->queryOrDie($query2, $DB->error());
+	}
 	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
 		
