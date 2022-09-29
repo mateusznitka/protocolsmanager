@@ -1,5 +1,4 @@
 <?php
-
 function plugin_protocolsmanager_redefine_menus($menu) {
 	global $DB;
 	if (empty($menu)) {
@@ -22,6 +21,16 @@ function plugin_protocolsmanager_redefine_menus($menu) {
 			];
 		}
 	}
+	if($result2['show_own_assets']){
+		$menu['myAssets'] = [
+			'default'   => '/plugins/protocolsmanager/front/myAssets.form.php',
+			'title'     => __('My assets', 'glpi'),
+			'content'   => [false],
+			'icon' => 'ti ti-alert-circle'
+		];
+	}
+
+
 	return $menu;
 }
 
@@ -46,21 +55,23 @@ function plugin_protocolsmanager_install() {
 					first_emial_reminder varchar(255),
 					second_emial_reminder varchar(255),
 					how_often_remind int(11),
+					show_own_assets int(1),
 					PRIMARY KEY (id)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 		
 		$DB->query($query) or die($DB->error());
 		
 		$query2 = "INSERT INTO `glpi_plugin_protocolsmanager_settings`(
-					`id`,
-					`protocols_save_on`,
-					`mail_confirm_on`,
-					`reminder_on`,
-					`first_emial_reminder`,
-					`second_emial_reminder`,
-					`how_often_remind`) 
-					VALUES (1,0,0,0,null,null,0)";
-		
+                    `id`,
+                    `protocols_save_on`,
+                    `mail_confirm_on`,
+                    `reminder_on`,
+                    `first_emial_reminder`,
+                    `second_emial_reminder`,
+                    `how_often_remind`,
+                    `show_own_assets`) 
+                    VALUES (1,0,0,0,null,null,0,0)";
+
 		$DB->queryOrDie($query2, $DB->error());
 	}
 	
