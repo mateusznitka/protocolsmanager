@@ -85,13 +85,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<table class='tab_cadre_fixe'>";
 			echo "<tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
+			//TODO pretty change format the current active field in the selection list, if is active
 			echo "<select name='userfield' style='font-size:14px; width:95%'>";
 				foreach ($User_Fields as $fuid => $userfield) {
-					echo '<option value="'.$userfield["fieldname"].'" '.($userfield["fieldname"] == $field_user ? 'selected' : '').'>'.__($userfield["label"],'fields').'</option>';
+					echo '<option value="'.$userfield["fieldname"].'" '.($userfield["fieldname"] == $field_user ? 'selected style="font-weight:bold"' : '').'>'.__($userfield["label"],'fields').'</option>';
 					$containerName = ($userfield["fieldname"] == $field_user ? $userfield["containername"] : '');
 				}
-			echo "<option value='users_id' ".('users_id' == $field_user ? 'selected' : '').">".__('User')."</option>";
-			echo "<option value='users_id_tech' ".('users_id_tech' == $field_user ? 'selected' : '').">".__('Technician')."</option>";
+			echo "<option value='users_id' ".('users_id' == $field_user ? 'selected style="font-weight:bold"' : '').">".__('User')."</option>";
+			echo "<option value='users_id_tech' ".('users_id_tech' == $field_user ? 'selected style="font-weight:bold"' : '').">".__('Technician')."</option>";
 			echo "</select></td>";
 			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field')."'></td>";
 			echo "<td style='width:30%'></td></tr>";
