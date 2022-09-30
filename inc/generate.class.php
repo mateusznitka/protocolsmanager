@@ -72,14 +72,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				 			 'glpi_plugin_fields_containers' => ['name AS containername']],
 				['FKEY' => ['glpi_plugin_fields_fields' => 'plugin_fields_containers_id',
 							'glpi_plugin_fields_containers'  => 'id']],
-				['AND' => [ 'glpi_plugin_fields_fields.type' => "dropdownuser"]]
+				['AND' => [ 'glpi_plugin_fields_fields.type' => "dropdown-User"]]
 				]);
 		/*  SELECT glpi_plugin_fields_fields.name AS fieldname,
 			glpi_plugin_fields_fields.label,
 			glpi_plugin_fields_containers.name AS containername
 			FROM glpi_plugin_fields_fields,glpi_plugin_fields_containers
 			where  glpi_plugin_fields_fields.plugin_fields_containers_id=glpi_plugin_fields_containers.id
-			AND glpi_plugin_fields_fields.type="dropdownuser"
+			AND glpi_plugin_fields_fields.type="dropdown-User"
 		*/
 			echo "<form method='post' name='user_field$rand' id='user_field$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'>";
