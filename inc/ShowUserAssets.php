@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__) . '/inc/CheckAccess.class.php';
 
 class ShowUserAssets
 {
@@ -13,6 +14,7 @@ class ShowUserAssets
 
     public function getAssets()
     {
+        CheckAccess::checkRightsToMyAssets();
         $this->headerHtml();
         $this->tableContentHtml($this->setContentData());
 

@@ -11,7 +11,7 @@ function plugin_protocolsmanager_redefine_menus($menu) {
 		$query2 = 'SELECT * FROM `glpi_plugin_protocolsmanager_settings` WHERE id = 1';
 		$result = $DB->request($query)->current();
 		$result2 = $DB->request($query2)->current();
-		
+
 		if($result['field_count'] > 0 && $result2['protocols_save_on']){
 			$menu['protocols'] = [
 				'default' => '/plugins/protocolsmanager/front/protocols.form.php',
@@ -38,14 +38,14 @@ function plugin_protocolsmanager_install() {
 	global $DB, $CFG_GLPI;
 	$version = plugin_version_protocolsmanager();
 	$migration = new Migration($version['version']);
-	
+
 	if (!countElementsInTable('glpi_crontasks', ['name' => 'PluginProtocolsmanagerReminder'])) {
 		Crontask::Register('PluginProtocolsmanagerReminder', 'PluginProtocolsmanagerReminder', DAY_TIMESTAMP, [
 			'param' => '',
 			'mode'  => CronTask::MODE_EXTERNAL
 		]);
 	}
-	
+
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_settings")) {
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_settings (
 					id int(11) NOT NULL auto_increment,
@@ -58,9 +58,9 @@ function plugin_protocolsmanager_install() {
 					show_own_assets int(1),
 					PRIMARY KEY (id)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->query($query) or die($DB->error());
-		
+
 		$query2 = "INSERT INTO `glpi_plugin_protocolsmanager_settings`(
                     `id`,
                     `protocols_save_on`,
@@ -74,9 +74,9 @@ function plugin_protocolsmanager_install() {
 
 		$DB->queryOrDie($query2, $DB->error());
 	}
-	
+
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_receipt")) {
-	
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_receipt (
 					id int(11) NOT NULL auto_increment,
 					profile_id int(11),
@@ -85,12 +85,12 @@ function plugin_protocolsmanager_install() {
 					modified datetime,
 					PRIMARY KEY (id)
 					) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->query($query) or die($DB->error());
 	}
-	
+
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_confirm")) {
-		
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_confirm (
 					id int(11) NOT NULL auto_increment,
 					id_user int(11),
@@ -99,12 +99,12 @@ function plugin_protocolsmanager_install() {
 					modified datetime,
 					PRIMARY KEY (id)
 					) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->query($query) or die($DB->error());
 	}
-	
+
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_profiles")) {
-	
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_profiles (
 					id int(11) NOT NULL auto_increment,
 					profile_id int(11),
@@ -114,22 +114,22 @@ function plugin_protocolsmanager_install() {
 					delete_access char(1) collate utf8_unicode_ci default NULL,
 					PRIMARY KEY  (`id`)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->query($query) or die($DB->error());
-		
+
 		$id = $_SESSION['glpiactiveprofile']['id'];
 		$query = "INSERT INTO glpi_plugin_protocolsmanager_profiles (profile_id, plugin_conf, tab_access, make_access, delete_access) VALUES ('$id','w', 'w', 'w', 'w')";
-		
+
 		$DB->query($query) or die($DB->error());
 	}
-	
+
 	//update profiles table if updating from 0.8
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_profiles', 'plugin_conf')) {
-		
+
 		$query = "DROP TABLE glpi_plugin_protocolsmanager_profiles";
-		
+
 		$DB->query($query) or die($DB->error());
-		
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_profiles (
 					id int(11) NOT NULL auto_increment,
 					profile_id int(11),
@@ -137,20 +137,21 @@ function plugin_protocolsmanager_install() {
 					tab_access char(1) collate utf8_unicode_ci default NULL,
 					make_access char(1) collate utf8_unicode_ci default NULL,
 					delete_access char(1) collate utf8_unicode_ci default NULL,
+					my_assets char(1) collate utf8_unicode_ci default NULL,
 					PRIMARY KEY  (`id`)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->query($query) or die($DB->error());
-		
+
 		$id = $_SESSION['glpiactiveprofile']['id'];
-		$query = "INSERT INTO glpi_plugin_protocolsmanager_profiles (profile_id, plugin_conf, tab_access, make_access, delete_access) VALUES ('$id','w', 'w', 'w', 'w')";
-		
+		$query = "INSERT INTO glpi_plugin_protocolsmanager_profiles (profile_id, plugin_conf, tab_access, make_access, delete_access, my_assets) VALUES ('$id','w', 'w', 'w', 'w', 'w')";
+
 		$DB->query($query) or die($DB->error());
 	}
-	
-	
+
+
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_config')) {
-		
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_config (
 					id INT(11) NOT NULL auto_increment,
 					name VARCHAR(255),
@@ -169,9 +170,9 @@ function plugin_protocolsmanager_install() {
 					email_template int(2),
 					PRIMARY KEY (id)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->queryOrDie($query, $DB->error());
-		
+
 		$query2 = "INSERT INTO glpi_plugin_protocolsmanager_config (
 					name, font, fontsize, content, footer, city, serial_mode, orientation, breakword)
 					VALUES ('Equipment report',
@@ -183,13 +184,13 @@ function plugin_protocolsmanager_install() {
 							1,
 							'Portrait',
 							1)";
-							
+
 		$DB->queryOrDie($query2, $DB->error());
 	}
-	
-		//update config table if upgrading from 1.0
+
+	//update config table if upgrading from 1.0
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'orientation')) {
-		
+
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
 					ADD serial_mode int(2)
 						AFTER city,
@@ -199,63 +200,63 @@ function plugin_protocolsmanager_install() {
 						AFTER column1,
 					ADD orientation varchar(10)
 						AFTER column2";
-		
+
 		$DB->queryOrDie($query, $DB->error());
-		
+
 	}
-	
-		//update config table if upgrading from 1.1.2
+
+	//update config table if upgrading from 1.1.2
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'fontsize')) {
-		
+
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
 					ADD fontsize varchar(255)
 						AFTER font,
 					ADD breakword int(2)
 						AFTER fontsize";
-		
+
 		$DB->queryOrDie($query, $DB->error());
-		
+
 		$query = "UPDATE glpi_plugin_protocolsmanager_config
 					SET serial_mode=1, orientation='p', fontsize='9', breakword=1";
-		
+
 		$DB->queryOrDie($query, $DB->error());
-		
+
 	}
-	
-	
+
+
 	//update config table if upgrading from 1.2
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'email_mode')) {
-		
+
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
 					ADD email_mode int(2)
 						AFTER breakword,
 					ADD email_template int(2)
 						AFTER email_mode";
-		
+
 		$DB->queryOrDie($query, $DB->error());
-		
+
 		$query = "UPDATE glpi_plugin_protocolsmanager_config
 					SET email_mode=2";
-		
+
 		$DB->queryOrDie($query, $DB->error());
-		
+
 	}
-	
-		//update config table if upgrading from 1.3
+
+	//update config table if upgrading from 1.3
 	if (!$DB->FieldExists('glpi_plugin_protocolsmanager_config', 'upper_content')) {
-		
+
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_config
 					ADD upper_content text
 						AFTER email_mode";
-		
+
 		$DB->queryOrDie($query, $DB->error());
 	}
-	
-		//update email_content field
+
+	//update email_content field
 	if ($DB->FieldExists('glpi_plugin_protocolsmanager_emailconfig', 'email_content')) {
-		
+
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_emailconfig MODIFY COLUMN email_content TEXT";
-		
+
 		$DB->queryOrDie($query, $DB->error());
 	}
 
@@ -269,9 +270,19 @@ function plugin_protocolsmanager_install() {
 		$DB->queryOrDie($query, $DB->error());
 		$DB->queryOrDie($query2, $DB->error());
 	}
-	
+
+	//add new column glpi_plugin_protocolsmanager_profiles
+	if (($DB->tableExists('glpi_plugin_protocolsmanager_profiles')) &&
+		!$DB->FieldExists('glpi_plugin_protocolsmanager_profiles', 'my_assets')) {
+
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_profiles ADD COLUMN my_assets char(1) collate utf8_unicode_ci default NULL";
+
+		$DB->queryOrDie($query, $DB->error());
+
+	}
+
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
-		
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_emailconfig (
 					id INT(11) NOT NULL auto_increment,
 					tname varchar(255),
@@ -282,13 +293,13 @@ function plugin_protocolsmanager_install() {
 					recipients varchar(255),
 					PRIMARY KEY (id)
 					) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-					
+
 		$DB->queryOrDie($query, $DB->error());
-	
+
 	}
-	
+
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
-		
+
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_protocols (
 					id INT(11) NOT NULL auto_increment,
 					name VARCHAR(255),
@@ -299,41 +310,41 @@ function plugin_protocolsmanager_install() {
 					document_type varchar(255),
 					PRIMARY KEY (id)
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-		
+
 		$DB->queryOrDie($query, $DB->error());
 	}
-	
+
 	if ($DB->tableExists('glpi_plugin_protocolsmanager_config')) {
 		return true;
 	}
-	
+
 	if ($DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
 		return true;
 	}
-	
+
 	//execute the whole migration
 	$migration->executeMigration();
-	
+
 	return true;
 }
 
 
 function plugin_protocolsmanager_uninstall() {
-	
+
 	global $DB;
-	
+
 	$tables = array("glpi_plugin_protocolsmanager_protocols",
-					"glpi_plugin_protocolsmanager_config",
-					"glpi_plugin_protocolsmanager_profiles",
-					"glpi_plugin_protocolsmanager_emailconfig",
-					"glpi_plugin_protocolsmanager_receipt",
-					"glpi_plugin_protocolsmanager_settings",
-					"glpi_plugin_protocolsmanager_confirm"
-				);
-	
+		"glpi_plugin_protocolsmanager_config",
+		"glpi_plugin_protocolsmanager_profiles",
+		"glpi_plugin_protocolsmanager_emailconfig",
+		"glpi_plugin_protocolsmanager_receipt",
+		"glpi_plugin_protocolsmanager_settings",
+		"glpi_plugin_protocolsmanager_confirm"
+	);
+
 	foreach($tables as $table)
-		{$DB->query("DROP TABLE IF EXISTS `$table`;");}
-	
+	{$DB->query("DROP TABLE IF EXISTS `$table`;");}
+
 	return true;
 }
 
