@@ -284,11 +284,21 @@ function plugin_protocolsmanager_install() {
 		$DB->queryOrDie($query2, $DB->error());
 	}
 
-	//add new column glpi_plugin_protocolsmanager_profiles
+	//add new column glpi_plugin_protocolsmanager_profiles - my_assets
 	if (($DB->tableExists('glpi_plugin_protocolsmanager_profiles')) &&
 		!$DB->FieldExists('glpi_plugin_protocolsmanager_profiles', 'my_assets')) {
 
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_profiles ADD COLUMN my_assets char(1) collate utf8_unicode_ci default NULL";
+
+		$DB->queryOrDie($query, $DB->error());
+
+	}
+
+	//add new column glpi_plugin_protocolsmanager_profiles - sign_protocol_form
+	if (($DB->tableExists('glpi_plugin_protocolsmanager_profiles')) &&
+		!$DB->FieldExists('glpi_plugin_protocolsmanager_profiles', 'sign_protocol_form')) {
+
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_profiles ADD COLUMN sign_protocol_form char(1) collate utf8_unicode_ci default NULL";
 
 		$DB->queryOrDie($query, $DB->error());
 

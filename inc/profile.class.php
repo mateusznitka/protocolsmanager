@@ -25,6 +25,7 @@ class PluginProtocolsmanagerProfile extends CommonDBTM
             $plugin_conf = $row['plugin_conf'];
             $tab_access = $row['tab_access'];
             $my_assets = $row['my_assets'];
+            $sign_protocol_form = $row['sign_protocol_form'];
         }
 
         if (count($req) == 0) {
@@ -49,6 +50,9 @@ class PluginProtocolsmanagerProfile extends CommonDBTM
         echo "<tr class='tab_bg_2'><td width=30%>My assets access</td><td>";
         Html::showCheckbox(['name' => 'my_assets', 'checked' => $my_assets, 'value' => 'w']);
         echo "</td></tr>";
+        echo "<tr class='tab_bg_2'><td width=30%>Sign protocol page</td><td>";
+        Html::showCheckbox(['name' => 'sign_protocol_form', 'checked' => $sign_protocol_form, 'value' => 'w']);
+        echo "</td></tr>";
         echo "<tr class='tab_bg_5'><th colspan='2'>";
         echo "<input type='submit' class='submit' name='update'>";
         echo "<input type='hidden' name='profile_id' value='$profile_id'>";
@@ -67,14 +71,16 @@ class PluginProtocolsmanagerProfile extends CommonDBTM
                     'profile_id' => $_POST['profile_id'],
                     'plugin_conf' => $_POST['plugin_conf'],
                     'tab_access' => $_POST['tab_access'],
-                    'my_assets' => $_POST['my_assets']
+                    'my_assets' => $_POST['my_assets'],
+                    'sign_protocol_form' => $_POST['sign_protocol_form']
                 ]
             );
         } else if ($_POST['edit_flag'] == 0){
             $DB->update('glpi_plugin_protocolsmanager_profiles', [
                 'plugin_conf' => $_POST['plugin_conf'],
                 'tab_access' => $_POST['tab_access'],
-                'my_assets' => $_POST['my_assets']
+                'my_assets' => $_POST['my_assets'],
+                'sign_protocol_form' => $_POST['sign_protocol_form']
             ], [
                     'profile_id' => $_POST['profile_id']
                 ]

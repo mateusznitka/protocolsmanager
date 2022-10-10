@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__) . '/inc/CheckAccess.class.php';
 
 class PluginProtocolsmanagerProtocols extends CommonDBTM {
 	
@@ -7,7 +8,9 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 	}
 	
 	public function showFormProtocols() {
-		
+
+        CheckAccess::checkRightsToSignProtocolsPage();
+
 		$id = $_SESSION['glpiID'];
 		global $DB, $CFG_GLPI;
 		$rand = mt_rand();
