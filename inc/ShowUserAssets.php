@@ -5,9 +5,12 @@ class ShowUserAssets
 {
     private $userID;
     private $tablesForUser;
+    private $user_field;
+    private $container_name;
 
     public function __construct()
     {
+        $this->setFieldUser();
         $this->setUserTables();
         $this->setUserId();
     }
@@ -17,6 +20,22 @@ class ShowUserAssets
         CheckAccess::checkRightsToMyAssets();
         $this->headerHtml();
         $this->tableContentHtml($this->setContentData());
+
+    }
+
+    private function setFieldUser()
+    {
+        global $DB;
+        $query = (['FROM' => 'glpi_plugin_protocolsmanager_settings', 'WHERE' => ['id' => 1]]);
+        $result = $DB->request($query)->current();
+        if(strpos( $result['user_fields'],','))
+        {
+            $this->user_field = isset(explode(',',$result['user_fields'])[0]) ? explode(',',$result['user_fields'])[0] : '';
+            $this->container_name = isset(explode(',',$result['user_fields'])[1]) ? explode(',',$result['user_fields'])[1] : '';
+        }else{
+            $this->user_field = $result['user_fields'];
+            $this->container_name = '';
+        }
 
     }
 
@@ -35,12 +54,30 @@ class ShowUserAssets
     {
         global $DB;
         $result = [];
+        $fieldsitemtableprefix = 'glpi_plugin_fields_';
+
         foreach($this->tablesForUser as $tableName)
         {
-            $iterator_params = [
-                'FROM' => $tableName,
-                'WHERE' => ['users_id' => $this->userID]
-            ];
+            $containerName =
+            $fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$tableName" . "$this->container_name" .'s');
+            if (($this->user_field == 'users_id') or ($this->user_field == 'users_id_tech')) {
+                $iterator_params = [
+                    'FROM' => $tableName,
+                    'WHERE' => [$this->user_field => $this->userID]
+                ];
+            }
+            else {
+                $sub_query = new QuerySubQuery([
+                    'SELECT' => 'items_id',
+                    'FROM' => $fieldsitemtablewithuser,
+                    'WHERE' => ['itemtype' => $tableName, $this->user_field => $this->userID]
+                ]);
+
+                $iterator_params = [
+                    'FROM' => $tableName,
+                    'WHERE' => ['id' => $sub_query]
+                ];
+            }
             $iterator_params['WHERE']['is_template'] = 0;
             $iterator_params['WHERE']['is_deleted'] = 0;
             $item_iterator = $DB->request($iterator_params);

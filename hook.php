@@ -56,6 +56,7 @@ function plugin_protocolsmanager_install() {
 					second_emial_reminder varchar(255),
 					how_often_remind int(11),
 					show_own_assets int(1),
+					user_fields varchar(255),
 					PRIMARY KEY (id)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
@@ -69,8 +70,9 @@ function plugin_protocolsmanager_install() {
                     `first_emial_reminder`,
                     `second_emial_reminder`,
                     `how_often_remind`,
-                    `show_own_assets`) 
-                    VALUES (1,0,0,0,null,null,0,0)";
+                    `show_own_assets`,
+                    `user_fields`) 
+                    VALUES (1,0,0,0,null,null,0,0,'')";
 
 		$DB->queryOrDie($query2, $DB->error());
 	}
@@ -266,6 +268,17 @@ function plugin_protocolsmanager_install() {
 
 		$query = "ALTER TABLE glpi_plugin_protocolsmanager_settings ADD COLUMN show_own_assets int(1)";
 		$query2 = "UPDATE glpi_plugin_protocolsmanager_settings SET show_own_assets = 0 WHERE id=1";
+
+		$DB->queryOrDie($query, $DB->error());
+		$DB->queryOrDie($query2, $DB->error());
+	}
+
+	//add another new column glpi_plugin_protocolsmanager_settings user_fields
+	if (($DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) &&
+		!$DB->FieldExists('glpi_plugin_protocolsmanager_settings', 'user_fields')) {
+
+		$query = "ALTER TABLE glpi_plugin_protocolsmanager_settings ADD COLUMN user_fields varchar(255)";
+		$query2 = "UPDATE glpi_plugin_protocolsmanager_settings SET user_fields = '' WHERE id=1";
 
 		$DB->queryOrDie($query, $DB->error());
 		$DB->queryOrDie($query2, $DB->error());

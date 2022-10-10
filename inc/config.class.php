@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__) . '/inc/ConfigNewSettingsForms.class.php';
+
 class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
 	
@@ -522,148 +524,31 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         ($formData['reminder_on'] == 1 && $formData['protocols_save_on'] == 1) ? $emailSettings = '' : $emailSettings = 'display:none';
         $formData['first_emial_reminder'] =  $formData['first_emial_reminder'] ?? ' - ';
         $formData['second_emial_reminder'] =  $formData['second_emial_reminder'] ?? ' - ';
-
+        $user_fields = $formData['user_fields'];
 
         echo "<div class='spaced'>
                 <table class='tab_cadre_fixehov'>
                 <div style='text-align:center;'><h2>ProtocolsManager Settings</h2></div>
-                    <div>
-                    <form method='post' action='config.form.php'>
-                               <input type='hidden' name='menu_mode' value='e'>
-                               <tr class='tab_bg_1' style='padding-top: 20px;'>
-                                    <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('Show user assets') . "
-                                    </td>
-                                    <td class='center' width='7%'>
-                                        " . __("on") . "
-                                        <input type='radio' name='show_own_assets' value='1' ".$showOwnAssetsOn.">
-                                    </td>
-                                    <td class='center' width='7%'>
-                                        " . __("off") . "
-                                        <input type='radio' name='show_own_assets' value='0' ".$showOwnAssetsOff .">
-                                    </td>
-                                    <td class='center' width='7%'>
-                                        <input type='hidden' name='witch_field_settings' value='show_own_assets' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-                                    </td>
-                               </tr>";
-        Html::closeForm();
+                    <div>";
+        //ConfigNewSettingsForms - forms for new protocols setting
+
+        ConfigNewSettingsForms::setUserFieldsForm($user_fields);
+
+        ConfigNewSettingsForms::show_own_assets($showOwnAssetsOn, $showOwnAssetsOff);
+
+        ConfigNewSettingsForms::protocols_save_on($serviceSignOn, $serviceSignOff);
+
+        ConfigNewSettingsForms::mail_confirm_on($emailConfirmationOn, $emailConfirmationOff);
+
+        ConfigNewSettingsForms::reminder_on($serviceReminderOn, $serviceReminderOff);
+
+        ConfigNewSettingsForms::first_emial_reminder($emailSettings, $formData);
+
+        ConfigNewSettingsForms::second_emial_reminder($emailSettings, $formData);
+
+        ConfigNewSettingsForms::how_often_remind($emailSettings, $formData);
+
         echo "
-						<form method='post' action='config.form.php'>
-							<input type='hidden' name='menu_mode' value='e'>
-								<tr class='tab_bg_1' style='padding-top: 20px;'>
-									<td class='center' width='7%' style='padding-top: 20px;'>
-											". __('sign protococols service') . "
-									</td>
-									<td class='center' width='7%'>
-										" . __("on") . "
-										<input type='radio' name='protocols_save_on' value='1' ".$serviceSignOn.">
-									</td>
-									<td class='center' width='7%'>
-										" . __("off") . "
-										<input type='radio' name='protocols_save_on' value='0' ".$serviceSignOff.">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='protocols_save_on' >
-										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-									</td>
-							   </tr>";
-						Html::closeForm();
-				echo "<form method='post' action='config.form.php'>
-							   <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1' style='padding-top: 20px;'>
-									<td class='center' width='7%' style='padding-top: 20px;'>
-										". __('email confirmation') . "
-									</td>
-									<td class='center' width='7%'>
-										" . __("on") . "
-										<input type='radio' name='mail_confirm_on' value='1' ".$emailConfirmationOn.">
-									</td>
-									<td class='center' width='7%'>
-										" . __("off") . "
-									<input type='radio' name='mail_confirm_on' value='0' ".$emailConfirmationOff.">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='mail_confirm_on' >
-										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-									</td>
-							   </tr>";
-						Html::closeForm();
-				echo "<form method='post' action='config.form.php'>
-							   <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1' style='padding-top: 20px;'>
-									<td class='center' width='7%' style='padding-top: 20px;'>
-										". __('protococols reminder service') . "
-									</td>
-									<td class='center' width='7%'>
-										" . __("on") . "
-										<input type='radio' name='reminder_on' value='1' ".$serviceReminderOn.">
-									</td>
-									<td class='center' width='7%'>
-										" . __("off") . "
-									<input type='radio' name='reminder_on' value='0' ".$serviceReminderOff.">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='reminder_on' >
-										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-									</td>
-							   </tr>";
-						Html::closeForm();
-				echo "<form method='post' action='config.form.php' >
-							  <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1' style='padding-top: 20px;". $emailSettings ."' >
-									<td class='center' width='7%' style='padding-top: 20px;'>
-										". __('protococols first reminder email') . "
-									</td>
-									<td class='center' width='7%'>
-									   " . $formData['first_emial_reminder'] . "
-									</td>
-									<td class='center' width='7%'>
-									<input type='email' name='first_emial_reminder' >
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='first_emial_reminder' >
-										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-									</td>
-							   </tr>";
-						Html::closeForm();
-					echo "<form method='post' action='config.form.php' >
-							  <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;". $emailSettings ."' >
-									<td class='center' width='7%' style='padding-top: 20px;'>
-										". __('protococols second reminder email') . "
-									</td>
-									<td class='center' width='7%'>
-									   " . $formData['second_emial_reminder'] . "
-									</td>
-									<td class='center' width='7%'>
-									<input type='email' name='second_emial_reminder' >
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='second_emial_reminder' >
-										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-									</td>
-							   </tr>";
-						Html::closeForm();
-					echo "<form method='post' action='config.form.php' >
-							  <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;". $emailSettings ."'>
-									<td class='center' width='7%' style='padding-top: 20px;'>
-										". __('How long should one wait before sending a reminder') . "
-									</td>
-									<td class='center' width='7%'>
-									   " . $formData['how_often_remind'] . "
-									</td>
-									<td class='center' width='7%'>
-									<input type='number' name='how_often_remind' >
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='how_often_remind' >
-										<input type='submit' name='service_settings' class='submit' value='".__('change')."'>
-									</td>
-								</tr>";
-						Html::closeForm();
-					echo "
 					</div>
 				</table>
 		</div><hr>";
