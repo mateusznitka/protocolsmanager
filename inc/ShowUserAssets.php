@@ -52,42 +52,52 @@ class ShowUserAssets
 
     private function setContentData()//: array
     {
-        global $DB;
+        global $DB, $CFG_GLPI;
         $result = [];
         $fieldsitemtableprefix = 'glpi_plugin_fields_';
+        $type_user = $CFG_GLPI['linkuser_types'];
 
-        foreach($this->tablesForUser as $tableName)
-        {
-            $containerName =
-            $fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$tableName" . "$this->container_name" .'s');
-            if (($this->user_field == 'users_id') or ($this->user_field == 'users_id_tech')) {
-                $iterator_params = [
-                    'FROM' => $tableName,
-                    'WHERE' => [$this->user_field => $this->userID]
-                ];
+        foreach($type_user as $itemtype) {
+            if (!($item = getItemForItemtype($itemtype))) {
+                continue;
             }
-            else {
-                $sub_query = new QuerySubQuery([
-                    'SELECT' => 'items_id',
-                    'FROM' => $fieldsitemtablewithuser,
-                    'WHERE' => ['itemtype' => $tableName, $this->user_field => $this->userID]
-                ]);
+            if ($item->canView()) {
+                $itemtable = getTableForItemType($itemtype);
+                $fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$itemtype" . "$this->container_name" . 's');
+                if (($this->user_field == 'users_id') or ($this->user_field == 'users_id_tech')) {
+                    $iterator_params = [
+                        'FROM' => $itemtable,
+                        'WHERE' => [$this->user_field => $this->userID]
+                    ];
+                }
+                else {
+                    $sub_query = new QuerySubQuery([
+                        'SELECT' => 'items_id',
+                        'FROM' => $fieldsitemtablewithuser,
+                        'WHERE' => ['itemtype' => $itemtype, $this->user_field => $this->userID]
+                    ]);
 
-                $iterator_params = [
-                    'FROM' => $tableName,
-                    'WHERE' => ['id' => $sub_query]
-                ];
-            }
-            $iterator_params['WHERE']['is_template'] = 0;
-            $iterator_params['WHERE']['is_deleted'] = 0;
-            $item_iterator = $DB->request($iterator_params);
-            $data = $item_iterator->current();
-            if(count($data) > 0){
-                $data['type'] = getItemTypeForTable($tableName);
-                array_push($result, $data);
+                    $iterator_params = [
+                        'FROM' => $itemtable,
+                        'WHERE' => ['id' => $sub_query]
+                    ];
+                }
+                if ($item->maybeTemplate()) {
+                    $iterator_params['WHERE']['is_template'] = 0;
+                }
+                
+                if ($item->maybeDeleted()) {
+                    $iterator_params['WHERE']['is_deleted'] = 0;
+                }
+                
+                $item_iterator = $DB->request($iterator_params);
+                $data = $item_iterator->current();
+                if(count($data) > 0){
+                    $data['type'] = getItemTypeForTable($tableName);
+                    array_push($result, $data);
+                }
             }
         }
-
         return $result;
     }
 
