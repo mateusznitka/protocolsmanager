@@ -92,10 +92,13 @@ class ShowUserAssets
                 }
                 
                 $item_iterator = $DB->request($iterator_params);
-                $data = $item_iterator->current();
-                if(count($data) > 0){
-                    $data['type'] = getItemTypeForTable($itemtype);
-                    array_push($result, $data);
+                foreach ($item_iterator as $iterator){
+                    if(count($iterator) > 1){
+
+                        $iterator['type'] = getItemTypeForTable($itemtype);
+
+                        array_push($result, $iterator);
+                    }
                 }
             }
         }
