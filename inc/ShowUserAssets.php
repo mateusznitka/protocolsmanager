@@ -55,15 +55,16 @@ class ShowUserAssets
         global $DB, $CFG_GLPI;
         $result = [];
         $fieldsitemtableprefix = 'glpi_plugin_fields_';
-        $type_user = $CFG_GLPI['linkuser_types'];
+        $item_type_user = $CFG_GLPI['linkuser_types'];
 
-        foreach($type_user as $itemtype) {
+        foreach($item_type_user as $itemtype) {
             if (!($item = getItemForItemtype($itemtype))) {
                 continue;
             }
             if ($item->canView()) {
                 $itemtable = getTableForItemType($itemtype);
                 $fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$itemtype" . "$this->container_name" . 's');
+
                 if (($this->user_field == 'users_id') or ($this->user_field == 'users_id_tech')) {
                     $iterator_params = [
                         'FROM' => $itemtable,
