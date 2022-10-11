@@ -94,7 +94,7 @@ class ShowUserAssets
                 $item_iterator = $DB->request($iterator_params);
                 $data = $item_iterator->current();
                 if(count($data) > 0){
-                    $data['type'] = getItemTypeForTable($tableName);
+                    $data['type'] = getItemTypeForTable($itemtype);
                     array_push($result, $data);
                 }
             }
