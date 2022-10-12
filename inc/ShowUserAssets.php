@@ -61,7 +61,8 @@ class ShowUserAssets
             if (!($item = getItemForItemtype($itemtype))) {
                 continue;
             }
-            if ($item->canView()) {
+            //TODO - problem to see in Self Service and other profiles without right to Assets.
+           // if ($item->canView()) {
                 $itemtable = getTableForItemType($itemtype);
                 $fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$itemtype" . "$this->container_name" . 's');
 
@@ -100,7 +101,7 @@ class ShowUserAssets
                         array_push($result, $iterator);
                     }
                 }
-            }
+            //}
         }
         return $result;
     }
