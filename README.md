@@ -24,6 +24,7 @@ GLPI Plugin to make PDF reports with user inventory.
 ## In 1.4.3:
 * for GLPI v.10
 * Sign protocols by users
+* view for users with linked/ownered devices
 
 ## Compatibility
 GLPI 9.5 or higher
