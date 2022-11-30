@@ -212,6 +212,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "</td>";
 							echo "<td class='center'>";
 							
+							//TODO - add custom models from GenericObject plugin
 							$modeltypes = ["computer", "phone", "monitor", "networkequipment", "printer", "peripheral"];
 							$mod_name = '';
 							
@@ -535,9 +536,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			ob_start();
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();
-			$options = new Options();
-			$options -> set('defaultFont', $font);
-			$html2pdf = new Dompdf($options);
+
+			$html2pdf = new Dompdf([
+					"defaultFont" => "$font",
+//					"logOutputFile" => /tmp/DOMPDF_render.log.htm',
+					"debugPng" => false, // extra messaging
+					"debugKeepTemp" => false, // don't delete temp files
+					'debugCss' => false, // output Style parsing information and frame details for every frame in the document
+					'debugLayout' => false, // draw boxes around frames
+					'debugLayoutLines' => false, // line boxes
+					'debugLayoutBlocks' => false, // block frames
+					'debugLayoutInline' => false, // inline frames
+					'debugLayoutPaddingBox' => false // padding box
+				]);
 			$html2pdf->loadHtml($html);
 			$html2pdf->setPaper('A4', $orientation);
 			$html2pdf->render();
