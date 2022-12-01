@@ -532,7 +532,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$islogo = 1;
 			}
 			
-			
+			$imgtype = pathinfo($logo, PATHINFO_EXTENSION);
+			$imgdata = file_get_contents($logo);
+			$imgbase64 = 'data:image/' . $imgtype . ';base64,' . base64_encode($imgdata);
+
 			ob_start();
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();

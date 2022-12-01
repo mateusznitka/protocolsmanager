@@ -38,8 +38,8 @@ footer
 	if ($islogo == 1) {
 
 		echo '<img src="';
-		echo $logo;
-		echo '" style="display: block; width: 100%; height: 20mm;">';
+		echo "$imgbase64";
+		echo '" style="display: block; width: 100%; height: 20mm;"/>';
 
 	}
 ?>
@@ -79,7 +79,7 @@ footer
 				echo "</th><th>"; 
 				echo __('Model');
 				echo "</th><th>";
-				echo __('Name');				
+				echo __('Name');
 				echo "</th><th>"; 
 				echo __('Serial number'); 
 				echo "</th><th>";
