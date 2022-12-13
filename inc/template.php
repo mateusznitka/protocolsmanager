@@ -77,6 +77,8 @@ footer
 				<th>'; 
 				echo __('Type');
 				echo "</th><th>"; 
+				echo __('Manufacturer'); 
+				echo "</th><th>"; 
 				echo __('Model');
 				echo "</th><th>";
 				echo __('Name');
@@ -92,7 +94,8 @@ footer
 				if (isset($type_name[$key])) {
 				echo '<tr><td>'. $lp . '</td>';
 				echo '<td>' . $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
+				echo '<td>'. $man_name[$key] .'</td>';
+				echo '<td>'. $mod_name[$key]. '</td>';
 				echo '<td>' .$item_name[$key] .'</td>';
 				echo '<td>'. $serial[$key] .'</td>';
 				echo '<td>'. $otherserial[$key] .'</td></tr>';
@@ -108,6 +111,8 @@ footer
 				<th></th>
 				<th>"; 
 				echo __('Type');
+				echo "</th><th>"; 
+				echo __('Manufacturer'); 
 				echo "</th><th>"; 
 				echo __('Model'); 
 				echo "</th><th>"; 
@@ -125,7 +130,8 @@ footer
 				if (isset($type_name[$key])){
 				echo '<tr><td>'. $lp .'</td>';
 				echo '<td>'. $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
+				echo '<td>'. $man_name[$key] .'</td>';
+				echo '<td>'. $mod_name[$key]. '</td>';
 				echo '<td>'. $item_name[$key] .'</td>';
 				echo '<td>'. $serial[$key] .'</td></tr>';
 				}
@@ -142,6 +148,8 @@ footer
 				<th></th>
 				<th>"; 
 				echo __('Type');
+				echo "</th><th>"; 
+				echo __('Manufacturer'); 
 				echo "</th><th>"; 
 				echo __('Model'); 
 				echo "</th><th>"; 
@@ -160,7 +168,8 @@ footer
 				if (isset($type_name[$key])){
 				echo '<tr><td>'. $lp . '</td>';
 				echo '<td>'. $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
+				echo '<td>'. $man_name[$key] .'</td>';
+				echo '<td>'. $mod_name[$key]. '</td>';
 				echo '<td>'. $item_name[$key]. '</td>';
 				echo '<td>' . $serial[$key] .'</td>';
 				echo '<td>'. $otherserial[$key] .'</td>';
@@ -176,6 +185,8 @@ footer
 				<th></th>
 				<th>"; 
 				echo __('Type');
+				echo "</th><th>"; 
+				echo __('Manufacturer'); 
 				echo "</th><th>"; 
 				echo __('Model'); 
 				echo "</th><th>"; 
@@ -195,7 +206,8 @@ footer
 				if (isset($type_name[$key])){
 				echo '<tr><td>'. $lp . '</td>';
 				echo '<td>'. $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
+				echo '<td>'. $man_name[$key] .'</td>';
+				echo '<td>'. $mod_name[$key]. '</td>';
 				echo '<td>'. $item_name[$key] .'</td>';
 				echo '<td>' . $serial[$key] .'</td>';
 				echo '<td>'. $comments[$key] .'</td></tr>';
