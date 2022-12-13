@@ -202,7 +202,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								if ($row = $req->current()) {
 									$man_name = $row["name"];
 								}
-								$man_name = explode(' ',trim($man_name))[0];
+								$man_name = trim($man_name);
 								echo $man_name;
 							}
 							else {
@@ -213,26 +213,24 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<td class='center'>";
 							
 							//TODO - add custom models from GenericObject plugin
-							$modeltypes = ["computer", "phone", "monitor", "networkequipment", "printer", "peripheral"];
 							$mod_name = '';
-							
-							foreach($modeltypes as $prefix) {
-								if(isset($data[$prefix.'models_id']) && !empty($data[$prefix.'models_id'])) {
-									$mod_id = $data[$prefix.'models_id'];
+							$prefix = strtolower($itemtype);
+							if(isset($data[$prefix.'models_id']) && !empty($data[$prefix.'models_id'])) {
+								$mod_id = $data[$prefix.'models_id'];
+								
+								$req2 = $DB->request(
+									'glpi_'.$prefix.'models',
+									['id' => $mod_id ]);
 									
-									$req2 = $DB->request(
-										'glpi_'.$prefix.'models',
-										['id' => $mod_id ]);
-										
-									if ($row2 = $req2->current()) {
-										$mod_name = $row2["name"];
-									}
-									echo $mod_name;
+								if ($row2 = $req2->current()) {
+									$mod_name = $row2["name"];
 								}
-								else {
-									echo '&nbsp;';
-									$mod_name = '';
-								}
+								$mod_name = trim($mod_name);
+								echo $mod_name;
+							}
+							else {
+								echo '&nbsp;';
+								$mod_name = '';
 							}
 							echo "</td>";
 							echo "<td class='center'>$link</td>";
@@ -888,12 +886,13 @@ $(function() {
 		var cols = "";
 		
 		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:9px;"></td>';
-		cols += '<td class="center"><input type="text" style="width:80% " name="type_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90% "name="man_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90% "name="item_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90% "name="serial[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90% "name="otherserial[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90% "name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+		cols += '<td class="center"><input type="text" style="width:80%" name="type_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90%" name="man_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90%" name="mod_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90%" name="item_name[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90%" name="serial[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90%" name="otherserial[]"></td>';
+		cols += '<td class="center"><input type="text" style="width:90%" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
 		
 		newRow.append(cols);
 		$("#additional_table").append(newRow);
