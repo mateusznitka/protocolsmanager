@@ -40,8 +40,8 @@ class SignProtocol {
 		$nmail = new GLPIMailer();
 	
 		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
-		$email_subject = _("GLPI Protocols Manager confirm code",'protocolsmanager');
-		$email_content = _('confirm code - ','protocolsmanager') . $this->confirmCode;
+		$email_subject = __("GLPI Protocols Manager confirm code",'protocolsmanager');
+		$email_content = __('confirm code - ','protocolsmanager') . $this->confirmCode;
 	
 		$req = $DB->request(
 			'glpi_useremails',
