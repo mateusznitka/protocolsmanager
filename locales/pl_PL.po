@@ -1,0 +1,100 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Protocols Manager\n"
+"POT-Creation-Date: 2023-03-08 23:20+0100\n"
+"PO-Revision-Date: 2023-03-08 23:34+0100\n"
+"Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
+"Language-Team: Wolvverine\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-Basepath: ../inc\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __:1,2c;ngettext:1,2;dgettext:2;dcgettext:2;"
+"dngettext:2,3;dcngettext:2,3\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Buttons.php:9
+msgctxt "protocolsmanager"
+msgid "Go to sign protocol by this button."
+msgstr "Idź podpisać protokół tym przyciskiem."
+
+#: Buttons.php:9
+msgctxt "protocolsmanager"
+msgid "or sign protocol by this button."
+msgstr "lub podpisz protokół tym przyciskiem."
+
+#: Buttons.php:13 protocols.class.php:87
+msgctxt "protocolsmanager"
+msgid "Sign protocol"
+msgstr "Podpisz protokół"
+
+#. TODO - preety look
+#: generate.class.php:121
+msgctxt "protocolsmanager"
+msgid "Current User Field: "
+msgstr "Aktualne pole użytkownika: "
+
+#: mailReminder.php:180
+msgctxt "protocolsmanager"
+msgid "Unsigned protocols list - "
+msgstr "Lista niepodpisanych protokołów - "
+
+#: mailReminder.php:183
+msgctxt "protocolsmanager"
+msgid "protocols name"
+msgstr "nazwa protokołu"
+
+#: protocols.class.php:19
+msgctxt "protocolsmanager"
+msgid "You haven't any protocols to sign"
+msgstr "Nie masz żadnych protokołów do podpisania"
+
+#: protocols.class.php:30
+msgctxt "protocolsmanager"
+msgid "Sign"
+msgstr "Podpisz"
+
+#: reminder.class.php:16
+msgctxt "protocolsmanager"
+msgid "Send Emails Reminder"
+msgstr "Wyślij powiadomienie E-mail"
+
+#: reminder.class.php:17
+msgctxt "protocolsmanager"
+msgid "Protocolsmanager send email reminder"
+msgstr "Menager Protokołów wysłał powiadomienie e-mail"
+
+#: reminder.class.php:18
+msgctxt "protocolsmanager"
+msgid "Protocols manager Reminder"
+msgstr "Przypomnienie Menadżera Protokołów"
+
+#: sign.class.php:43
+msgctxt "protocolsmanager"
+msgid "GLPI Protocols Manager confirm code"
+msgstr "Kod potwierdzający Menadżera Protokołów GLPI"
+
+#: sign.class.php:44
+msgctxt "protocolsmanager"
+msgid "confirm code - "
+msgstr "kod potwierdzający - "
+
+#: sign.class.php:80
+msgctxt "protocolsmanager"
+msgid "Document signed"
+msgstr "Dokument podpisany"
+
+#: sign.class.php:83
+msgctxt "protocolsmanager"
+msgid "Error - Document not signed"
+msgstr "Błąd - dokument niepodpisany"
+
+#: sign.class.php:140
+msgctxt "protocolsmanager"
+msgid "wrong confirmation code"
+msgstr "zły kod potwierdzający"
