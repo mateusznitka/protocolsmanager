@@ -13,9 +13,9 @@ class PluginProtocolsmanagerReminder extends CommonDBTM {
 		
 		switch ($name) {
 			case 'protocolsManagerReminder' :
-			return array('description' => __('Send Emails Reminder'),
-			'parameter'   => __('Protocolsmanager send email reminder'),
-			'itemtype' => __('Protocols manager Reminder'));
+			return array('description' => __('Send Emails Reminder','protocolsmanager'),
+			'parameter'   => __('Protocolsmanager send email reminder','protocolsmanager'),
+			'itemtype' => __('Protocols manager Reminder','protocolsmanager'));
 		}
 		return [];
 	}

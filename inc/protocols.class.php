@@ -16,7 +16,7 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 		$rand = mt_rand();
 		
 		if(!$this->hasProtocols()){
-			echo "<h2 style='color: green;text-align: center'>". __("You haven't any protocols to sign"). "</h2>";
+			echo "<h2 style='color: green;text-align: center'>". __("You haven't any protocols to sign",'protocolsmanager'). "</h2>";
 		} else {
 			echo "<div id='protocols_table'>";
 			echo "<table  class='tab_cadre_fixe'><td style='width:5%'></td><td style='width:5%'>";
@@ -27,7 +27,7 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 			$header2 .= "<th class='center'>".__('Date')."</th>";
 			$header2 .= "<th class='center'>".__('File')."</th>";
 			$header2 .= "<th class='center'>".__('Creator')."</th>";
-			$header2 .= "<th class='center'>".__('Podpis')."</th></tr>";
+			$header2 .= "<th class='center'>".__('Sign','protocolsmanager')."</th></tr>";
 			echo $header2;
 			$exports = [];
 			$doc_counter = 0;
@@ -84,7 +84,7 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 				</div>
 				<div class="modal-footer">
 						<button id="back_to_list" type="button" class="btn btn-secondary">'.__("Back").'</button>
-						<input type="submit" class="btn btn-primary" name="sign_protocols_submit" value="'.__("Sign protocol").'"/>
+						<input type="submit" class="btn btn-primary" name="sign_protocols_submit" value="'.__("Sign protocol",'protocolsmanager').'"/>
 					</div>';
 			Html::closeForm();
 			echo '</div>

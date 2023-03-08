@@ -40,8 +40,8 @@ class SignProtocol {
 		$nmail = new GLPIMailer();
 	
 		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
-		$email_subject = "GLPI Protocols Manager confirm code";
-		$email_content = 'confirm code - ' . $this->confirmCode;
+		$email_subject = _("GLPI Protocols Manager confirm code",'protocolsmanager');
+		$email_content = _('confirm code - ','protocolsmanager') . $this->confirmCode;
 	
 		$req = $DB->request(
 			'glpi_useremails',
@@ -77,10 +77,10 @@ class SignProtocol {
 					'protocol_id' => $prID
 				]
 			);
-			Session::addMessageAfterRedirect(__('Document signed'), false, 0);
+			Session::addMessageAfterRedirect(__('Document signed','protocolsmanager'), false, 0);
 			Html::redirect($CFG_GLPI["root_doc"]);
 		} catch (Exception $e) {
-			Session::addMessageAfterRedirect(__('Error - Document not signed'), false, 1);
+			Session::addMessageAfterRedirect(__('Error - Document not signed','protocolsmanager'), false, 1);
 			Html::redirect($CFG_GLPI["root_doc"]);
 		}
 	}
@@ -137,7 +137,7 @@ class SignProtocol {
 			$this->signdocument($data['protocols_id'], $data['user_id']);
 		} else {
 			$this->showFormconfirm($data['protocols_id'], $data['user_id']);
-			echo '<span style="color: red">' . __("wrong confirmation code") . '</span>';
+			echo '<span style="color: red">' . __("wrong confirmation code",'protocolsmanager') . '</span>';
 		}
 	}
 

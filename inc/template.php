@@ -209,7 +209,7 @@ footer
 				echo '<td>'. $man_name[$key] .'</td>';
 				echo '<td>'. $mod_name[$key]. '</td>';
 				echo '<td>'. $item_name[$key] .'</td>';
-				echo '<td>' . $serial[$key] .'</td>';
+				echo '<td>' .$serial[$key] .'</td>';
 				echo '<td>'. $comments[$key] .'</td></tr>';
 				}
 				$lp++;

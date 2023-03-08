@@ -177,11 +177,11 @@ class MailReminder{
 		$dataContent = $data;
 		$date = (new DateTime($dataContent[0]['modified']))->format('Y-m-d');
 		$body_message = '<table style="border: solid 1px black">';
-		$body_message .= '<tr style="border: solid 1px black" >' . __('Unsigned protocols list - ') . $date . '</tr>';
+		$body_message .= '<tr style="border: solid 1px black" >' . __('Unsigned protocols list - ','protocolsmanager') . $date . '</tr>';
 		$body_message .= '<tr style="border: solid 1px black">';
 		$body_message .= '<th style="border: solid 1px black; padding: 15px;">' . __('user name') . '</th>';
-		$body_message .= '<th style="border: solid 1px black; padding: 15px;">' . __('protocols name') . '</th>';
-		$body_message .= '<th style="border: solid 1px black; padding: 15px;">' . __('user eamil') . '</th>';
+		$body_message .= '<th style="border: solid 1px black; padding: 15px;">' . __('protocols name','protocolsmanager') . '</th>';
+		$body_message .= '<th style="border: solid 1px black; padding: 15px;">' . __('user email') . '</th>';
 		$body_message .= '</tr>';
 		foreach ($data as $dt) {
 			$body_message .= '<tr style="border: solid 1px black">';
