@@ -15,22 +15,20 @@ function plugin_protocolsmanager_redefine_menus($menu) {
 		if($result['field_count'] > 0 && $result2['protocols_save_on']){
 			$menu['protocols'] = [
 				'default' => '/plugins/protocolsmanager/front/protocols.form.php',
-				'title' => __('Sign protocol','protocolsmanager'),
+				'title'   => __('Sign protocol','protocolsmanager'),
 				'content' => [false],
-				'icon' => 'ti ti-alert-circle'
+				'icon'    => 'ti ti-alert-circle'
 			];
 		}
 	}
 	if($result2['show_own_assets']){
 		$menu['myAssets'] = [
-			'default'   => '/plugins/protocolsmanager/front/myAssets.form.php',
-			'title'     => __('My assets','protocolsmanager'),
-			'content'   => [false],
-			'icon' => 'ti ti-alert-circle'
+			'default' => '/plugins/protocolsmanager/front/myAssets.form.php',
+			'title'   => __('My assets','protocolsmanager'),
+			'content' => [false],
+			'icon'    => 'ti ti-alert-circle'
 		];
 	}
-
-
 	return $menu;
 }
 
