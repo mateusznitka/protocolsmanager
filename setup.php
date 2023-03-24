@@ -2,8 +2,8 @@
 
 function plugin_version_protocolsmanager() {
 	return array('name'				=> __('Protocols manager','protocolsmanager'),
-				'version'			=> '1.4.3',
-				'author'			=> 'Mateusz Nitka', # Michał Panasiewicz,Artur Barzdo
+				'version'			=> '1.4.3.1',
+				'author'			=> 'Mateusz Nitka,Michał Panasiewicz,Artur Barzdo',
 				'license'			=> 'GPLv3+',
 				'homepage'			=> 'https://github.com/Wolvverine/protocolsmanager',
 				'minGlpiVersion'	=> '10.0');
@@ -18,7 +18,7 @@ function plugin_protocolsmanager_check_prerequisites() {
 		if (GLPI_VERSION>=10.0){
 			return true;
 		} else {
-			echo "GLPI version NOT compatible. Requires GLPI 10.0";
+			echo __('GLPI version NOT compatible. Requires GLPI 10.0','protocolsmanager');
 		}
 }
 
