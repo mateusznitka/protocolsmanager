@@ -94,7 +94,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<option value='users_id' ".('users_id' == $field_user ? 'selected style="font-weight:bold"' : '').">".__('User')."</option>";
 			echo "<option value='users_id_tech' ".('users_id_tech' == $field_user ? 'selected style="font-weight:bold"' : '').">".__('Technician')."</option>";
 			echo "</select></td>";
-			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field')."'></td>";
+			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field','protocolsmanager')."'></td>";
 			echo "<td style='width:30%'></td></tr>";
 			echo "</table>";
 			Html::closeForm();
@@ -412,7 +412,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "</td>";
 					if(self::checkSignProtocolsOn()){
 						echo "<td class='center'>";
-						echo $exports["confirmed"] == 0 ? __('No signed'): __('Signed') ;
+						echo $exports["confirmed"] == 0 ? __('No signed','protocolsmanager'): __('Signed','protocolsmanager') ;
 						echo "</td>";
 					}
 					

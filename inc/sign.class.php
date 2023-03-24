@@ -117,7 +117,7 @@ class SignProtocol {
 					<input type='text' name='code' >
 					</td>
 					<td class='center' width='7%'>
-						<input type='submit' name='sign_protocols_submit_confirm' class='submit' value='" . __('Submit') . "'>
+						<input type='submit' name='sign_protocols_submit_confirm' class='submit' value='" . __('Submit','protocolsmanager') . "'>
 					</td>
 				</tr>";
 			Html::closeForm();

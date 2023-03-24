@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-24 15:49+0100\n"
-"PO-Revision-Date: 2023-03-24 15:51+0100\n"
+"POT-Creation-Date: 2023-03-24 16:54+0100\n"
+"PO-Revision-Date: 2023-03-24 16:55+0100\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
 "Language: pl\n"
@@ -37,6 +37,11 @@ msgstr "Idź podpisać protokół tym przyciskiem."
 msgctxt "protocolsmanager"
 msgid "or sign protocol by this button."
 msgstr "lub podpisz protokół tym przyciskiem."
+
+#: inc/ConfigNewSettingsForms.class.php:20
+msgctxt "protocolsmanager"
+msgid "Set user fields option"
+msgstr "Ustaw pole dla użytkownika"
 
 #: inc/ConfigNewSettingsForms.class.php:35
 #: inc/ConfigNewSettingsForms.class.php:59
@@ -105,10 +110,25 @@ msgctxt "protocolsmanager"
 msgid "Enable email autosending"
 msgstr "Włącz autowysyłanie e-meili"
 
+#: inc/generate.class.php:97
+msgctxt "protocolsmanager"
+msgid "Change Field"
+msgstr "Zmień pole"
+
 #: inc/generate.class.php:121
 msgctxt "protocolsmanager"
 msgid "Current User Field: "
 msgstr "Aktualne pole użytkownika: "
+
+#: inc/generate.class.php:415
+msgctxt "protocolsmanager"
+msgid "No signed"
+msgstr "Niepodpisany"
+
+#: inc/generate.class.php:415
+msgctxt "protocolsmanager"
+msgid "Signed"
+msgstr "Podpisany"
 
 #: inc/mailReminder.php:180
 msgctxt "protocolsmanager"
@@ -130,7 +150,17 @@ msgctxt "protocolsmanager"
 msgid "Go to GLPI and sign protocol"
 msgstr "Idź do GLPI i podpisz protokół"
 
-#: inc/profile.class.php:43
+#: inc/mailReminder.php:237
+msgctxt "protocolsmanager"
+msgid "GLPI REMINDER"
+msgstr "Przypomnienie z GLPI"
+
+#: inc/mailReminder.php:260 inc/sign.class.php:61
+msgctxt "protocolsmanager"
+msgid "Can not confirm, add e-mail"
+msgstr "Nie można potwierdzić, dodaj e-mail dla użytkownika"
+
+#: inc/profile.class.php:43 setup.php:4
 msgctxt "protocolsmanager"
 msgid "Protocols manager"
 msgstr "Menadżer Protokołów"
@@ -195,15 +225,15 @@ msgctxt "protocolsmanager"
 msgid "confirm code - "
 msgstr "kod potwierdzający - "
 
-#: inc/sign.class.php:61
-msgctxt "protocolsmanager"
-msgid "Can not confirm, add e-mail"
-msgstr "Nie można potwierdzić, dodaj e-mail dla użytkownika"
-
 #: inc/sign.class.php:114
 msgctxt "protocolsmanager"
 msgid "Check your email and write code"
 msgstr "Sprawdź e-mail i wpisz kod"
+
+#: inc/sign.class.php:120
+msgctxt "protocolsmanager"
+msgid "Submit"
+msgstr "Wyślij"
 
 #: inc/sign.class.php:140
 msgctxt "protocolsmanager"

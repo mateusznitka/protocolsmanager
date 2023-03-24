@@ -17,7 +17,7 @@ class ConfigNewSettingsForms
                                <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1' style='padding-top: 20px;'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('Set user fields option') . "
+                                        ". __('Set user fields option','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                         

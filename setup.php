@@ -1,7 +1,7 @@
 <?php
 
 function plugin_version_protocolsmanager() {
-	return array('name'				=> "Protocols manager",
+	return array('name'				=> __('Protocols manager','protocolsmanager'),
 				'version'			=> '1.4.3',
 				'author'			=> 'Mateusz Nitka', # Michał Panasiewicz,Artur Barzdo
 				'license'			=> 'GPLv3+',

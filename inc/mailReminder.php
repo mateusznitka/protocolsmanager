@@ -203,7 +203,7 @@ class MailReminder{
 
 		$body = __('You have an unsigned protocol','protocolsmanager');
 		$body .= ' - ' . $data['protocol_name'];
-		$body .= __(' from') . ' ' . $data['modified'] . '<br>';
+		$body .= __('from') . ' ' . $data['modified'] . '<br>';
 		$body .= __('Go to GLPI and sign protocol','protocolsmanager');
 		$body .= $button->createSignProtocolButton($CFG_GLPI, 'reminder');
 		return $body;
@@ -234,7 +234,7 @@ class MailReminder{
 		$nmail = new GLPIMailer();
 
 		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
-		$email_subject = __('GLPI REMINDER');
+		$email_subject = __('GLPI REMINDER','protocolsmanager');
 		$email_content = $protocols['conntent'];
 
 		if ($protocols['id_user'] != '') {
@@ -257,7 +257,7 @@ class MailReminder{
 				Session::addMessageAfterRedirect(__('Email sent') . " to " . $owner_email);
 			}
 		} else {
-			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail'), false, ERROR);
+			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, ERROR);
 		}
 	}
 }
