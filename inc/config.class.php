@@ -124,11 +124,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<form action='config.form.php' method='post'>";
 		echo "<input type='hidden' name='menu_mode' value='t'>";
 		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<tr><td style='text-align:center'><input type='submit' class='submit' name='template_settings' value='Templates settings'></td>";
+		echo "<tr><td style='text-align:center'><input type='submit' class='submit' name='template_settings' value=" . __('Templates settings','protocolsmanager') . "></td>";
 		Html::closeForm();
 		echo "<form action='config.form.php' method='post'>";
 		echo "<input type='hidden' name='menu_mode' value='e'>";
-		echo "<td style='text-align:center'><input type='submit' class='submit' name='email_settings' value='Email settings'></td></tr>";
+		echo "<td style='text-align:center'><input type='submit' class='submit' name='email_settings' value=" . __('Email settings','protocolsmanager') . "></td></tr>";
 		echo "</table>";
 		Html::closeForm();
 		echo "</div>";
@@ -240,11 +240,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<form action='config.form.php' method='post'>";
 		echo "<input type='hidden' name='menu_mode' value='t'>";
 		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<tr><td style='text-align:center'><input type='submit' class='submit' name='template_settings' value='Templates settings'></td>";
+		echo "<tr><td style='text-align:center'><input type='submit' class='submit' name='template_settings' value=" . __('Templates settings','protocolsmanager') . "></td>";
 		Html::closeForm();
 		echo "<form action='config.form.php' method='post'>";
 		echo "<input type='hidden' name='menu_mode' value='e'>";
-		echo "<td style='text-align:center'><input type='submit' class='submit' name='email_settings' value='Email settings'></td></tr>";
+		echo "<td style='text-align:center'><input type='submit' class='submit' name='email_settings' value=" . __('Email settings','protocolsmanager') . "></td></tr>";
 		echo "</table>";
 		Html::closeForm();
 		echo "</div>";

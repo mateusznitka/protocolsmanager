@@ -294,17 +294,17 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 				
 				//send email popup
-				echo "<div class='dialog' title='".__('Send')." email'><p>Select recipients from template or enter manually to send email</p><br><br>";
+				echo "<div class='dialog' title='".__('Send email')."'><p>" . __('Select recipients from template or enter manually to send email','protocolsmanager') . "</p><br><br>";
 				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
 				
 				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
-				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'><b> Enter recipients manually </b><br><br>";
-				echo "<textarea style='width:90%; height:30px' name='em_list' class='man_recs' placeholder='Recipients (use ; to separate emails)'></textarea><br><br>";
-				echo "<input type='text' style='width:90%' name='email_subject' class='man_recs' placeholder='Subject'><br><br>";
-				echo "<textarea style='width:90%; height:80px' name='email_content' class='man_recs' placeholder='Content'></textarea><br><br>";
+				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'><b>" . __('Enter recipients manually','protocolsmanager') . "</b><br><br>";
+				echo "<textarea style='width:90%; height:30px' name='em_list' class='man_recs' placeholder=" . __('Recipients (use ; to separate emails)','protocolsmanager') . "></textarea><br><br>";
+				echo "<input type='text' style='width:90%' name='email_subject' class='man_recs' placeholder=" . __('Subject') . "><br><br>";
+				echo "<textarea style='width:90%; height:80px' name='email_content' class='man_recs' placeholder=" . __('Content') . "></textarea><br><br>";
 				
 				
-				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'><b> Select recipients from template</b><br><br>";
+				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'><b>" . __('Select recipients from template','protocolsmanager') . "</b><br><br>";
 
 				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
 				
@@ -323,7 +323,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>";
 				
 				//add custom row
-				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
+				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>" . __('Add Custom Fields','protocolsmanager') . "</button></div>";
 				
 				echo "<div class='spaced'>";
 				echo "<form method='post' name='docs_form' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
