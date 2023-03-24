@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-24 15:23+0100\n"
-"PO-Revision-Date: 2023-03-24 15:23+0100\n"
+"POT-Creation-Date: 2023-03-24 15:49+0100\n"
+"PO-Revision-Date: 2023-03-24 15:51+0100\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
 "Language: pl\n"
@@ -38,6 +38,18 @@ msgctxt "protocolsmanager"
 msgid "or sign protocol by this button."
 msgstr "lub podpisz protokół tym przyciskiem."
 
+#: inc/ConfigNewSettingsForms.class.php:35
+#: inc/ConfigNewSettingsForms.class.php:59
+#: inc/ConfigNewSettingsForms.class.php:84
+#: inc/ConfigNewSettingsForms.class.php:108
+#: inc/ConfigNewSettingsForms.class.php:132
+#: inc/ConfigNewSettingsForms.class.php:154
+#: inc/ConfigNewSettingsForms.class.php:176
+#: inc/ConfigNewSettingsForms.class.php:198
+msgctxt "protocolsmanager"
+msgid "Change"
+msgstr "Zmień"
+
 #: inc/ConfigNewSettingsForms.class.php:47
 msgctxt "protocolsmanager"
 msgid "Show user assets"
@@ -47,6 +59,11 @@ msgstr "Pokaż zasoby użytkownika"
 msgctxt "protocolsmanager"
 msgid "sign protococols service"
 msgstr "usługa podpisywania protokołów"
+
+#: inc/ConfigNewSettingsForms.class.php:96
+msgctxt "protocolsmanager"
+msgid "email confirmation"
+msgstr "potwierdzenie email"
 
 #: inc/ConfigNewSettingsForms.class.php:120
 msgctxt "protocolsmanager"
@@ -62,6 +79,11 @@ msgstr "pierwsze przypomnienie o protokole"
 msgctxt "protocolsmanager"
 msgid "protococols second reminder email"
 msgstr "drugie przypomnienie o protokole"
+
+#: inc/ConfigNewSettingsForms.class.php:188
+msgctxt "protocolsmanager"
+msgid "How long should one wait before sending a reminder"
+msgstr "Jak długo należy czekać przed wysłaniem przypomnienia"
 
 #: inc/ShowUserAssets.php:49
 msgctxt "protocolsmanager"

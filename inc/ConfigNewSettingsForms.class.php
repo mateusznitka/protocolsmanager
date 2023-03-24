@@ -32,7 +32,7 @@ class ConfigNewSettingsForms
 
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='user_fields' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -56,7 +56,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='show_own_assets' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -81,7 +81,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='protocols_save_on' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -93,7 +93,7 @@ class ConfigNewSettingsForms
                                <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1' style='padding-top: 20px;'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('email confirmation') . "
+                                        ". __('email confirmation','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                         " . __("on") . "
@@ -105,7 +105,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='mail_confirm_on' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -129,7 +129,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='reminder_on' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -151,7 +151,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='first_emial_reminder' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -173,7 +173,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='second_emial_reminder' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                </tr>";
         Html::closeForm();
@@ -185,7 +185,7 @@ class ConfigNewSettingsForms
                               <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;". $emailSettings ."'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('How long should one wait before sending a reminder') . "
+                                        ". __('How long should one wait before sending a reminder','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                        " . $formData['how_often_remind'] . "
@@ -195,7 +195,7 @@ class ConfigNewSettingsForms
                                     </td>
                                     <td class='center' width='7%'>
                                         <input type='hidden' name='witch_field_settings' value='how_often_remind' >
-                                        <input type='submit' name='service_settings' class='submit' value='".__('change')."'>
+                                        <input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
                                     </td>
                                 </tr>";
         Html::closeForm();
