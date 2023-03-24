@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-24 16:54+0100\n"
-"PO-Revision-Date: 2023-03-24 16:55+0100\n"
+"POT-Creation-Date: 2023-03-24 17:49+0100\n"
+"PO-Revision-Date: 2023-03-24 17:50+0100\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
 "Language: pl\n"
@@ -160,7 +160,8 @@ msgctxt "protocolsmanager"
 msgid "Can not confirm, add e-mail"
 msgstr "Nie można potwierdzić, dodaj e-mail dla użytkownika"
 
-#: inc/profile.class.php:43 setup.php:4
+#: inc/profile.class.php:6 inc/profile.class.php:43 inc/protocols.class.php:7
+#: setup.php:4
 msgctxt "protocolsmanager"
 msgid "Protocols manager"
 msgstr "Menadżer Protokołów"
@@ -239,3 +240,8 @@ msgstr "Wyślij"
 msgctxt "protocolsmanager"
 msgid "wrong confirmation code"
 msgstr "zły kod potwierdzający"
+
+#: setup.php:21
+msgctxt "protocolsmanager"
+msgid "GLPI version NOT compatible. Requires GLPI 10.0"
+msgstr "Wersja GLPI jest niekompatybilna. Wymagana jest wersja 10.0 ."
