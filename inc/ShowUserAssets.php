@@ -46,7 +46,7 @@ class ShowUserAssets
         $header .= "<th>".__('Asset')."</th>";
         $header .= "<th>".__('Name')."</th>";
         $header .= "<th>".__('Serial number')."</th>";
-        $header .= "<th>".__('Created date')."</th>";
+        $header .= "<th>".__('Created date','protocolsmanager')."</th>";
         echo $header;
     }
 

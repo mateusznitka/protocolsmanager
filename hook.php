@@ -24,7 +24,7 @@ function plugin_protocolsmanager_redefine_menus($menu) {
 	if($result2['show_own_assets']){
 		$menu['myAssets'] = [
 			'default'   => '/plugins/protocolsmanager/front/myAssets.form.php',
-			'title'     => __('My assets', 'protocolsmanager'),
+			'title'     => __('My assets','protocolsmanager'),
 			'content'   => [false],
 			'icon' => 'ti ti-alert-circle'
 		];

@@ -37,20 +37,20 @@ class PluginProtocolsmanagerProfile extends CommonDBTM
             $edit_flag = 0;
         }
 
-        echo "<form name='profiles' action='". $CFG_GLPI["root_doc"] ."/plugins/protocolsmanager/front/profile.form.php' method='post'>";
+        echo "<form name='profiles' action='" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/profile.form.php' method='post'>";
         echo "<div class='center'>";
         echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr class='tab_bg_5'><th colspan='2'>Protocols manager</th></tr>";
-        echo "<tr class='tab_bg_2'><td width=30%>Plugin configuration</td><td>";
+        echo "<tr class='tab_bg_5'><th colspan='2'>" . __('Protocols manager','protocolsmanager') . "</th></tr>";
+        echo "<tr class='tab_bg_2'><td width=30%>" . __('Plugin configuration','protocolsmanager') . "</td><td>";
         Html::showCheckbox(['name' => 'plugin_conf', 'checked' => $plugin_conf, 'value' => 'w']);
         echo "</td></tr>";
-        echo "<tr class='tab_bg_2'><td width=30%>Protocols mananger tab access</td><td>";
+        echo "<tr class='tab_bg_2'><td width=30%>" . __('Protocols manager tab access','protocolsmanager') . "</td><td>";
         Html::showCheckbox(['name' => 'tab_access', 'checked' => $tab_access, 'value' => 'w']);
         echo "</td></tr>";
-        echo "<tr class='tab_bg_2'><td width=30%>My assets access</td><td>";
+        echo "<tr class='tab_bg_2'><td width=30%>" . __('My assets page access','protocolsmanager') . "</td><td>";
         Html::showCheckbox(['name' => 'my_assets', 'checked' => $my_assets, 'value' => 'w']);
         echo "</td></tr>";
-        echo "<tr class='tab_bg_2'><td width=30%>Sign protocol page</td><td>";
+        echo "<tr class='tab_bg_2'><td width=30%>" . __('Sign protocol page access','protocolsmanager') . "</td><td>";
         Html::showCheckbox(['name' => 'sign_protocol_form', 'checked' => $sign_protocol_form, 'value' => 'w']);
         echo "</td></tr>";
         echo "<tr class='tab_bg_5'><th colspan='2'>";
