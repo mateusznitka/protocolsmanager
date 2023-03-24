@@ -201,10 +201,10 @@ class MailReminder{
 		$protocol_for_url = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
 		$link = $protocol_for_url.$_SERVER['HTTP_HOST'].$CFG_GLPI["root_doc"]."plugins/protocolsmanager/front/protocols.form.php";
 
-		$body = __('You have an unsigned protocol');
+		$body = __('You have an unsigned protocol','protocolsmanager');
 		$body .= ' - ' . $data['protocol_name'];
 		$body .= __(' from') . ' ' . $data['modified'] . '<br>';
-		$body .= __('Go to GLPI and sign protocol');
+		$body .= __('Go to GLPI and sign protocol','protocolsmanager');
 		$body .= $button->createSignProtocolButton($CFG_GLPI, 'reminder');
 		return $body;
 	}

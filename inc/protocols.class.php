@@ -56,7 +56,7 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 				echo $exports['author'];
 				echo "</td>";
 				echo '<td class="center"><button data-id="'.$exports['document_id'].'" type="button" class="btn btn-primary describe_modal">
-					'.__('Show').'
+					'.__('Show','protocolsmanager').'
 					</button>';
 				echo "</td>";
 			}

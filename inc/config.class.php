@@ -201,7 +201,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "&nbsp&nbsp<input type='checkbox' name='img_delete' value='$img_delete'>&nbsp ".__('Delete')." ".__('File');
 		}
 		echo "</td></tr>";
-		echo "<tr><td>".__('Enable email autosending')."</td><td><input type='radio' name='email_mode' value='1'";
+		echo "<tr><td>".__('Enable email autosending','protocolsmanager')."</td><td><input type='radio' name='email_mode' value='1'";
 		if ($email_mode == 1)
 			echo "checked='checked'";
 		echo "> ON</td>";

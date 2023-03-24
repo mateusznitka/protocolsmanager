@@ -65,10 +65,10 @@ class SignProtocolByEmail
             }
             $sp = new SignProtocol();
             $sp->signdocumentByEmail($arrayResult[2],$arrayResult[0]);
-            $result = ['message' =>__('Document signed'), 'message_color' => 'green' ];
+            $result = ['message' =>__('Document signed','protocolsmanager'), 'message_color' => 'green' ];
 
         }catch (\Exception $exception){
-            $result = ['message' => __('Error - Document not signed'), 'message_color' => 'red'];
+            $result = ['message' => __('Error - Document not signed','protocolsmanager'), 'message_color' => 'red'];
         }
         return $result;
     }

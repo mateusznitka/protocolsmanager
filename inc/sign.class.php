@@ -58,7 +58,7 @@ class SignProtocol {
 				Session::addMessageAfterRedirect(__('Email sent') . " to " . $owner_email);
 			}
 		} else {
-			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail'), false, ERROR);
+			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, ERROR);
 		}
 	}
 	
@@ -111,7 +111,7 @@ class SignProtocol {
 				<input type='hidden' name='user_id' value='" . $usID . "' >
 				<tr class='tab_bg_1' style='padding: 20px;'>
 					<td class='center' width='7%' style='padding-top: 20px;'>
-						" . __('Check your email and write code') . "
+						" . __('Check your email and write code','protocolsmanager') . "
 					</td>
 					<td class='center' width='7%'>
 					<input type='text' name='code' >

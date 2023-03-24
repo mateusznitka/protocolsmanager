@@ -44,7 +44,7 @@ class ConfigNewSettingsForms
                                <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1' style='padding-top: 20px;'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-        ". __('Show user assets') . "
+        ". __('Show user assets','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
         " . __("on") . "
@@ -69,7 +69,7 @@ class ConfigNewSettingsForms
                             <input type='hidden' name='menu_mode' value='e'>
                                 <tr class='tab_bg_1' style='padding-top: 20px;'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                            ". __('sign protococols service') . "
+                                            ". __('sign protococols service','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                         " . __("on") . "
@@ -117,7 +117,7 @@ class ConfigNewSettingsForms
                                <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1' style='padding-top: 20px;'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('protococols reminder service') . "
+                                        ". __('protococols reminder service','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                         " . __("on") . "
@@ -141,7 +141,7 @@ class ConfigNewSettingsForms
                               <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1' style='padding-top: 20px;". $emailSettings ."' >
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('protococols first reminder email') . "
+                                        ". __('protococols first reminder email','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                        " . $formData['first_emial_reminder'] . "
@@ -163,7 +163,7 @@ class ConfigNewSettingsForms
                               <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;". $emailSettings ."' >
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('protococols second reminder email') . "
+                                        ". __('protococols second reminder email','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
                                        " . $formData['second_emial_reminder'] . "
