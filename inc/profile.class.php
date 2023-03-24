@@ -3,7 +3,7 @@
 class PluginProtocolsmanagerProfile extends CommonDBTM
 {
     function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-        return self::createTabEntry('Protocols manager');
+        return self::createTabEntry(__('Protocols manager','protocolsmanager'));
     }
 
     static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {

@@ -4,7 +4,7 @@ require_once dirname(__DIR__) . '/inc/CheckAccess.class.php';
 class PluginProtocolsmanagerProtocols extends CommonDBTM {
 	
 	function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-		return self::createTabEntry('Protocols manager');
+		return self::createTabEntry(__('Protocols manager','protocolsmanager'));
 	}
 	
 	public function showFormProtocols() {
