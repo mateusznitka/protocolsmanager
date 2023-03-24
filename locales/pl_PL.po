@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-24 13:10+0100\n"
-"PO-Revision-Date: 2023-03-24 13:17+0100\n"
+"POT-Creation-Date: 2023-03-24 15:23+0100\n"
+"PO-Revision-Date: 2023-03-24 15:23+0100\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
 "Language: pl\n"
@@ -12,143 +12,178 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
 "|| n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 3.2.2\n"
-"X-Poedit-Basepath: ../inc\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __:1,2c;ngettext:1,2;dgettext:2;dcgettext:2;"
 "dngettext:2,3;dcngettext:2,3\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Buttons.php:9
-msgctxt "protocolsmanager"
-msgid "Go to sign protocol by this button."
-msgstr "Idź podpisać protokół tym przyciskiem."
-
-#: Buttons.php:9
-msgctxt "protocolsmanager"
-msgid "or sign protocol by this button."
-msgstr "lub podpisz protokół tym przyciskiem."
-
-#: Buttons.php:13 protocols.class.php:87
+#: hook.php:18 inc/Buttons.php:13 inc/protocols.class.php:87
 msgctxt "protocolsmanager"
 msgid "Sign protocol"
 msgstr "Podpisz protokół"
 
-#: ConfigNewSettingsForms.class.php:47
+#: hook.php:27
+msgctxt "protocolsmanager"
+msgid "My assets"
+msgstr "Moje zasoby"
+
+#: inc/Buttons.php:9
+msgctxt "protocolsmanager"
+msgid "Go to sign protocol by this button."
+msgstr "Idź podpisać protokół tym przyciskiem."
+
+#: inc/Buttons.php:9
+msgctxt "protocolsmanager"
+msgid "or sign protocol by this button."
+msgstr "lub podpisz protokół tym przyciskiem."
+
+#: inc/ConfigNewSettingsForms.class.php:47
 msgctxt "protocolsmanager"
 msgid "Show user assets"
 msgstr "Pokaż zasoby użytkownika"
 
-#: ConfigNewSettingsForms.class.php:72
+#: inc/ConfigNewSettingsForms.class.php:72
 msgctxt "protocolsmanager"
 msgid "sign protococols service"
 msgstr "usługa podpisywania protokołów"
 
-#: ConfigNewSettingsForms.class.php:120
+#: inc/ConfigNewSettingsForms.class.php:120
 msgctxt "protocolsmanager"
 msgid "protococols reminder service"
 msgstr "usługa przypominania o podpisaniach"
 
-#: ConfigNewSettingsForms.class.php:144
+#: inc/ConfigNewSettingsForms.class.php:144
 msgctxt "protocolsmanager"
 msgid "protococols first reminder email"
 msgstr "pierwsze przypomnienie o protokole"
 
-#: ConfigNewSettingsForms.class.php:166
+#: inc/ConfigNewSettingsForms.class.php:166
 msgctxt "protocolsmanager"
 msgid "protococols second reminder email"
 msgstr "drugie przypomnienie o protokole"
 
-#: SignProtocolByEmail.php:68 sign.class.php:80
+#: inc/ShowUserAssets.php:49
+msgctxt "protocolsmanager"
+msgid "Created date"
+msgstr "Data utworzenia"
+
+#: inc/SignProtocolByEmail.php:68 inc/sign.class.php:80
 msgctxt "protocolsmanager"
 msgid "Document signed"
 msgstr "Dokument podpisany"
 
-#: SignProtocolByEmail.php:71 sign.class.php:83
+#: inc/SignProtocolByEmail.php:71 inc/sign.class.php:83
 msgctxt "protocolsmanager"
 msgid "Error - Document not signed"
 msgstr "Błąd - dokument niepodpisany"
 
-#: config.class.php:204
+#: inc/config.class.php:204
 msgctxt "protocolsmanager"
 msgid "Enable email autosending"
 msgstr "Włącz autowysyłanie e-meili"
 
-#: generate.class.php:121
+#: inc/generate.class.php:121
 msgctxt "protocolsmanager"
 msgid "Current User Field: "
 msgstr "Aktualne pole użytkownika: "
 
-#: mailReminder.php:180
+#: inc/mailReminder.php:180
 msgctxt "protocolsmanager"
 msgid "Unsigned protocols list - "
 msgstr "Lista niepodpisanych protokołów - "
 
-#: mailReminder.php:183
+#: inc/mailReminder.php:183
 msgctxt "protocolsmanager"
 msgid "protocols name"
 msgstr "nazwa protokołu"
 
-#: mailReminder.php:204
+#: inc/mailReminder.php:204
 msgctxt "protocolsmanager"
 msgid "You have an unsigned protocol"
 msgstr "Masz protokół do podpisania"
 
-#: mailReminder.php:207
+#: inc/mailReminder.php:207
 msgctxt "protocolsmanager"
 msgid "Go to GLPI and sign protocol"
 msgstr "Idź do GLPI i podpisz protokół"
 
-#: protocols.class.php:19
+#: inc/profile.class.php:43
+msgctxt "protocolsmanager"
+msgid "Protocols manager"
+msgstr "Menadżer Protokołów"
+
+#: inc/profile.class.php:44
+msgctxt "protocolsmanager"
+msgid "Plugin configuration"
+msgstr "Konfiguracja pluginu"
+
+#: inc/profile.class.php:47
+msgctxt "protocolsmanager"
+msgid "Protocols manager tab access"
+msgstr "Dostęp do strony Manadżera protokołów"
+
+#: inc/profile.class.php:50
+msgctxt "protocolsmanager"
+msgid "My assets page access"
+msgstr "Dostęp do strony własnych zasobów"
+
+#: inc/profile.class.php:53
+msgctxt "protocolsmanager"
+msgid "Sign protocol page access"
+msgstr "Dostęp do strony podpisywania protokołu"
+
+#: inc/protocols.class.php:19
 msgctxt "protocolsmanager"
 msgid "You haven't any protocols to sign"
 msgstr "Nie masz żadnych protokołów do podpisania"
 
-#: protocols.class.php:30
+#: inc/protocols.class.php:30
 msgctxt "protocolsmanager"
 msgid "Sign"
 msgstr "Podpisz"
 
-#: protocols.class.php:59
+#: inc/protocols.class.php:59
 msgctxt "protocolsmanager"
 msgid "Show"
 msgstr "Pokaż"
 
-#: reminder.class.php:16
+#: inc/reminder.class.php:16
 msgctxt "protocolsmanager"
 msgid "Send Emails Reminder"
 msgstr "Wyślij powiadomienie E-mail"
 
-#: reminder.class.php:17
+#: inc/reminder.class.php:17
 msgctxt "protocolsmanager"
 msgid "Protocolsmanager send email reminder"
 msgstr "Menager Protokołów wysłał powiadomienie e-mail"
 
-#: reminder.class.php:18
+#: inc/reminder.class.php:18
 msgctxt "protocolsmanager"
 msgid "Protocols manager Reminder"
 msgstr "Przypomnienie Menadżera Protokołów"
 
-#: sign.class.php:43
+#: inc/sign.class.php:43
 msgctxt "protocolsmanager"
 msgid "GLPI Protocols Manager confirm code"
 msgstr "Kod potwierdzający Menadżera Protokołów GLPI"
 
-#: sign.class.php:44
+#: inc/sign.class.php:44
 msgctxt "protocolsmanager"
 msgid "confirm code - "
 msgstr "kod potwierdzający - "
 
-#: sign.class.php:61
+#: inc/sign.class.php:61
 msgctxt "protocolsmanager"
 msgid "Can not confirm, add e-mail"
 msgstr "Nie można potwierdzić, dodaj e-mail dla użytkownika"
 
-#: sign.class.php:114
+#: inc/sign.class.php:114
 msgctxt "protocolsmanager"
 msgid "Check your email and write code"
 msgstr "Sprawdź e-mail i wpisz kod"
 
-#: sign.class.php:140
+#: inc/sign.class.php:140
 msgctxt "protocolsmanager"
 msgid "wrong confirmation code"
 msgstr "zły kod potwierdzający"
