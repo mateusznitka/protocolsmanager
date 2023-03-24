@@ -1,0 +1,188 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Protocols Manager\n"
+"POT-Creation-Date: 2023-03-24 15:28+0100\n"
+"PO-Revision-Date: 2023-03-24 15:28+0100\n"
+"Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
+"Language-Team: Wolvverine\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __:1,2c;ngettext:1,2;dgettext:2;dcgettext:2;"
+"dngettext:2,3;dcngettext:2,3\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: hook.php:18 inc/Buttons.php:13 inc/protocols.class.php:87
+msgctxt "protocolsmanager"
+msgid "Sign protocol"
+msgstr "Sign protocol"
+
+#: hook.php:27
+msgctxt "protocolsmanager"
+msgid "My assets"
+msgstr "My assets"
+
+#: inc/Buttons.php:9
+msgctxt "protocolsmanager"
+msgid "Go to sign protocol by this button."
+msgstr "Go to sign protocol by this button."
+
+#: inc/Buttons.php:9
+msgctxt "protocolsmanager"
+msgid "or sign protocol by this button."
+msgstr "or sign protocol by this button."
+
+#: inc/ConfigNewSettingsForms.class.php:47
+msgctxt "protocolsmanager"
+msgid "Show user assets"
+msgstr "Show user assets"
+
+#: inc/ConfigNewSettingsForms.class.php:72
+msgctxt "protocolsmanager"
+msgid "sign protococols service"
+msgstr "sign protococols service"
+
+#: inc/ConfigNewSettingsForms.class.php:120
+msgctxt "protocolsmanager"
+msgid "protococols reminder service"
+msgstr "protococols reminder service"
+
+#: inc/ConfigNewSettingsForms.class.php:144
+msgctxt "protocolsmanager"
+msgid "protococols first reminder email"
+msgstr "protococols first reminder email"
+
+#: inc/ConfigNewSettingsForms.class.php:166
+msgctxt "protocolsmanager"
+msgid "protococols second reminder email"
+msgstr "protococols second reminder email"
+
+#: inc/ShowUserAssets.php:49
+msgctxt "protocolsmanager"
+msgid "Created date"
+msgstr "Created date"
+
+#: inc/SignProtocolByEmail.php:68 inc/sign.class.php:80
+msgctxt "protocolsmanager"
+msgid "Document signed"
+msgstr "Document signed"
+
+#: inc/SignProtocolByEmail.php:71 inc/sign.class.php:83
+msgctxt "protocolsmanager"
+msgid "Error - Document not signed"
+msgstr "Error - Document not signed"
+
+#: inc/config.class.php:204
+msgctxt "protocolsmanager"
+msgid "Enable email autosending"
+msgstr "Enable email autosending"
+
+#: inc/generate.class.php:121
+msgctxt "protocolsmanager"
+msgid "Current User Field: "
+msgstr "Current User Field: "
+
+#: inc/mailReminder.php:180
+msgctxt "protocolsmanager"
+msgid "Unsigned protocols list - "
+msgstr "Unsigned protocols list - "
+
+#: inc/mailReminder.php:183
+msgctxt "protocolsmanager"
+msgid "protocols name"
+msgstr "protocols name"
+
+#: inc/mailReminder.php:204
+msgctxt "protocolsmanager"
+msgid "You have an unsigned protocol"
+msgstr "You have an unsigned protocol"
+
+#: inc/mailReminder.php:207
+msgctxt "protocolsmanager"
+msgid "Go to GLPI and sign protocol"
+msgstr "Go to GLPI and sign protocol"
+
+#: inc/profile.class.php:43
+msgctxt "protocolsmanager"
+msgid "Protocols manager"
+msgstr "Protocols manager"
+
+#: inc/profile.class.php:44
+msgctxt "protocolsmanager"
+msgid "Plugin configuration"
+msgstr "Plugin configuration"
+
+#: inc/profile.class.php:47
+msgctxt "protocolsmanager"
+msgid "Protocols manager tab access"
+msgstr "Protocols manager tab access"
+
+#: inc/profile.class.php:50
+msgctxt "protocolsmanager"
+msgid "My assets page access"
+msgstr "My assets page access"
+
+#: inc/profile.class.php:53
+msgctxt "protocolsmanager"
+msgid "Sign protocol page access"
+msgstr "Sign protocol page access"
+
+#: inc/protocols.class.php:19
+msgctxt "protocolsmanager"
+msgid "You haven't any protocols to sign"
+msgstr "You haven't any protocols to sign"
+
+#: inc/protocols.class.php:30
+msgctxt "protocolsmanager"
+msgid "Sign"
+msgstr "Sign"
+
+#: inc/protocols.class.php:59
+msgctxt "protocolsmanager"
+msgid "Show"
+msgstr "Show"
+
+#: inc/reminder.class.php:16
+msgctxt "protocolsmanager"
+msgid "Send Emails Reminder"
+msgstr "Send Emails Reminder"
+
+#: inc/reminder.class.php:17
+msgctxt "protocolsmanager"
+msgid "Protocolsmanager send email reminder"
+msgstr "Protocolsmanager send email reminder"
+
+#: inc/reminder.class.php:18
+msgctxt "protocolsmanager"
+msgid "Protocols manager Reminder"
+msgstr "Protocols manager Reminder"
+
+#: inc/sign.class.php:43
+msgctxt "protocolsmanager"
+msgid "GLPI Protocols Manager confirm code"
+msgstr "GLPI Protocols Manager confirm code"
+
+#: inc/sign.class.php:44
+msgctxt "protocolsmanager"
+msgid "confirm code - "
+msgstr "confirm code - "
+
+#: inc/sign.class.php:61
+msgctxt "protocolsmanager"
+msgid "Can not confirm, add e-mail"
+msgstr "Can not confirm, add e-mail"
+
+#: inc/sign.class.php:114
+msgctxt "protocolsmanager"
+msgid "Check your email and write code"
+msgstr "Check your email and write code"
+
+#: inc/sign.class.php:140
+msgctxt "protocolsmanager"
+msgid "wrong confirmation code"
+msgstr "wrong confirmation code"
