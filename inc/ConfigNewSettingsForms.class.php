@@ -200,4 +200,37 @@ class ConfigNewSettingsForms
                                 </tr>";
         Html::closeForm();
     }
+
+    public static function template_emails($temlateData){
+
+        $title = isset($temlateData['template_title']) ? $temlateData['template_title'] : 'message title';
+        $body = isset($temlateData['template_body']) ? $temlateData['template_body'] : 'message body';
+
+        echo "<form method='post' action='config.form.php' >
+                              <input type='hidden' name='menu_mode' value='e'>
+                               <tr class='tab_bg_1' style='padding-top: 20px;'>
+                                    <td class='center' width='7%' style='padding-top: 20px;'>
+                                        ". __('sign email template') . "
+                                    </td>
+                                    <td class='center' colspan='2'>
+                                      <input style='width:80%' type='text' name='template_title' value='".$title."'>
+                                    </td>
+                              
+                                    
+                                </tr>
+                                <tr>
+                                <td class='center'></td>
+                                <td class='center' colspan='2'>
+                                    <textarea style='width:80%; height: 150px;' type='text' name='template_body'>".
+            $body."</textarea>
+                                </td>
+                                
+                                <td class='center' width='7%'>
+                                        <input type='submit' name='email_template_new' class='submit' value='".__('save')."'>
+                                 </td>
+                                </tr>
+                                ";
+
+        Html::closeForm();
+    }
 }

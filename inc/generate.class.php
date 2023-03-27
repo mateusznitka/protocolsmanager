@@ -796,13 +796,18 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$nmail->IsHtml(true);
 			
-			$nmail->Subject = $email_subject; //do konfiguracji
+
 			$nmail->addAttachment($fullpath, $filename);
             if(self::checkSignProtocolsOn()){
+                $temlateData = PluginProtocolsmanagerConfig::getDataTemplate();
+                $subject = isset($temlateData['template_title']) ? $temlateData['template_title'] : 'message title';
+                $body_message = isset($temlateData['template_body']) ? $temlateData['template_body'] : 'message body';
                 $button = new Buttons();
-                $email_content .= $button->createSignProtocolButton($CFG_GLPI);
+                $email_subject = (!empty($email_subject)) ? $email_subject : $subject;
+                $email_content .= $button->createSignProtocolButton($body_message, $CFG_GLPI);
             }
 			$nmail->Body = nl2br(stripcslashes($email_content));
+            $nmail->Subject = $email_subject; //do konfiguracji
 			
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);

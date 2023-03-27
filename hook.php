@@ -44,6 +44,19 @@ function plugin_protocolsmanager_install() {
 		]);
 	}
 
+	if (!$DB->tableExists("glpi_plugin_protocolsmanager_mails_templates")) {
+
+		$query = "CREATE TABLE glpi_plugin_protocolsmanager_mails_templates (
+					id int(11) NOT NULL auto_increment,
+					template_name varchar(255),
+					template_title TEXT,
+					template_body TEXT,
+					PRIMARY KEY (id)
+					) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+
+		$DB->query($query) or die($DB->error());
+	}
+
 	if (!$DB->tableExists("glpi_plugin_protocolsmanager_settings")) {
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_settings (
 					id int(11) NOT NULL auto_increment,

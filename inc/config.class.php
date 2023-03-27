@@ -517,6 +517,16 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 
     static function setEmailsToSendReminder(){
         $formData = self::getDataSettings();
+        $templateData = self::getDataTemplate();
+        $showOwnAssetsOn = '';
+        $showOwnAssetsOff = '';
+        $serviceSignOn = '';
+        $serviceSignOff = '';
+        $emailConfirmationOn = '';
+        $emailConfirmationOff = '';
+        $serviceReminderOn = '';
+        $serviceReminderOff = '';
+
         $formData['show_own_assets'] == 1 ? $showOwnAssetsOn = 'checked' : $showOwnAssetsOff = 'checked';
         $formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
         $formData['mail_confirm_on'] == 1 ? $emailConfirmationOn = 'checked' : $emailConfirmationOff = 'checked';
@@ -547,6 +557,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         ConfigNewSettingsForms::second_emial_reminder($emailSettings, $formData);
 
         ConfigNewSettingsForms::how_often_remind($emailSettings, $formData);
+
+        ConfigNewSettingsForms::template_emails($templateData);
 
         echo "
 					</div>
@@ -637,6 +649,30 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			Session::addMessageAfterRedirect('Error - field not updated', 'ERROR', true);
 		}
 	}
+
+    public static function getDataTemplate(){
+        global $DB;
+        $query = (['FROM' => 'glpi_plugin_protocolsmanager_mails_templates', 'WHERE' => ['id' => 1]]);
+        return $DB->request($query)->current();
+    }
+
+    public static function setEmailTemplate($postData){
+        global $DB;
+        try{
+            $DB->update('glpi_plugin_protocolsmanager_mails_templates',
+                [
+                    'template_title'  => $postData['template_title'],
+                    'template_body'  => $postData['template_body'],
+                ],
+                [
+                    'id' => 1
+                ]
+            );
+            Session::addMessageAfterRedirect('Template email updated');
+        }catch(Exception $e){
+            Session::addMessageAfterRedirect('Error - Template email not updated', 'ERROR', true);
+        }
+    }
 }
 
 ?>

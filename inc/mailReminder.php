@@ -196,17 +196,16 @@ class MailReminder{
 
 	private function createBodyMessageForUser($data): string
 	{
-		global $CFG_GLPI;
-		$button = new Buttons();
-		$protocol_for_url = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
-		$link = $protocol_for_url.$_SERVER['HTTP_HOST'].$CFG_GLPI["root_doc"]."plugins/protocolsmanager/front/protocols.form.php";
+        global $CFG_GLPI;
+        $temlateData = PluginProtocolsmanagerConfig::getDataTemplate();
+        $body_message = isset($temlateData['template_body']) ? $temlateData['template_body'] : 'message body';
 
-		$body = __('You have an unsigned protocol','protocolsmanager');
-		$body .= ' - ' . $data['protocol_name'];
-		$body .= __('from') . ' ' . $data['modified'] . '<br>';
-		$body .= __('Go to GLPI and sign protocol','protocolsmanager');
-		$body .= $button->createSignProtocolButton($CFG_GLPI, 'reminder');
-		return $body;
+        $button = new Buttons();
+        $protocol_for_url = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
+        $link = $protocol_for_url.$_SERVER['HTTP_HOST'].$CFG_GLPI["root_doc"]."plugins/protocolsmanager/front/protocols.form.php";
+
+        $body = $button->createSignProtocolButton($body_message ,$CFG_GLPI, 'reminder');
+        return $body;
 	}
 
 	private function setDate(): array
@@ -252,12 +251,12 @@ class MailReminder{
 			$nmail->Subject = $email_subject;
 			$nmail->Body = nl2br(stripcslashes($email_content));
 			if (!$nmail->Send()) {
-				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				Session::addMessageAfterRedirect(__('Failed to send email'), false, 'ERROR');
 			} else {
 				Session::addMessageAfterRedirect(__('Email sent') . " to " . $owner_email);
 			}
 		} else {
-			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, ERROR);
+			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, 'ERROR');
 		}
 	}
 }
