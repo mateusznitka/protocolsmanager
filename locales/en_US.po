@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-24 17:50+0100\n"
-"PO-Revision-Date: 2023-03-24 17:51+0100\n"
+"POT-Creation-Date: 2023-03-27 15:40+0200\n"
+"PO-Revision-Date: 2023-03-27 15:41+0200\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
 "Language: en\n"
@@ -26,16 +26,6 @@ msgstr "Sign protocol"
 msgctxt "protocolsmanager"
 msgid "My assets"
 msgstr "My assets"
-
-#: inc/Buttons.php:9
-msgctxt "protocolsmanager"
-msgid "Go to sign protocol by this button."
-msgstr "Go to sign protocol by this button."
-
-#: inc/Buttons.php:9
-msgctxt "protocolsmanager"
-msgid "or sign protocol by this button."
-msgstr "or sign protocol by this button."
 
 #: inc/ConfigNewSettingsForms.class.php:20
 msgctxt "protocolsmanager"
@@ -89,6 +79,16 @@ msgctxt "protocolsmanager"
 msgid "How long should one wait before sending a reminder"
 msgstr "How long should one wait before sending a reminder"
 
+#: inc/ConfigNewSettingsForms.class.php:213
+msgctxt "protocolsmanager"
+msgid "sign email template"
+msgstr "sign email template"
+
+#: inc/ConfigNewSettingsForms.class.php:229
+msgctxt "protocolsmanager"
+msgid "Save"
+msgstr "Save"
+
 #: inc/ShowUserAssets.php:49
 msgctxt "protocolsmanager"
 msgid "Created date"
@@ -104,14 +104,44 @@ msgctxt "protocolsmanager"
 msgid "Error - Document not signed"
 msgstr "Error - Document not signed"
 
+#: inc/config.class.php:127 inc/config.class.php:243
+msgctxt "protocolsmanager"
+msgid "Templates settings"
+msgstr "Templates settings"
+
+#: inc/config.class.php:131 inc/config.class.php:247
+msgctxt "protocolsmanager"
+msgid "Email settings"
+msgstr "Email settings"
+
+#: inc/config.class.php:142
+#| msgctxt "protocolsmanager"
+#| msgid "Created date"
+msgctxt "protocolsmanager"
+msgid "Create"
+msgstr "Create"
+
+#: inc/config.class.php:142
+msgctxt "protocolsmanager"
+msgid "template"
+msgstr "template"
+
+#: inc/config.class.php:143
+msgctxt "protocolsmanager"
+msgid "Template name"
+msgstr "Template name"
+
 #: inc/config.class.php:204
 msgctxt "protocolsmanager"
 msgid "Enable email autosending"
 msgstr "Enable email autosending"
 
+#: inc/config.class.php:212
+msgctxt "protocolsmanager"
+msgid "Email template"
+msgstr "Email template"
+
 #: inc/generate.class.php:97
-#| msgctxt "protocolsmanager"
-#| msgid "Change"
 msgctxt "protocolsmanager"
 msgid "Change Field"
 msgstr "Change Field"
@@ -121,16 +151,37 @@ msgctxt "protocolsmanager"
 msgid "Current User Field: "
 msgstr "Current User Field: "
 
+#: inc/generate.class.php:297
+msgctxt "protocolsmanager"
+msgid "Select recipients from template or enter manually to send email"
+msgstr "Select recipients from template or enter manually to send email"
+
+#: inc/generate.class.php:301
+msgctxt "protocolsmanager"
+msgid "Enter recipients manually"
+msgstr "Enter recipients manually"
+
+#: inc/generate.class.php:302
+msgctxt "protocolsmanager"
+msgid "Recipients (use ; to separate emails)"
+msgstr "Recipients (use ; to separate emails)"
+
+#: inc/generate.class.php:307
+msgctxt "protocolsmanager"
+msgid "Select recipients from template"
+msgstr "Select recipients from template"
+
+#: inc/generate.class.php:326
+msgctxt "protocolsmanager"
+msgid "Add Custom Fields"
+msgstr "Add Custom Fields"
+
 #: inc/generate.class.php:415
-#| msgctxt "protocolsmanager"
-#| msgid "Document signed"
 msgctxt "protocolsmanager"
 msgid "No signed"
 msgstr "No signed"
 
 #: inc/generate.class.php:415
-#| msgctxt "protocolsmanager"
-#| msgid "Sign"
 msgctxt "protocolsmanager"
 msgid "Signed"
 msgstr "Signed"
@@ -145,22 +196,12 @@ msgctxt "protocolsmanager"
 msgid "protocols name"
 msgstr "protocols name"
 
-#: inc/mailReminder.php:204
-msgctxt "protocolsmanager"
-msgid "You have an unsigned protocol"
-msgstr "You have an unsigned protocol"
-
-#: inc/mailReminder.php:207
-msgctxt "protocolsmanager"
-msgid "Go to GLPI and sign protocol"
-msgstr "Go to GLPI and sign protocol"
-
-#: inc/mailReminder.php:237
+#: inc/mailReminder.php:236
 msgctxt "protocolsmanager"
 msgid "GLPI REMINDER"
 msgstr "GLPI REMINDER"
 
-#: inc/mailReminder.php:260 inc/sign.class.php:61
+#: inc/mailReminder.php:259 inc/sign.class.php:61
 msgctxt "protocolsmanager"
 msgid "Can not confirm, add e-mail"
 msgstr "Can not confirm, add e-mail"
@@ -250,3 +291,19 @@ msgstr "wrong confirmation code"
 msgctxt "protocolsmanager"
 msgid "GLPI version NOT compatible. Requires GLPI 10.0"
 msgstr "GLPI version NOT compatible. Requires GLPI 10.0"
+
+#~ msgctxt "protocolsmanager"
+#~ msgid "Go to sign protocol by this button."
+#~ msgstr "Go to sign protocol by this button."
+
+#~ msgctxt "protocolsmanager"
+#~ msgid "or sign protocol by this button."
+#~ msgstr "or sign protocol by this button."
+
+#~ msgctxt "protocolsmanager"
+#~ msgid "You have an unsigned protocol"
+#~ msgstr "You have an unsigned protocol"
+
+#~ msgctxt "protocolsmanager"
+#~ msgid "Go to GLPI and sign protocol"
+#~ msgstr "Go to GLPI and sign protocol"

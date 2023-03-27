@@ -139,8 +139,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<input type='hidden' name='mode' value='$mode'>";
 		echo "<table class='tab_cadre_fixe'>";
 		//echo "<tr><th></th>";
-		echo "<tr><th colspan='3'>".__('Create')." ".__('template')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
-		echo "<tr><td>".__('Template name')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
+		echo "<tr><th colspan='3'>".__('Create','protocolsmanager')." ".__('template','protocolsmanager')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
+		echo "<tr><td>".__('Template name','protocolsmanager')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
 		echo "<tr><td>Font</td><td colspan='2'><select name='font' style='width:150px'>";
 			foreach($fonts as $code => $fontname) {
 				echo "<option value='".$code."' ";
@@ -209,7 +209,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		if ($email_mode == 2)
 			echo "checked='checked'";
 		echo "> OFF</td></tr>";
-		echo "<tr><td>".__('Email template')."</td><td colspan='2'><select name='email_template' style='width:150px'>";
+		echo "<tr><td>".__('Email template','protocolsmanager')."</td><td colspan='2'><select name='email_template' style='width:150px'>";
 			foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 				echo '<option value=';
 				echo $list["id"];

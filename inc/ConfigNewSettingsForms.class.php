@@ -210,7 +210,7 @@ class ConfigNewSettingsForms
                               <input type='hidden' name='menu_mode' value='e'>
                                <tr class='tab_bg_1' style='padding-top: 20px;'>
                                     <td class='center' width='7%' style='padding-top: 20px;'>
-                                        ". __('sign email template') . "
+                                        ". __('sign email template','protocolsmanager') . "
                                     </td>
                                     <td class='center' colspan='2'>
                                       <input style='width:80%' type='text' name='template_title' value='".$title."'>
@@ -226,7 +226,7 @@ class ConfigNewSettingsForms
                                 </td>
                                 
                                 <td class='center' width='7%'>
-                                        <input type='submit' name='email_template_new' class='submit' value='".__('save')."'>
+                                        <input type='submit' name='email_template_new' class='submit' value='".__('Save','protocolsmanager')."'>
                                  </td>
                                 </tr>
                                 ";
