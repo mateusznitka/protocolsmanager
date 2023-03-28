@@ -659,15 +659,23 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
     public static function setEmailTemplate($postData){
         global $DB;
         try{
-            $DB->update('glpi_plugin_protocolsmanager_mails_templates',
-                [
-                    'template_title'  => $postData['template_title'],
-                    'template_body'  => $postData['template_body'],
-                ],
-                [
-                    'id' => 1
-                ]
-            );
+            if(empty(self::getDataTemplate())){
+                $query = "INSERT INTO `glpi_plugin_protocolsmanager_mails_templates` (`id`, `template_name`, `template_title`, `template_body`) 
+                            VALUES ('1', 'send_email','".$postData['template_title']."','".$postData['template_body']."')";
+                $DB->queryOrDie($query, $DB->error());
+            }else{
+                $DB->update('glpi_plugin_protocolsmanager_mails_templates',
+                    [
+                        'template_title'  => $postData['template_title'],
+                        'template_body'  => $postData['template_body'],
+                    ],
+                    [
+                        'id' => 1
+                    ]
+                );
+            }
+
+
             Session::addMessageAfterRedirect('Template email updated');
         }catch(Exception $e){
             Session::addMessageAfterRedirect('Error - Template email not updated', 'ERROR', true);
