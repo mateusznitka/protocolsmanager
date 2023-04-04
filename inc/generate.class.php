@@ -700,16 +700,16 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$nmail->Body = $email_content;
 			
 			if (!$nmail->Send()) {
-				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				Session::addMessageAfterRedirect(__('Error in sending the email'), false, ERROR);
 				GLPINetwork::addErrorMessageAfterRedirect();
 				return false;
 			} else {
-				
+				#TODO %s as recipients
 				if ($send_user == 1) {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+					Session::addMessageAfterRedirect(__('An email was sent to %s') . implode(", ", $recipients_array)." ".$owner_email);
 					return true;
 				} else {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array));
+					Session::addMessageAfterRedirect(__('An email was sent to %s') . implode(", ", $recipients_array));
 					return true;
 				}
 			}
@@ -735,7 +735,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if (isset($_POST["email_subject"])) {
 				$email_subject = $_POST["email_subject"];
 			} else {
-				$email_subject = "GLPI Protocols Manager mail";
+				$email_subject = __('GLPI Protocols Manager mail','protocolsmanager');
 			}
 			
 			if (isset($_POST['email_content'])) {
@@ -780,7 +780,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			foreach($recipients_array as $recipient) {
 				
-				$nmail->AddAddress($recipient); //do konfiguracji
+				$nmail->AddAddress($recipient); //TODO do konfiguracji
 			}
 			
 			$req = $DB->request(
@@ -810,15 +810,16 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
             $nmail->Subject = $email_subject; //do konfiguracji
 			
 			if (!$nmail->Send()) {
-				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				Session::addMessageAfterRedirect(__('Error in sending the email'), false, ERROR);
 				return false;
 			} else {
 				
 				if ($send_user == 1) {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+					#TODO %s as recipients
+					Session::addMessageAfterRedirect(__('An email was sent to %s') . implode(", ", $recipients_array)." ".$owner_email);
 					return true;
 				} else {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array));
+					Session::addMessageAfterRedirect(___('An email was sent to %s') . implode(", ", $recipients_array));
 					return true;
 				}
 			}

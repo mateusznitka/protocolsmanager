@@ -141,38 +141,38 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		//echo "<tr><th></th>";
 		echo "<tr><th colspan='3'>".__('Create','protocolsmanager')." ".__('template','protocolsmanager')."<a href='https://github.com/mateusznitka/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
 		echo "<tr><td>".__('Template name','protocolsmanager')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
-		echo "<tr><td>Font</td><td colspan='2'><select name='font' style='width:150px'>";
+		echo "<tr><td>" . __('Font','protocolsmanager') . "</td><td colspan='2'><select name='font' style='width:150px'>";
 			foreach($fonts as $code => $fontname) {
 				echo "<option value='".$code."' ";
 				if ($code == $font) {
-					echo " selected";
+					echo __('selected','protocolsmanager');
 				}
 				echo ">".$fontname."</option>";
 			}
 		echo "</select></td></tr>";
 		
-		echo "<tr><td>Font size</td><td colspan='2'><select name='fontsize' style='width:150px'";
+		echo "<tr><td>" . __('Font size','protocolsmanager') . "</td><td colspan='2'><select name='fontsize' style='width:150px'";
 			foreach($fontsizes as $fsize => $fsizes) {
 				echo "<option value='".$fsize."' ";
 				if ($fsize == $fontsize) {
-					echo " selected";
+					echo __('selected','protocolsmanager');
 				}
 				echo ">".$fsizes."</option>";
 			}
 			
-		echo "<tr><td>Word breaking</td><td><input type='radio' name='breakword' value=1 ";
+		echo "<tr><td>" . __('Word breaking','protocolsmanager') . "</td><td><input type='radio' name='breakword' value=1 ";
 		if ($breakword == 1)
 			echo "checked='checked'";
-		echo "> On</td>";
+		echo ">" . __('On') . "</td>";
 		echo "<td><input type='radio' name='breakword' value=0 ";
 		if ($breakword == 0)
 			echo "checked='checked'";
-		echo "> Off</td></tr>";
+		echo ">" . __('Off') . "</td></tr>";
 		
 		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
-		echo "<tr><td>".__('Upper Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_uppercontent'>".$template_uppercontent."</textarea></td></tr>";
+		echo "<tr><td>".__('Upper Content','protocolsmanager')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_uppercontent'>".$template_uppercontent."</textarea></td></tr>";
 		echo "<tr><td>".__('Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".$template_content."</textarea></td></tr>";
-		echo "<tr><td>".__('Footer')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
+		echo "<tr><td>".__('Footer','protocolsmanager')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
 		echo "<tr><td>".__('Orientation')."</td><td colspan='2'><select name='orientation' style='width:150px'>";
 			foreach($orientations as $vals => $valname) {
 				echo "<option value='".$vals."' ";
@@ -185,11 +185,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<tr><td>".__('Serial number')."</td><td><input type='radio' name='serial_mode' value='1' ";
 		if ($serial_mode == 1)
 			echo "checked='checked'";
-		echo "> serial and inventory number in separate columns</td>";
+		echo ">" . __('serial and inventory number in separate columns','protocolsmanager') . "</td>";
 		echo "<td><input type='radio' name='serial_mode' value='2' ";
 		if ($serial_mode == 2)
 			echo "checked='checked'";
-		echo "> serial or inventory number if serial doesn't exists</td></tr>";
+		echo ">" . __("serial or inventory number if serial doesn't exists",'protocolsmanager') . "</td></tr>";
 		echo "<tr><td>".__('Logo')."</td><td colspan='2'><input type='file' name='logo' accept='image/png, image/jpeg'>";
 		if (isset($logo)) {
 			$full_img_name = GLPI_ROOT.'/files/_pictures/'.$logo;
@@ -204,11 +204,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<tr><td>".__('Enable email autosending','protocolsmanager')."</td><td><input type='radio' name='email_mode' value='1'";
 		if ($email_mode == 1)
 			echo "checked='checked'";
-		echo "> ON</td>";
+		echo ">" . __('On') . "</td>";
 		echo "<td><input type='radio' name='email_mode' value='2'";
 		if ($email_mode == 2)
 			echo "checked='checked'";
-		echo "> OFF</td></tr>";
+		echo ">" . __('Off') . "</td></tr>";
 		echo "<tr><td>".__('Email template','protocolsmanager')."</td><td colspan='2'><select name='email_template' style='width:150px'>";
 			foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 				echo '<option value=';
@@ -283,11 +283,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<tr><td>".__('Send to user')."</td><td><input type='radio' name='send_user' value='1' class='eboxes' ";
 		if ($send_user == 1)
 			echo "checked='checked'";
-		echo "> send to user</td>";
+		echo ">".__('Send to user')."</td>";
 		echo "<td><input type='radio' name='send_user' value='2' class='eboxes' ";
 		if ($send_user == 2)
 			echo "checked='checked'";
-		echo "> don't send to user</td></tr>";
+		echo ">".__("don't send to user") . "</td></tr>";
 		echo "<tr><td>".__('Email content')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows'8' name='email_content'>".$email_content."</textarea></td></tr>";
 		echo "<tr><td>".__('Email subject')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='email_subject' style='width:80%;' value='$email_subject'></td></tr>";
 		echo "<tr><td>".__('Add emails - use ; to separate')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows '8' name='recipients'>".$recipients."</textarea></td></tr>";
@@ -587,13 +587,13 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						return $full_img_name;
 						
 					} else {
-						Session::addMessageAfterRedirect('Wrong file type. Only .jpg and .png files accepted', 'WARNING', true);
+						Session::addMessageAfterRedirect(__('Filetype not allowed.')." ".__('Only jpg and png files are accepted','protocolsmanager'),'WARNING',true);
 					}
 				} else {
 					Session::addMessageAfterRedirect(__('Unknown error'), 'WARNING', true);
 				}
 			} else {
-				Session::addMessageAfterRedirect('File size too large', 'WARNING', true);
+				Session::addMessageAfterRedirect('File too large to be added.', 'WARNING', true);
 			}
 		}
 
@@ -644,9 +644,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 					'id' => 1
 				]
 			);
-			Session::addMessageAfterRedirect('Field '.$postData['witch_field_settings'].' updated');
+			Session::addMessageAfterRedirect(__('Field') . " " . $postData['witch_field_settings'] ." " . __('updated'));
 		}catch(Exception $e){
-			Session::addMessageAfterRedirect('Error - field not updated', 'ERROR', true);
+			Session::addMessageAfterRedirect(__('Error - field not updated','protocolsmanager'), 'ERROR', true);
 		}
 	}
 
@@ -676,9 +676,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             }
 
 
-            Session::addMessageAfterRedirect('Template email updated');
+            Session::addMessageAfterRedirect(__('Template email updated','protocolsmanager'));
         }catch(Exception $e){
-            Session::addMessageAfterRedirect('Error - Template email not updated', 'ERROR', true);
+            Session::addMessageAfterRedirect(__('Error - Template email not updated','protocolsmanager'), 'ERROR', true);
         }
     }
 }
