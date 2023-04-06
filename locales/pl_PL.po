@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-27 15:33+0200\n"
-"PO-Revision-Date: 2023-03-27 15:39+0200\n"
+"POT-Creation-Date: 2023-04-06 18:02+0200\n"
+"PO-Revision-Date: 2023-04-06 18:02+0200\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
 "Language: pl\n"
@@ -130,6 +130,46 @@ msgctxt "protocolsmanager"
 msgid "Template name"
 msgstr "Nazwa szablonu"
 
+#: inc/config.class.php:144
+msgctxt "protocolsmanager"
+msgid "Font"
+msgstr "Czcionka"
+
+#: inc/config.class.php:148 inc/config.class.php:158
+msgctxt "protocolsmanager"
+msgid "selected"
+msgstr "wybrany"
+
+#: inc/config.class.php:154
+msgctxt "protocolsmanager"
+msgid "Font size"
+msgstr "Wielkość czcionki"
+
+#: inc/config.class.php:163
+msgctxt "protocolsmanager"
+msgid "Word breaking"
+msgstr "Łamanie wyrazów"
+
+#: inc/config.class.php:173
+msgctxt "protocolsmanager"
+msgid "Upper Content"
+msgstr "Górna Zawartość"
+
+#: inc/config.class.php:175
+msgctxt "protocolsmanager"
+msgid "Footer"
+msgstr "Stopka"
+
+#: inc/config.class.php:188
+msgctxt "protocolsmanager"
+msgid "serial and inventory number in separate columns"
+msgstr "numer seryjny i numer inwentarzowy w oddzielnych kolumnach"
+
+#: inc/config.class.php:192
+msgctxt "protocolsmanager"
+msgid "serial or inventory number if serial doesn't exists"
+msgstr "numer seryjny lub numer inwentarzowy, jeśli numer seryjny nie istnieje"
+
 #: inc/config.class.php:204
 msgctxt "protocolsmanager"
 msgid "Enable email autosending"
@@ -139,6 +179,26 @@ msgstr "Włącz autowysyłanie e-meili"
 msgctxt "protocolsmanager"
 msgid "Email template"
 msgstr "Szablon e-mail"
+
+#: inc/config.class.php:590
+msgctxt "protocolsmanager"
+msgid "Only jpg and png files are accepted"
+msgstr "Akceptowane są tylko pliki jpg i png"
+
+#: inc/config.class.php:649
+msgctxt "protocolsmanager"
+msgid "Error - field not updated"
+msgstr "Błąd - pola nie zaktualizowano"
+
+#: inc/config.class.php:679
+msgctxt "protocolsmanager"
+msgid "Template email updated"
+msgstr "Zaktualizowano szablon e-mail"
+
+#: inc/config.class.php:681
+msgctxt "protocolsmanager"
+msgid "Error - Template email not updated"
+msgstr "Błąd - nie zaktualizowano szablonu"
 
 #: inc/generate.class.php:97
 msgctxt "protocolsmanager"
@@ -185,6 +245,11 @@ msgctxt "protocolsmanager"
 msgid "Signed"
 msgstr "Podpisany"
 
+#: inc/generate.class.php:738
+msgctxt "protocolsmanager"
+msgid "GLPI Protocols Manager mail"
+msgstr "Mail Menadżera Protokołów GLPI"
+
 #: inc/mailReminder.php:180
 msgctxt "protocolsmanager"
 msgid "Unsigned protocols list - "
@@ -199,6 +264,11 @@ msgstr "nazwa protokołu"
 msgctxt "protocolsmanager"
 msgid "GLPI REMINDER"
 msgstr "Przypomnienie z GLPI"
+
+#: inc/mailReminder.php:256 inc/sign.class.php:58
+msgctxt "protocolsmanager"
+msgid "Email sent to "
+msgstr "Wysłano email do "
 
 #: inc/mailReminder.php:259 inc/sign.class.php:61
 msgctxt "protocolsmanager"
@@ -290,19 +360,3 @@ msgstr "zły kod potwierdzający"
 msgctxt "protocolsmanager"
 msgid "GLPI version NOT compatible. Requires GLPI 10.0"
 msgstr "Wersja GLPI jest niekompatybilna. Wymagana jest wersja 10.0"
-
-#~ msgctxt "protocolsmanager"
-#~ msgid "Go to sign protocol by this button."
-#~ msgstr "Idź podpisać protokół tym przyciskiem."
-
-#~ msgctxt "protocolsmanager"
-#~ msgid "or sign protocol by this button."
-#~ msgstr "lub podpisz protokół tym przyciskiem."
-
-#~ msgctxt "protocolsmanager"
-#~ msgid "You have an unsigned protocol"
-#~ msgstr "Masz protokół do podpisania"
-
-#~ msgctxt "protocolsmanager"
-#~ msgid "Go to GLPI and sign protocol"
-#~ msgstr "Idź do GLPI i podpisz protokół"

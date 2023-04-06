@@ -124,11 +124,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<form action='config.form.php' method='post'>";
 		echo "<input type='hidden' name='menu_mode' value='t'>";
 		echo "<table class='tab_cadre_fixe' style='width:90%;'>";
-		echo "<tr><td style='text-align:center'><input type='submit' class='submit' name='template_settings' value=" . __('Templates settings','protocolsmanager') . "></td>";
+		echo "<tr><td style='text-align:center'><input type='submit' class='submit' name='template_settings' value='" . __('Templates settings','protocolsmanager') . "' ></td>";
 		Html::closeForm();
 		echo "<form action='config.form.php' method='post'>";
 		echo "<input type='hidden' name='menu_mode' value='e'>";
-		echo "<td style='text-align:center'><input type='submit' class='submit' name='email_settings' value=" . __('Email settings','protocolsmanager') . "></td></tr>";
+		echo "<td style='text-align:center'><input type='submit' class='submit' name='email_settings' value='" . __('Email settings','protocolsmanager') . "' ></td></tr>";
 		echo "</table>";
 		Html::closeForm();
 		echo "</div>";
@@ -163,11 +163,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<tr><td>" . __('Word breaking','protocolsmanager') . "</td><td><input type='radio' name='breakword' value=1 ";
 		if ($breakword == 1)
 			echo "checked='checked'";
-		echo ">" . __('On') . "</td>";
+		echo ">" . __('Enabled') . "</td>";
 		echo "<td><input type='radio' name='breakword' value=0 ";
 		if ($breakword == 0)
 			echo "checked='checked'";
-		echo ">" . __('Off') . "</td></tr>";
+		echo ">" . __('Disabled') . "</td></tr>";
 		
 		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
 		echo "<tr><td>".__('Upper Content','protocolsmanager')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_uppercontent'>".$template_uppercontent."</textarea></td></tr>";
@@ -204,11 +204,11 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<tr><td>".__('Enable email autosending','protocolsmanager')."</td><td><input type='radio' name='email_mode' value='1'";
 		if ($email_mode == 1)
 			echo "checked='checked'";
-		echo ">" . __('On') . "</td>";
+		echo ">" . __('Enabled') . "</td>";
 		echo "<td><input type='radio' name='email_mode' value='2'";
 		if ($email_mode == 2)
 			echo "checked='checked'";
-		echo ">" . __('Off') . "</td></tr>";
+		echo ">" . __('Disabled') . "</td></tr>";
 		echo "<tr><td>".__('Email template','protocolsmanager')."</td><td colspan='2'><select name='email_template' style='width:150px'>";
 			foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 				echo '<option value=';

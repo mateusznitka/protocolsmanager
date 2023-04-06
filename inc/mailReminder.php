@@ -253,7 +253,7 @@ class MailReminder{
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, 'ERROR');
 			} else {
-				Session::addMessageAfterRedirect(__('Email sent') . " to " . $owner_email);
+				Session::addMessageAfterRedirect(__('Email sent to ','protocolsmanager') . $owner_email);
 			}
 		} else {
 			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, 'ERROR');

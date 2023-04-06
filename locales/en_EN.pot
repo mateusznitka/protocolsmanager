@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Protocols Manager\n"
-"POT-Creation-Date: 2023-03-27 15:41+0200\n"
+"POT-Creation-Date: 2023-04-06 17:35+0200\n"
 "PO-Revision-Date: 2023-03-24 15:30+0100\n"
 "Last-Translator: Michał Panasiewicz <wolvverinepld@gmail.com>\n"
 "Language-Team: Wolvverine\n"
@@ -129,6 +129,46 @@ msgctxt "protocolsmanager"
 msgid "Template name"
 msgstr ""
 
+#: inc/config.class.php:144
+msgctxt "protocolsmanager"
+msgid "Font"
+msgstr ""
+
+#: inc/config.class.php:148 inc/config.class.php:158
+msgctxt "protocolsmanager"
+msgid "selected"
+msgstr ""
+
+#: inc/config.class.php:154
+msgctxt "protocolsmanager"
+msgid "Font size"
+msgstr ""
+
+#: inc/config.class.php:163
+msgctxt "protocolsmanager"
+msgid "Word breaking"
+msgstr ""
+
+#: inc/config.class.php:173
+msgctxt "protocolsmanager"
+msgid "Upper Content"
+msgstr ""
+
+#: inc/config.class.php:175
+msgctxt "protocolsmanager"
+msgid "Footer"
+msgstr ""
+
+#: inc/config.class.php:188
+msgctxt "protocolsmanager"
+msgid "serial and inventory number in separate columns"
+msgstr ""
+
+#: inc/config.class.php:192
+msgctxt "protocolsmanager"
+msgid "serial or inventory number if serial doesn't exists"
+msgstr ""
+
 #: inc/config.class.php:204
 msgctxt "protocolsmanager"
 msgid "Enable email autosending"
@@ -137,6 +177,26 @@ msgstr ""
 #: inc/config.class.php:212
 msgctxt "protocolsmanager"
 msgid "Email template"
+msgstr ""
+
+#: inc/config.class.php:590
+msgctxt "protocolsmanager"
+msgid "Only jpg and png files are accepted"
+msgstr ""
+
+#: inc/config.class.php:649
+msgctxt "protocolsmanager"
+msgid "Error - field not updated"
+msgstr ""
+
+#: inc/config.class.php:679
+msgctxt "protocolsmanager"
+msgid "Template email updated"
+msgstr ""
+
+#: inc/config.class.php:681
+msgctxt "protocolsmanager"
+msgid "Error - Template email not updated"
 msgstr ""
 
 #: inc/generate.class.php:97
@@ -184,6 +244,11 @@ msgctxt "protocolsmanager"
 msgid "Signed"
 msgstr ""
 
+#: inc/generate.class.php:738
+msgctxt "protocolsmanager"
+msgid "GLPI Protocols Manager mail"
+msgstr ""
+
 #: inc/mailReminder.php:180
 msgctxt "protocolsmanager"
 msgid "Unsigned protocols list - "
@@ -197,6 +262,11 @@ msgstr ""
 #: inc/mailReminder.php:236
 msgctxt "protocolsmanager"
 msgid "GLPI REMINDER"
+msgstr ""
+
+#: inc/mailReminder.php:256 inc/sign.class.php:58
+msgctxt "protocolsmanager"
+msgid "Email sent to "
 msgstr ""
 
 #: inc/mailReminder.php:259 inc/sign.class.php:61
