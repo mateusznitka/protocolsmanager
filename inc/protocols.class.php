@@ -83,8 +83,8 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 					</div>
 				</div>
 				<div class="modal-footer">
-						<button id="back_to_list" type="button" class="btn btn-secondary">'.__("Back").'</button>
-						<input type="submit" class="btn btn-primary" name="sign_protocols_submit" value="'.__("Sign protocol",'protocolsmanager').'"/>
+						<button id="back_to_list" type="button" class="btn btn-secondary">'.__('Back').'</button>
+						<input type="submit" class="btn btn-primary" name="sign_protocols_submit" value="'.__('Sign protocol','protocolsmanager').'"/>
 					</div>';
 			Html::closeForm();
 			echo '</div>

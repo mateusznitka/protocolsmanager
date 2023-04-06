@@ -40,7 +40,7 @@ class SignProtocol {
 		$nmail = new GLPIMailer();
 	
 		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
-		$email_subject = __("GLPI Protocols Manager confirm code",'protocolsmanager');
+		$email_subject = __('GLPI Protocols Manager confirm code','protocolsmanager');
 		$email_content = __('confirm code - ','protocolsmanager') . $this->confirmCode;
 	
 		$req = $DB->request(
@@ -137,7 +137,7 @@ class SignProtocol {
 			$this->signdocument($data['protocols_id'], $data['user_id']);
 		} else {
 			$this->showFormconfirm($data['protocols_id'], $data['user_id']);
-			echo '<span style="color: red">' . __("wrong confirmation code",'protocolsmanager') . '</span>';
+			echo '<span style="color: red">' . __('wrong confirmation code','protocolsmanager') . '</span>';
 		}
 	}
 

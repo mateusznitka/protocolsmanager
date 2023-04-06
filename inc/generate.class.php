@@ -29,7 +29,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$PluginProtocolsmanagerGenerate = new self();
 				$PluginProtocolsmanagerGenerate->showContent($item);
 			} else {
-				echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__("Access denied")."</div>";
+				echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__('Access denied')."</div>";
 			}
 		}
 		

@@ -47,11 +47,11 @@ class ConfigNewSettingsForms
         ". __('Show user assets','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
-        " . __("on") . "
+        " . __('Enabled') . "
     <input type='radio' name='show_own_assets' value='1' ".$showOwnAssetsOn.">
                                     </td>
                                     <td class='center' width='7%'>
-        " . __("off") . "
+        " . __('Disabled') . "
     <input type='radio' name='show_own_assets' value='0' ".$showOwnAssetsOff .">
                                     </td>
                                     <td class='center' width='7%'>
@@ -72,11 +72,11 @@ class ConfigNewSettingsForms
                                             ". __('sign protococols service','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
-                                        " . __("on") . "
+                                        " . __('Enabled') . "
                                         <input type='radio' name='protocols_save_on' value='1' ".$serviceSignOn.">
                                     </td>
                                     <td class='center' width='7%'>
-                                        " . __("off") . "
+                                        " . __('Disabled') . "
                                         <input type='radio' name='protocols_save_on' value='0' ".$serviceSignOff.">
                                     </td>
                                     <td class='center' width='7%'>
@@ -96,11 +96,11 @@ class ConfigNewSettingsForms
                                         ". __('email confirmation','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
-                                        " . __("on") . "
+                                        " . __('Enabled') . "
                                         <input type='radio' name='mail_confirm_on' value='1' ".$emailConfirmationOn.">
                                     </td>
                                     <td class='center' width='7%'>
-                                        " . __("off") . "
+                                        " . __('Disabled') . "
                                     <input type='radio' name='mail_confirm_on' value='0' ".$emailConfirmationOff.">
                                     </td>
                                     <td class='center' width='7%'>
@@ -120,11 +120,11 @@ class ConfigNewSettingsForms
                                         ". __('protococols reminder service','protocolsmanager') . "
                                     </td>
                                     <td class='center' width='7%'>
-                                        " . __("on") . "
+                                        " . __('Enabled') . "
                                         <input type='radio' name='reminder_on' value='1' ".$serviceReminderOn.">
                                     </td>
                                     <td class='center' width='7%'>
-                                        " . __("off") . "
+                                        " . __('Disabled') . "
                                     <input type='radio' name='reminder_on' value='0' ".$serviceReminderOff.">
                                     </td>
                                     <td class='center' width='7%'>
