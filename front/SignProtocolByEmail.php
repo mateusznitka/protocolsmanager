@@ -2,6 +2,7 @@
 
 include ('../../../inc/includes.php');
 require_once dirname(__DIR__) . '/inc/SignProtocolByEmail.php';
+Session::checkValidSessionId();
 $dataFromURL = $_GET['p'];
 $sp = new SignProtocolByEmail();
 $result = $sp->updateDataFromEmailLink($dataFromURL);

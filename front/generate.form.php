@@ -1,5 +1,7 @@
 <?php
 include ('../../../inc/includes.php');
+Session::checkValidSessionId();
+
 $PluginProtocolsmanagerGenerate = new PluginProtocolsmanagerGenerate();
 
 if (isset($_REQUEST['generate'])) {

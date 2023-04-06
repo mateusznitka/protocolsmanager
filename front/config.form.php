@@ -2,7 +2,8 @@
 	
 	include ('../../../inc/includes.php');
 	require_once dirname(__DIR__) . '/inc/mailReminder.php';
-	
+
+	Session::checkValidSessionId();
 	Session::haveRight("config", UPDATE);
 	
 	Html::header(PluginProtocolsmanagerConfig::getTypeName(1),

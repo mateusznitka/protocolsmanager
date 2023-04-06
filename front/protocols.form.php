@@ -1,6 +1,7 @@
 <?php
 include ("../../../inc/includes.php");
 require_once dirname(__DIR__) . '/inc/sign.class.php';
+Session::checkValidSessionId();
 Html::header('Self-service');
 
 $PluginProtocolsmanagerProtocols = new PluginProtocolsmanagerProtocols();
