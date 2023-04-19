@@ -4,7 +4,6 @@ require_once dirname(__DIR__) . '/inc/ConfigNewSettingsForms.class.php';
 
 class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
-	
 	function showFormProtocolsmanager() {
 		global $CFG_GLPI, $DB;
 		$plugin_conf = self::checkRights();
@@ -15,7 +14,6 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__('Access denied')."</div>";
 		}
 	}
-	
 	
 	static function checkRights() {
 		global $DB;
@@ -34,7 +32,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	static function displaySettings(){
 		self::setEmailsToSendReminder();
 	}
-
+	
 	static function displayContent() {
 		global $CFG_GLPI, $DB;
 		
@@ -322,7 +320,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$breakword = $_POST["breakword"];
 			$email_mode = $_POST["email_mode"];
 			$email_template = $_POST["email_template"];
-
+			
 			
 			if (isset($_POST['img_delete'])) {
 				
@@ -404,10 +402,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			}
 			
 			Session::AddMessageAfterRedirect('Config saved');
-		}		
-	
+		}
 	}
-
+	
 	static function saveEmailConfigs() {
 		global $DB, $CFG_GLPI;
 		
@@ -449,13 +446,10 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				);
 				
 			}
-			
 			Session::AddMessageAfterRedirect('Config saved');
 		}
-
 	}
 	
-
 	static function showConfigs() {
 		global $DB, $CFG_GLPI;
 		$configs = [];
@@ -513,54 +507,43 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			}
 		echo "</table></div>";
 	}
+	
+	static function setEmailsToSendReminder(){
+		$formData = self::getDataSettings();
+		$templateData = self::getDataTemplate();
+		$showOwnAssetsOn = '';
+		$showOwnAssetsOff = '';
+		$serviceSignOn = '';
+		$serviceSignOff = '';
+		$emailConfirmationOn = '';
+		$emailConfirmationOff = '';
+		$serviceReminderOn = '';
+		$serviceReminderOff = '';
 
+		$formData['show_own_assets'] == 1 ? $showOwnAssetsOn = 'checked' : $showOwnAssetsOff = 'checked';
+		$formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
+		$formData['mail_confirm_on'] == 1 ? $emailConfirmationOn = 'checked' : $emailConfirmationOff = 'checked';
+		$formData['reminder_on'] == 1 ? $serviceReminderOn = 'checked' : $serviceReminderOff = 'checked';
+		($formData['reminder_on'] == 1 && $formData['protocols_save_on'] == 1) ? $emailSettings = '' : $emailSettings = 'display:none';
+		$formData['first_emial_reminder'] =  $formData['first_emial_reminder'] ?? ' - ';
+		$formData['second_emial_reminder'] =  $formData['second_emial_reminder'] ?? ' - ';
+		$user_fields = $formData['user_fields'];
 
-    static function setEmailsToSendReminder(){
-        $formData = self::getDataSettings();
-        $templateData = self::getDataTemplate();
-        $showOwnAssetsOn = '';
-        $showOwnAssetsOff = '';
-        $serviceSignOn = '';
-        $serviceSignOff = '';
-        $emailConfirmationOn = '';
-        $emailConfirmationOff = '';
-        $serviceReminderOn = '';
-        $serviceReminderOff = '';
-
-        $formData['show_own_assets'] == 1 ? $showOwnAssetsOn = 'checked' : $showOwnAssetsOff = 'checked';
-        $formData['protocols_save_on'] == 1 ? $serviceSignOn = 'checked' : $serviceSignOff = 'checked';
-        $formData['mail_confirm_on'] == 1 ? $emailConfirmationOn = 'checked' : $emailConfirmationOff = 'checked';
-        $formData['reminder_on'] == 1 ? $serviceReminderOn = 'checked' : $serviceReminderOff = 'checked';
-        ($formData['reminder_on'] == 1 && $formData['protocols_save_on'] == 1) ? $emailSettings = '' : $emailSettings = 'display:none';
-        $formData['first_emial_reminder'] =  $formData['first_emial_reminder'] ?? ' - ';
-        $formData['second_emial_reminder'] =  $formData['second_emial_reminder'] ?? ' - ';
-        $user_fields = $formData['user_fields'];
-
-        echo "<div class='spaced'>
-                <table class='tab_cadre_fixehov'>
-                <div style='text-align:center;'><h2>ProtocolsManager Settings</h2></div>
-                    <div>";
-        //ConfigNewSettingsForms - forms for new protocols setting
-
-        ConfigNewSettingsForms::setUserFieldsForm($user_fields);
-
-        ConfigNewSettingsForms::show_own_assets($showOwnAssetsOn, $showOwnAssetsOff);
-
-        ConfigNewSettingsForms::protocols_save_on($serviceSignOn, $serviceSignOff);
-
-        ConfigNewSettingsForms::mail_confirm_on($emailConfirmationOn, $emailConfirmationOff);
-
-        ConfigNewSettingsForms::reminder_on($serviceReminderOn, $serviceReminderOff);
-
-        ConfigNewSettingsForms::first_emial_reminder($emailSettings, $formData);
-
-        ConfigNewSettingsForms::second_emial_reminder($emailSettings, $formData);
-
-        ConfigNewSettingsForms::how_often_remind($emailSettings, $formData);
-
-        ConfigNewSettingsForms::template_emails($templateData);
-
-        echo "
+		echo "<div class='spaced'>
+				<table class='tab_cadre_fixehov'>
+				<div style='text-align:center;'><h2>ProtocolsManager Settings</h2></div>
+					<div>";
+		//ConfigNewSettingsForms - forms for new protocols setting
+		ConfigNewSettingsForms::setUserFieldsForm($user_fields);
+		ConfigNewSettingsForms::show_own_assets($showOwnAssetsOn, $showOwnAssetsOff);
+		ConfigNewSettingsForms::protocols_save_on($serviceSignOn, $serviceSignOff);
+		ConfigNewSettingsForms::mail_confirm_on($emailConfirmationOn, $emailConfirmationOff);
+		ConfigNewSettingsForms::reminder_on($serviceReminderOn, $serviceReminderOff);
+		ConfigNewSettingsForms::first_emial_reminder($emailSettings, $formData);
+		ConfigNewSettingsForms::second_emial_reminder($emailSettings, $formData);
+		ConfigNewSettingsForms::how_often_remind($emailSettings, $formData);
+		ConfigNewSettingsForms::template_emails($templateData);
+		echo "
 					</div>
 				</table>
 		</div><hr>";
@@ -596,7 +579,6 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				Session::addMessageAfterRedirect('File too large to be added.', 'WARNING', true);
 			}
 		}
-
 	}
 	
 	static function deleteConfigs() {
@@ -609,11 +591,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				'id' => $conf_id
 			]
 		);	
-		
-		
-		
 	}
-	
 	
 	static function deleteEmailConfigs() {
 		global $DB;
@@ -649,38 +627,36 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			Session::addMessageAfterRedirect(__('Error - field not updated','protocolsmanager'), 'ERROR', true);
 		}
 	}
-
-    public static function getDataTemplate(){
-        global $DB;
-        $query = (['FROM' => 'glpi_plugin_protocolsmanager_mails_templates', 'WHERE' => ['id' => 1]]);
-        return $DB->request($query)->current();
-    }
-
-    public static function setEmailTemplate($postData){
-        global $DB;
-        try{
-            if(empty(self::getDataTemplate())){
-                $query = "INSERT INTO `glpi_plugin_protocolsmanager_mails_templates` (`id`, `template_name`, `template_title`, `template_body`) 
-                            VALUES ('1', 'send_email','".$postData['template_title']."','".$postData['template_body']."')";
-                $DB->queryOrDie($query, $DB->error());
-            }else{
-                $DB->update('glpi_plugin_protocolsmanager_mails_templates',
-                    [
-                        'template_title'  => $postData['template_title'],
-                        'template_body'  => $postData['template_body'],
-                    ],
-                    [
-                        'id' => 1
-                    ]
-                );
-            }
-
-
-            Session::addMessageAfterRedirect(__('Template email updated','protocolsmanager'));
-        }catch(Exception $e){
-            Session::addMessageAfterRedirect(__('Error - Template email not updated','protocolsmanager'), 'ERROR', true);
-        }
-    }
+	
+	public static function getDataTemplate(){
+		global $DB;
+		$query = (['FROM' => 'glpi_plugin_protocolsmanager_mails_templates', 'WHERE' => ['id' => 1]]);
+		return $DB->request($query)->current();
+	}
+	
+	public static function setEmailTemplate($postData){
+		global $DB;
+		try{
+			if(empty(self::getDataTemplate())){
+				$query = "INSERT INTO `glpi_plugin_protocolsmanager_mails_templates` (`id`, `template_name`, `template_title`, `template_body`) 
+							VALUES ('1', 'send_email','".$postData['template_title']."','".$postData['template_body']."')";
+				$DB->queryOrDie($query, $DB->error());
+			}else{
+				$DB->update('glpi_plugin_protocolsmanager_mails_templates',
+					[
+						'template_title'  => $postData['template_title'],
+						'template_body'  => $postData['template_body'],
+					],
+					[
+						'id' => 1
+					]
+				);
+			}
+			Session::addMessageAfterRedirect(__('Template email updated','protocolsmanager'));
+		}catch(Exception $e){
+			Session::addMessageAfterRedirect(__('Error - Template email not updated','protocolsmanager'), 'ERROR', true);
+		}
+	}
 }
 
 ?>
