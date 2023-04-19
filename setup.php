@@ -3,7 +3,7 @@
 function plugin_version_protocolsmanager() {
 	return array('name'				=> __('Protocols manager','protocolsmanager'),
 				'version'			=> '1.4.3.2',
-				'author'			=> 'Mateusz Nitka,Michał Panasiewicz,Artur Barzdo',
+				'author'			=> 'Mateusz Nitka,Artur Barzdo,Michał Panasiewicz',
 				'license'			=> 'GPLv3+',
 				'homepage'			=> 'https://github.com/Wolvverine/protocolsmanager',
 				'minGlpiVersion'	=> '10.0');
