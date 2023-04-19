@@ -38,7 +38,7 @@ class SignProtocol {
 		global $CFG_GLPI, $DB;
 	
 		$nmail = new GLPIMailer();
-	
+		// ## TODO: Use function getEmailSender to noreply or configured address ##
 		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 		$email_subject = __('GLPI Protocols Manager confirm code','protocolsmanager');
 		$email_content = __('confirm code - ','protocolsmanager') . $this->confirmCode;
@@ -55,7 +55,7 @@ class SignProtocol {
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
 			} else {
-				Session::addMessageAfterRedirect(__('Email sent to ','protocolsmanager') . $owner_email);
+				Session::addMessageAfterRedirect(sprintf(__('Email sent to %s','protocolsmanager'), $owner_email));
 			}
 		} else {
 			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, ERROR);
