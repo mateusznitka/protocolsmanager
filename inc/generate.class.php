@@ -587,7 +587,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		
 		static function getDocNumber() {
 			global $DB;
-
+			
 			$req = $DB->request('SELECT MAX(id) as max FROM glpi_plugin_protocolsmanager_protocols');
 			if ($row = $req->current()) {
 				$nextnum = $row["max"];
@@ -654,45 +654,41 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		//send mail notification
 		static function sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id) {
 			global $CFG_GLPI, $DB;
-
+			
 			$nmail = new GLPIMailer();
 			$sender=Config::getEmailSender(null,true);
 			$nmail->SetFrom($sender["email"], $sender["name"], false);
-
 			$recipients_array = explode(';',$recipients);
-
-			$req = $DB->request(
-					'glpi_documents',
-					['id' => $doc_id ]);
-
+			$req = $DB->request('glpi_documents',['id' => $doc_id ]);
+			
 			if ($row = $req->current()) {
 				$path = $row["filepath"];
 				$filename = $row["filename"];
 			}
-
+			
 			$fullpath = GLPI_ROOT."/files/".$path;
-
+			
 			// User email address from glpi database
 			$req2 = $DB->request(
 					'glpi_useremails',
 					['users_id' => $id, 'is_default' => 1]);
-
+				
 			if ($row2 = $req2->current()) {
 				$owner_email = $row2["email"];
 			}
-
+			
 			if ($send_user == 1) {
 				$nmail->AddAddress($owner_email);
 			}
-
+			
 			foreach($recipients_array as $recipient) {
 				$nmail->AddAddress($recipient); //TODO do konfiguracji
 			}
-
+			
 			$nmail->Subject = $email_subject; //TODO do konfiguracji
 			$nmail->addAttachment($fullpath, $filename);
 			$nmail->Body = $email_content;
-
+			
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Error in sending the email'), false, ERROR);
 				GLPINetwork::addErrorMessageAfterRedirect();
