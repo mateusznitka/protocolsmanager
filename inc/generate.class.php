@@ -350,7 +350,6 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>";
 
 				return true;
-
 		}
 
 		//show user's generated documents
@@ -415,13 +414,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 						echo $exports["confirmed"] == 0 ? __('No signed','protocolsmanager'): __('Signed','protocolsmanager') ;
 						echo "</td>";
 					}
-
+					
 					echo "<td class='center'>";
 					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
 					echo "<a class='openDialog' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
 					echo "</td>";
-
-
+					
 					echo "</tr>";
 
 					$doc_counter++;
@@ -658,8 +656,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			global $CFG_GLPI, $DB;
 
 			$nmail = new GLPIMailer();
-			// ## TODO: Use function getEmailSender to noreply or configured address ##
-			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$sender=Config::getEmailSender(null,true);
+			$nmail->SetFrom($sender["email"], $sender["name"], false);
 
 			$recipients_array = explode(';',$recipients);
 
@@ -708,15 +706,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					return true;
 				}
 			}
-
-
 		}
 
 		static function sendOneMail($id) {
 			global $CFG_GLPI, $DB;
 
 			$nmail = new GLPIMailer();
-			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$sender=Config::getEmailSender(null,true);
+			$nmail->SetFrom($sender["email"], $sender["name"], false);
 
 			$doc_id = $_POST["doc_id"];
 
@@ -834,20 +831,14 @@ $(function(){
 });
 
 $(function(){
-
 	$(".dialog").dialog({ autoOpen: false, modal: true, height: 500, width: 500 });
-
 	$("#myTable").on('click','.openDialog',function(){
 		// get the current row
 		var currentRow=$(this).closest("tr");
-
 		var docid=currentRow.find(".docid").html(); // get current row 1st table cell TD value
-
 		$('#dialogVal').val(docid);
 		$(".dialog").dialog('open');
-
 		});
-
 });
 
 $(function(){

@@ -30,19 +30,20 @@ class SignProtocol {
 	 */
 	private function checkEmailCode(): void {
 		global $DB;
+
 		$query = 'SELECT * FROM `glpi_plugin_protocolsmanager_settings` WHERE id = 1';
 		$this->emailCode = $DB->request($query)->current()['mail_confirm_on'];
 	}
 	
 	private function sendEmailCode(): void {
 		global $CFG_GLPI, $DB;
-	
+		
 		$nmail = new GLPIMailer();
-		// ## TODO: Use function getEmailSender to noreply or configured address ##
-		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+		$sender=Config::getEmailSender(null,true);
+		$nmail->SetFrom($sender["email"], $sender["name"], false);
 		$email_subject = __('GLPI Protocols Manager confirm code','protocolsmanager');
 		$email_content = __('confirm code - ','protocolsmanager') . $this->confirmCode;
-	
+		
 		$req = $DB->request(
 			'glpi_useremails',
 			['users_id' => $this->idUser, 'is_default' => 1]);
@@ -62,17 +63,19 @@ class SignProtocol {
 		}
 	}
 	
-	private function signdocument($idProtocol = null, $idUser = null)
-	{
+	private function signdocument($idProtocol = null, $idUser = null) {
+		global $DB;
+
 		$usID = $idUser == null ? $this->idUser : $idUser;
 		$prID = $idProtocol == null ? $this->idProtocol : $idProtocol;
-		global $DB;
+
 		try {
 			$date = new DateTime();
 			$DB->update('glpi_plugin_protocolsmanager_receipt', [
 				'confirmed' => 1,
 				'modified' => $date->format('Y-m-d H:i:s')
-			], [
+				],
+				[
 					'profile_id' => $usID,
 					'protocol_id' => $prID
 				]
@@ -85,9 +88,9 @@ class SignProtocol {
 		}
 	}
 	
-	private function insertConfirmCode()
-	{
+	private function insertConfirmCode() {
 		global $DB;
+
 		$date = new DateTime();
 		$this->confirmCode = rand(1000, 9999);
 		$DB->insert('glpi_plugin_protocolsmanager_confirm', [
@@ -101,6 +104,7 @@ class SignProtocol {
 	
 	private function showFormconfirm($idProtocol = null, $idUser = null) {
 		global $CFG_GLPI;
+
 		$prID = $idProtocol == null ? $this->idProtocol : $idProtocol;
 		$usID = $idUser == null ? $this->idUser : $idUser;
 		
@@ -125,6 +129,7 @@ class SignProtocol {
 	
 	public function checkConfirmationCode($data) {
 		global $DB;
+
 		$date = new DateTime();
 		$toDelete = $date->modify('-5 minutes')->format('Y-m-d H:i:s');
 		$query = 'DELETE FROM `glpi_plugin_protocolsmanager_confirm` WHERE modified < "' . $toDelete . '"';
@@ -141,20 +146,20 @@ class SignProtocol {
 		}
 	}
 
-    public function signdocumentByEmail($idProtocol = null, $idUser = null)
-    {
-        global $DB;
-        $usID = $idUser == null ? $this->idUser : $idUser;
-        $prID = $idProtocol == null ? $this->idProtocol : $idProtocol;
-        $date = new DateTime();
-        $DB->update('glpi_plugin_protocolsmanager_receipt', [
-            'confirmed' => 1,
-            'modified' => $date->format('Y-m-d H:i:s')
-        ], [
-                'profile_id' => $usID,
-                'protocol_id' => $prID
-
-            ]
-        );
-    }
+	public function signdocumentByEmail($idProtocol = null, $idUser = null) {
+		global $DB;
+		
+		$usID = $idUser == null ? $this->idUser : $idUser;
+		$prID = $idProtocol == null ? $this->idProtocol : $idProtocol;
+		$date = new DateTime();
+		$DB->update('glpi_plugin_protocolsmanager_receipt', [
+				'confirmed' => 1,
+				'modified' => $date->format('Y-m-d H:i:s')
+			],
+			[
+				'profile_id' => $usID,
+				'protocol_id' => $prID
+			]
+		);
+	}
 }

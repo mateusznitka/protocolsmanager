@@ -13,7 +13,7 @@ class MailReminder{
 	public function send()
 	{
 		if ($this->settingsInfo['reminder_on'] && $this->settingsInfo['how_often_remind'])
-        {
+		{
 			$data = $this->setDataToSendEmailReminderToAdmins();
 			foreach ($data as $dt) {
 				$this->sendMail($dt);
@@ -81,7 +81,7 @@ class MailReminder{
 					'glpi_useremails' => [
 						['FKEY' => [
 							'glpi_plugin_protocolsmanager_receipt' => 'profile_id',
-                            'glpi_useremails' => 'users_id']]
+							'glpi_useremails' => 'users_id']]
 					],
 					'glpi_plugin_protocolsmanager_protocols' => [
 						['FKEY' => [
@@ -196,16 +196,16 @@ class MailReminder{
 
 	private function createBodyMessageForUser($data): string
 	{
-        global $CFG_GLPI;
-        $temlateData = PluginProtocolsmanagerConfig::getDataTemplate();
-        $body_message = isset($temlateData['template_body']) ? $temlateData['template_body'] : 'message body';
+		global $CFG_GLPI;
+		$temlateData = PluginProtocolsmanagerConfig::getDataTemplate();
+		$body_message = isset($temlateData['template_body']) ? $temlateData['template_body'] : 'message body';
 
-        $button = new Buttons();
-        $protocol_for_url = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
-        $link = $protocol_for_url.$_SERVER['HTTP_HOST'].$CFG_GLPI["root_doc"]."plugins/protocolsmanager/front/protocols.form.php";
+		$button = new Buttons();
+		$protocol_for_url = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
+		$link = $protocol_for_url.$_SERVER['HTTP_HOST'].$CFG_GLPI["root_doc"]."plugins/protocolsmanager/front/protocols.form.php";
 
-        $body = $button->createSignProtocolButton($body_message ,$CFG_GLPI, 'reminder');
-        return $body;
+		$body = $button->createSignProtocolButton($body_message ,$CFG_GLPI, 'reminder');
+		return $body;
 	}
 
 	private function setDate(): array
@@ -231,8 +231,8 @@ class MailReminder{
 		global $CFG_GLPI, $DB;
 
 		$nmail = new GLPIMailer();
-
-		$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+		$sender=Config::getEmailSender(null,true);
+		$nmail->SetFrom($sender["email"], $sender["name"], false);
 		$email_subject = __('GLPI REMINDER','protocolsmanager');
 		$email_content = $protocols['conntent'];
 
@@ -253,7 +253,7 @@ class MailReminder{
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, 'ERROR');
 			} else {
-				Session::addMessageAfterRedirect(__('Email sent to ','protocolsmanager') . $owner_email);
+				Session::addMessageAfterRedirect(sprintf(__('Email sent to %s','protocolsmanager'), $owner_email));
 			}
 		} else {
 			Session::addMessageAfterRedirect(__('Can not confirm, add e-mail','protocolsmanager'), false, 'ERROR');
