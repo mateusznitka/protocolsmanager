@@ -79,6 +79,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			where  glpi_plugin_fields_fields.plugin_fields_containers_id=glpi_plugin_fields_containers.id
 			AND glpi_plugin_fields_fields.type="dropdown-User"
 		*/
+			// Select user field type in item for generate list
 			echo "<form method='post' name='user_field$rand' id='user_field$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'>";
 			echo "<tr><td style ='width:25%'></td>";
@@ -94,30 +95,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "</select></td>";
 			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field','protocolsmanager')."'></td>";
 			echo "<td style='width:30%'></td></tr>";
+			//TODO - pretty look
+			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Curent Fields container: " . $containerName . "</td><td style='width:10%'></td><td style='width:10%'></td></tr>";
 			echo "</table>";
 			Html::closeForm();
-			
+			// Generate protocol form 
 			echo "<form method='post' name='protocolsmanager_form$rand'
 					id='protocolsmanager_form$rand'
 					action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
-			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
-			echo "<td class='center' style ='width:25%'>";
-			echo "<select name='list' style='font-size:14px; width:95%'>";
-				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config',
-				['FIELDS' => ['glpi_plugin_protocolsmanager_config' => ['id', 'name']]]) as $uid => $list) {
-					echo '<option value="';
-					echo $list["id"];
-					echo '">';
-					echo $list["name"];
-					echo '</option>';
-				}
-			echo "</select></td>";
-			echo "<td style='width:10%'><input type='submit' name='generate' class='submit' value='".__('Create')."'></td>";
-			echo "<td style='width:30%'></td></tr>";
+			echo "<table class='tab_cadre_fixe'>";
+			//TODO note - pretty look
 			echo "<tr><td></td><td colspan='2'><input type='text' name='notes' placeholder='".__('Note')."' style='width:89%; font-size:14px; padding: 2px'></td><td></td></tr>";
-			//TODO - preety look
-			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Curent Fields container: " . $containerName . "</td><td style='width:10%'></td><td style='width:10%'></td></tr>";
 			echo "</table>";
+			// Generate User items list
 			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
 			$header = "<th width='10'><input type='checkbox' class='checkall' style='height:16px; width: 16px;'></th>";
 			$header .= "<th>".__('Type')."</th>";
@@ -285,10 +275,26 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					}
 				}
 			}
-			
-				echo "</table>";
-				Html::closeForm();
-				echo "</div>";
+			echo "</table>";
+			echo "</div>";
+			// Choose protocol template and Create button
+			echo "<table class='tab_cadre_fixe'>";
+			echo "<tr><td style ='width:25%'></td>";
+			echo "<td class='center' style ='width:25%'>";
+			echo "<select name='list' style='font-size:14px; width:95%'>";
+				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config',
+				['FIELDS' => ['glpi_plugin_protocolsmanager_config' => ['id', 'name']]]) as $uid => $list) {
+					echo '<option value="';
+					echo $list["id"];
+					echo '">';
+					echo $list["name"];
+					echo '</option>';
+				}
+			echo "</select></td>";
+			echo "<td style='width:10%'><input type='submit' name='generate' class='submit' value='".__('Create')."'></td>";
+			echo "<td style='width:30%'></td></tr>";
+			echo "</table>";
+			Html::closeForm();
 				
 				//send email popup
 				echo "<div class='dialog' title='".__('Send email')."'><p>" . __('Select recipients from template or enter manually to send email','protocolsmanager') . "</p><br><br>";
@@ -345,7 +351,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				return true;
 		}
 		
-		//show user's generated documents
+		//show user's generated protocols documents
 		static function getAllForUser($id) {
 			global $DB, $CFG_GLPI;
 
@@ -409,7 +415,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					}
 					
 					echo "<td class='center'>";
-					//TODO - send default email with document to user
+				//TODO - send default email with document to user
 				/*
 				echo "<div class='dialog' title='".__('Send email')."'>;
 				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
@@ -542,7 +548,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$html2pdf = new Dompdf([
 					"defaultFont" => "$font",
-//					"logOutputFile" => /tmp/DOMPDF_render.log.htm',
+					// "logOutputFile" => /tmp/DOMPDF_render.log.htm',
 					"debugPng" => false, // extra messaging
 					"debugKeepTemp" => false, // don't delete temp files
 					'debugCss' => false, // output Style parsing information and frame details for every frame in the document
