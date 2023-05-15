@@ -80,15 +80,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			AND glpi_plugin_fields_fields.type="dropdown-User"
 		*/
 			// Select user field type in item for generate list
-			echo "<form method='post' name='user_field$rand' id='user_field$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+			echo "<form method='post' name='user_field$rand' id='user_field$rand' 
+					action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'>";
 			echo "<tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
 			//TODO pretty change format the current active field in the selection list, if is active
+			
 			echo "<select name='userfield' style='font-size:14px; width:95%'>";
 				foreach ($User_Fields as $fuid => $userfield) {
 					echo '<option value="'.$userfield["fieldname"].'" '.($userfield["fieldname"] == $field_user ? 'selected style="font-weight:bold"' : '').'>'.__($userfield["label"],'fields').'</option>';
-					$containerName = ($userfield["fieldname"] == $field_user ? $userfield["containername"] : '');
+					if ($userfield["fieldname"] == $field_user) {
+						$containerName = $userfield["containername"] ;
+					}
 				}
 			echo "<option value='users_id' ".('users_id' == $field_user ? 'selected style="font-weight:bold"' : '').">".__('User')."</option>";
 			echo "<option value='users_id_tech' ".('users_id_tech' == $field_user ? 'selected style="font-weight:bold"' : '').">".__('Technician')."</option>";
@@ -96,9 +100,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field','protocolsmanager')."'></td>";
 			echo "<td style='width:30%'></td></tr>";
 			//TODO - pretty look
-			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Curent Fields container: " . $containerName . "</td><td style='width:10%'></td><td style='width:10%'></td></tr>";
+			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Curent Fields container: " . $containerName . "</td>
+				<td style='width:10%'></td>
+				<td style='width:10%'></td></tr>";
 			echo "</table>";
 			Html::closeForm();
+
 			// Generate protocol form 
 			echo "<form method='post' name='protocolsmanager_form$rand'
 					id='protocolsmanager_form$rand'
