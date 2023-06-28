@@ -802,8 +802,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$email_subject = (!empty($email_subject)) ? $email_subject : $subject;
 				$email_content .= $button->createSignProtocolButton($body_message, $CFG_GLPI);
 			}
-			$nmail->Body = nl2br(stripcslashes($email_content));
-			$nmail->Subject = $email_subject; //do konfiguracji
+			$nmail->Body = htmlspecialchars_decode($email_content); // HTML in e-mail
+			$nmail->IsHtml(true);
+			$nmail->AltBody = strip_tags(htmlspecialchars_decode($email_content)); // for text mode - clean html tags
 			
 			if (!$nmail->Send()) {
 				Session::addMessageAfterRedirect(__('Error in sending the email'), false, ERROR);
