@@ -100,7 +100,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<td style='width:10%'><input type='submit' name='choiceuserfield' class='submit' value='".__('Change Field','protocolsmanager')."'></td>";
 			echo "<td style='width:30%'></td></tr>";
 			//TODO - pretty look
-			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Curent Fields container: " . $containerName . "</td>
+			echo "<tr><td style ='width:25%'></td><td class='center'>" . __('Current User Field: ', 'protocolsmanager') . $field_user  . "</br> Current Fields container: " . $containerName . "</td>
 				<td style='width:10%'></td>
 				<td style='width:10%'></td></tr>";
 			echo "</table>";
