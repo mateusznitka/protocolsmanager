@@ -32,30 +32,23 @@ class ConfigNewSettingsForms {
 										<input type='hidden' name='witch_field_settings' value='user_fields' >
 										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
 									</td>
-							   </tr>";
+								</tr>";
 		Html::closeForm();
 	}
 
 	static function show_own_assets($showOwnAssetsOn, $showOwnAssetsOff ) {
-		echo "<form method='post' action='config.form.php'>
-							   <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1' style='padding-top: 20px;'>
+		echo "
+		<script type='text/javascript' src='../js/jquery.switcher.js'></script>
+		<form method='post' action='config.form.php'>
+								<input type='hidden' name='menu_mode' value='e'>
+								<tr class='tab_bg_1' style='padding-top: 20px;'>
 									<td class='center' width='7%' style='padding-top: 20px;'>
-		". __('Show user assets','protocolsmanager') . "
+		". __('Show user assets') . "
 									</td>
 									<td class='center' width='7%'>
-		" . __('Enabled') . "
-	<input type='radio' name='show_own_assets' value='1' ".$showOwnAssetsOn.">
-									</td>
-									<td class='center' width='7%'>
-		" . __('Disabled') . "
-	<input type='radio' name='show_own_assets' value='0' ".$showOwnAssetsOff .">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='show_own_assets' >
-										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
-									</td>
-							   </tr>";
+									<input class='form-check-input' type='checkbox' id='inlineCheckbox1' witch_field_settings='show_own_assets' name='_glpi_csrf_token' 
+									value='" . Session::getNewCSRFToken() ."' " . ($showOwnAssetsOn == 'checked' ? "checked='checked'" : "") . ">
+								</tr>";
 		Html::closeForm();
 	}
 
@@ -68,41 +61,24 @@ class ConfigNewSettingsForms {
 											". __('sign protococols service','protocolsmanager') . "
 									</td>
 									<td class='center' width='7%'>
-										" . __('Enabled') . "
-										<input type='radio' name='protocols_save_on' value='1' ".$serviceSignOn.">
-									</td>
-									<td class='center' width='7%'>
-										" . __('Disabled') . "
-										<input type='radio' name='protocols_save_on' value='0' ".$serviceSignOff.">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='protocols_save_on' >
-										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
-									</td>
-							   </tr>";
+									
+									<input class='form-check-input' type='checkbox' id='inlineCheckbox2' witch_field_settings='protocols_save_on' name='_glpi_csrf_token'
+									value='" . Session::getNewCSRFToken() ."' " . ($serviceSignOn == 'checked' ? "checked='checked'" : "") . ">
+								</tr>";
 		Html::closeForm();
 	}
 
 	static function mail_confirm_on($emailConfirmationOn, $emailConfirmationOff) {
 		echo "<form method='post' action='config.form.php'>
-							   <input type='hidden' name='menu_mode' value='e'>
-							   <tr class='tab_bg_1' style='padding-top: 20px;'>
+								<input type='hidden' name='menu_mode' value='e'>
+								<tr class='tab_bg_1' style='padding-top: 20px;'>
 									<td class='center' width='7%' style='padding-top: 20px;'>
 										". __('email confirmation','protocolsmanager') . "
 									</td>
 									<td class='center' width='7%'>
-										" . __('Enabled') . "
-										<input type='radio' name='mail_confirm_on' value='1' ".$emailConfirmationOn.">
-									</td>
-									<td class='center' width='7%'>
-										" . __('Disabled') . "
-									<input type='radio' name='mail_confirm_on' value='0' ".$emailConfirmationOff.">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='mail_confirm_on' >
-										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
-									</td>
-							   </tr>";
+									<input class='form-check-input' type='checkbox' id='inlineCheckbox3' witch_field_settings='mail_confirm_on' name='_glpi_csrf_token' 
+									value='" . Session::getNewCSRFToken() ."' " . ($emailConfirmationOn == 'checked' ? "checked='checked'" : "") . ">
+								</tr>";
 		Html::closeForm();
 	}
 
@@ -114,18 +90,12 @@ class ConfigNewSettingsForms {
 										". __('protococols reminder service','protocolsmanager') . "
 									</td>
 									<td class='center' width='7%'>
-										" . __('Enabled') . "
-										<input type='radio' name='reminder_on' value='1' ".$serviceReminderOn.">
-									</td>
-									<td class='center' width='7%'>
-										" . __('Disabled') . "
-									<input type='radio' name='reminder_on' value='0' ".$serviceReminderOff.">
-									</td>
-									<td class='center' width='7%'>
-										<input type='hidden' name='witch_field_settings' value='reminder_on' >
-										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
-									</td>
-							   </tr>";
+									<input class='form-check-input' type='checkbox' id='inlineCheckbox4' witch_field_settings='reminder_on' name='_glpi_csrf_token'
+									value='" . Session::getNewCSRFToken() ."' " . ($serviceReminderOn == 'checked' ? "checked='checked'" : "") . ">
+								</tr>
+								<script>
+								$.switcher();</script>
+								";
 		Html::closeForm();
 	}
 
@@ -146,7 +116,7 @@ class ConfigNewSettingsForms {
 										<input type='hidden' name='witch_field_settings' value='first_emial_reminder' >
 										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
 									</td>
-							   </tr>";
+								</tr>";
 		Html::closeForm();
 	}
 
@@ -167,7 +137,7 @@ class ConfigNewSettingsForms {
 										<input type='hidden' name='witch_field_settings' value='second_emial_reminder' >
 										<input type='submit' name='service_settings' class='submit' value='".__('Change','protocolsmanager')."'>
 									</td>
-							   </tr>";
+								</tr>";
 		Html::closeForm();
 	}
 

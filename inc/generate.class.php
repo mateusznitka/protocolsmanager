@@ -435,13 +435,35 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				Html::closeForm();
 				echo "</div>";
 				*/
-					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
-					echo "<a class='openDialog' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
-					echo "</td>";
-					echo "</tr>";
-
-					$doc_counter++;
+				
+				$hash =  $_GET['id'] * $exports['document_id'] * 386479 + 335235;
+				echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
+				echo "<a class='openDialog' docid='".$exports['document_id']."' hash = ".$hash ." style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
+				echo "</td>";
+				echo "</tr>";
+				$doc_counter++;
+			}
+			
+			echo '<script type="text/javascript">
+			var anchors = document.getElementsByClassName("openDialog");
+			for(var i = 0; i < anchors.length; i++) {
+				var anchor = anchors[i];
+				anchor.onclick = function(e) {
+					 let doc = e.target.getAttribute("docid");
+					 let hash = e.target.getAttribute("hash");
+					 let dane = {"id" : '. $_GET['id'] .', "doc_id" : doc, "hash": hash};
+					 jQuery.ajax({
+						type: "POST",
+						url: "'. Plugin::getWebDir('protocolsmanager').'/ajax/SendOneMailAjax.php",
+						data: dane,
+						dataType: "text",
+						success: function(data) {
+							alert(data);
+						}
+					}); 
 				}
+			}
+			</script>';
 		}
 		
 		//make PDF and save to DB
