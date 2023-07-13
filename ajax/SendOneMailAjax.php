@@ -5,37 +5,21 @@ header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 Session::checkLoginUser();
 
-global $DB;
-$query = (['FROM' => 'glpi_plugin_protocolsmanager_settings', 'WHERE' => ['id' => 1]]);
-$wynik = $DB->request($query)->current()['protocols_save_on'];
-
-die(print_r($wynik));
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////
+global $CFG_GLPI, $DB;
 
 $hash_new2 =  $_POST['id'] *$_POST["doc_id"] * 386479 + 335235;
 
 if ($hash_new2 != $_POST['hash'])
 	die('Blad autoryzacji');
-global $CFG_GLPI, $DB;
+
 $id = $_POST["id"];
 $nmail = new GLPIMailer();  //PHPMailer
 $sender=Config::getEmailSender(null,true);
-$nmail->SetFrom($sender["email"], $sender["name"], false);		
+$nmail->SetFrom($sender["email"], $sender["name"], false);
 $doc_id = $_POST["doc_id"];
 
 if (isset($_POST["em_list"])) {
 	$recipients = $_POST["em_list"];
-	
 }
 
 if (isset($_POST["email_subject"])) {
@@ -76,14 +60,10 @@ $req2 = $DB->request(
 if ($row2 = $req2->current()) {
 	$owner_email = $row2["email"];
 }
-$send_user = 1; // dla testu
-if ($send_user == 1) {
-	$nmail->AddAddress($owner_email);			
-}
 
-/* foreach($recipients_array as $recipient) {
-	$nmail->AddAddress($recipient); //do konfiguracji
-} */ //do ustalenia
+if ($send_user == 1) {
+	$nmail->AddAddress($owner_email);
+}
 
 $req = $DB->request(
 		'glpi_documents',
@@ -106,7 +86,6 @@ if(PluginProtocolsmanagerGenerate::checkSignProtocolsOn()){
 	$email_subject = (!empty($email_subject)) ? $email_subject : $subject;
 	$email_content .= $button->createSignProtocolButton($body_message, $CFG_GLPI);
 }
-
 
 $nmail->Subject = $email_subject; // do ustalenia
 $nmail->Body = htmlspecialchars_decode($email_content); // HTML in e-mail

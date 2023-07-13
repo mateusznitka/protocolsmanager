@@ -2,7 +2,7 @@
 	
 	include ('../../../inc/includes.php');
 	require_once dirname(__DIR__) . '/inc/mailReminder.php';
-
+	
 	Session::checkValidSessionId();
 	Session::haveRight("config", UPDATE);
 	
@@ -55,16 +55,14 @@
 		$PluginProtocolsmanagerConfig::setSettingsData($_POST);
 		Html::back();
 	}
-
-    if (isset($_REQUEST['email_template_new'])){
-        $PluginProtocolsmanagerConfig::setEmailTemplate($_POST);
-        Html::back();
-
-    }
-
+	
+	if (isset($_REQUEST['email_template_new'])){
+		$PluginProtocolsmanagerConfig::setEmailTemplate($_POST);
+		Html::back();
+	}
+	
 	$PluginProtocolsmanagerConfig->showFormProtocolsmanager();
 	unset($_SESSION["menu_mode"]);
-	
 	
 ?>
 

@@ -415,6 +415,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "<td class='center'>";
 					echo $Doc->getField("comment");
 					echo "</td>";
+					
 					if(self::checkSignProtocolsOn()){
 						echo "<td class='center'>";
 						echo $exports["confirmed"] == 0 ? __('No signed','protocolsmanager'): __('Signed','protocolsmanager') ;
@@ -422,26 +423,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					}
 					
 					echo "<td class='center'>";
-				//TODO - send default email with document to user
-				/*
-				echo "<div class='dialog' title='".__('Send email')."'>;
-				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
-				echo "<input type='submit' name='send' class='submit' value=".__('Send').">";
-				echo "<input type='hidden' name='author' value='" . $exports['author'] . "'>";
-				echo "<input type='hidden' name='owner' value='$owner'>";
-				echo "<input type='hidden' name='doc_id' value='".$exports['document_id']."'>";
-				echo "<input type='hidden' name='user_id' value='$id'>";
-				echo ""
-				Html::closeForm();
-				echo "</div>";
-				*/
 				
-				$hash =  $_GET['id'] * $exports['document_id'] * 386479 + 335235;
-				echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
-				echo "<a class='openDialog' docid='".$exports['document_id']."' hash = ".$hash ." style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
-				echo "</td>";
-				echo "</tr>";
-				$doc_counter++;
+					$hash =  $_GET['id'] * $exports['document_id'] * 386479 + 335235;
+					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
+					echo "<a class='openDialog' docid='".$exports['document_id']."' hash = ".$hash ." style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
+					echo "</td>";
+					echo "</tr>";
+					$doc_counter++;
 			}
 			
 			echo '<script type="text/javascript">

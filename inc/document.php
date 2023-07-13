@@ -13,7 +13,7 @@ if (isset($_GET['docid'])) { // docid for document
 	if (!$doc->getFromDB($_GET['docid'])) {
 		Html::displayErrorAndDie(__('Unknown file'), true);
 	}
-
+	
 	if (!file_exists(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
 		Html::displayErrorAndDie(__('File not found'), true); // Not found
 	} else if (checkDocPermisions($_GET['docid'])) {
@@ -33,13 +33,12 @@ if (isset($_GET['docid'])) { // docid for document
 	
 }
 
-function checkDocPermisions($docID){
-	
+function checkDocPermisions($docID){	
 	global $DB;
 	$response = false;
 	if(isset($_SESSION['glpiID'])) {
 		$id = $_SESSION['glpiID'];
-        $query = ['SELECT' => ['COUNT' => 'id'],
+		$query = ['SELECT' => ['COUNT' => 'id'],
 					'FROM' => 'glpi_plugin_protocolsmanager_receipt',
 					'WHERE' => [
 						'profile_id'=>$id,
@@ -47,7 +46,7 @@ function checkDocPermisions($docID){
 					]
 				];
 		$result = $DB->request($query)->current();
-        $result['COUNT(`id`)'] ? $response = true : '';
+		$result['COUNT(`id`)'] ? $response = true : '';
 	}
 	return $response;
 }

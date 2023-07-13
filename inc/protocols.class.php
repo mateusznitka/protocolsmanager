@@ -8,9 +8,9 @@ class PluginProtocolsmanagerProtocols extends CommonDBTM {
 	}
 	
 	public function showFormProtocols() {
-
-        CheckAccess::checkRightsToSignProtocolsPage();
-
+		
+		CheckAccess::checkRightsToSignProtocolsPage();
+		
 		$id = $_SESSION['glpiID'];
 		global $DB, $CFG_GLPI;
 		$rand = mt_rand();

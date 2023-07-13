@@ -5,12 +5,12 @@ header("Content-Type: text/html; charset=UTF-8");
 
 Html::header_nocache();
 Session::checkLoginUser();
-Session::checkValidSessionId();
 Session::haveRight("config", UPDATE);
+global $DB;
 	
 	$PluginProtocolsmanagerConfig = new PluginProtocolsmanagerConfig();
 	
-    if (isset($_REQUEST['witch_field_settings'])){
+	if (isset($_REQUEST['witch_field_settings'])){
 		
 		$postData = array(
 			"menu_mode" => "e",
@@ -19,9 +19,7 @@ Session::haveRight("config", UPDATE);
 			"service_settings"  => "Change",
 		);
 		
-		global $DB;
-
-	try{
+		try{
 			$DB->update('glpi_plugin_protocolsmanager_settings',
 				[
 					$postData['witch_field_settings'] => $postData['checkVal'],
@@ -30,13 +28,16 @@ Session::haveRight("config", UPDATE);
 					'id' => 1
 				]
 			);
-
-$token = Session::getNewCSRFToken();
-	 $res = array("result" => "res_ok", "token" => $token);
-	$res_json = json_encode($res);
+			
+			$token = Session::getNewCSRFToken();
+			$res = array("result" => "res_ok", "token" => $token);
+			$res_json = json_encode($res);
 			die($res_json);
+
 		}catch(Exception $e){
 			die('Error - field not updated');
 		}
-	}	
+	}
+	
 ?>
+
