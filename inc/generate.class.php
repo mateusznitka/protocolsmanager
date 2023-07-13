@@ -426,32 +426,41 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 					$hash =  $_GET['id'] * $exports['document_id'] * 386479 + 335235;
 					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
-					echo "<a class='openDialog' docid='".$exports['document_id']."' hash = ".$hash ." style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
+					echo "<a class='openDialog' docid='".$exports['document_id']."' hash = ".$hash .
+					" style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>
+					".__('Send')."</a>";
 					echo "</td>";
 					echo "</tr>";
 					$doc_counter++;
 			}
 			
-			echo '<script type="text/javascript">
+			$ajax_url = Plugin::getWebDir('protocolsmanager').'/ajax/SendOneMailAjax.php';
+			$js = <<<JAVASCRIPT
+			// init variables to pass to /ajax/SendOneMail.js
+			var onemail_ajax_url = "{$ajax_url}";
+			var user_id = "{$_GET['id']}";
+			var send_user = 1;
+			// TODO - more parameters and move to Html::script('js/SendOneMail.js');
 			var anchors = document.getElementsByClassName("openDialog");
 			for(var i = 0; i < anchors.length; i++) {
 				var anchor = anchors[i];
 				anchor.onclick = function(e) {
-					 let doc = e.target.getAttribute("docid");
-					 let hash = e.target.getAttribute("hash");
-					 let dane = {"id" : '. $_GET['id'] .', "doc_id" : doc, "hash": hash};
-					 jQuery.ajax({
+					let doc = e.target.getAttribute("docid");
+					let hash = e.target.getAttribute("hash");
+					let dane = {"id" : user_id, "doc_id" : doc, "hash": hash, "send_user": send_user };
+					jQuery.ajax({
 						type: "POST",
-						url: "'. Plugin::getWebDir('protocolsmanager').'/ajax/SendOneMailAjax.php",
+						url: onemail_ajax_url,
 						data: dane,
 						dataType: "text",
-						success: function(data) {
-							alert(data);
+						success: function() { 
+							displayAjaxMessageAfterRedirect();
 						}
-					}); 
+					});
 				}
 			}
-			</script>';
+			JAVASCRIPT;
+			echo Html::scriptBlock($js);
 		}
 		
 		//make PDF and save to DB

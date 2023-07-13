@@ -18,6 +18,10 @@ $sender=Config::getEmailSender(null,true);
 $nmail->SetFrom($sender["email"], $sender["name"], false);
 $doc_id = $_POST["doc_id"];
 
+if (isset($_POST["send_user"])) {
+	$send_user = $_POST["send_user"];
+}
+
 if (isset($_POST["em_list"])) {
 	$recipients = $_POST["em_list"];
 }
@@ -53,6 +57,7 @@ $email_subject = str_replace("{admin}", $author, $email_subject);
 $email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
 $recipients_array = explode(';',$recipients);
 
+// User email address from glpi database
 $req2 = $DB->request(
 		'glpi_useremails',
 		['users_id' => $id, 'is_default' => 1]);
@@ -61,6 +66,7 @@ if ($row2 = $req2->current()) {
 	$owner_email = $row2["email"];
 }
 
+// If template or custom email is not set use actual user id
 if ($send_user == 1) {
 	$nmail->AddAddress($owner_email);
 }
@@ -93,11 +99,9 @@ $nmail->IsHtml(true);
 $nmail->AltBody = strip_tags(htmlspecialchars_decode($email_content)); // for text mode - clean html tags
 
 if (!$nmail->Send()) {
-	die("nie wyslano" .  $nmail->ErrorInfo);
 	Session::addMessageAfterRedirect(__('Error in sending the email'), false, ERROR);
 	return false;
 } else {
-	die("Wysłano na adres $owner_email, dokument o nazwie $filename");
 	if ($send_user == 1) {
 		Session::addMessageAfterRedirect(sprintf(__('An email was sent to %s'), implode(", ", $recipients_array)." ".$owner_email));
 		return true;
