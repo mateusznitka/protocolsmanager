@@ -455,6 +455,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 						dataType: "text",
 						success: function() { 
 							displayAjaxMessageAfterRedirect();
+						},
+						error: function() { 
+							displayAjaxMessageAfterRedirect();
 						}
 					});
 				}
