@@ -87,7 +87,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<td class='center' style ='width:25%'>";
 			//TODO pretty change format the current active field in the selection list, if is active
 			
-			echo "<select name='userfield' style='font-size:14px; width:95%'>";
+			echo "<select required name='userfield' style='font-size:14px; width:95%'>";
 				foreach ($User_Fields as $fuid => $userfield) {
 					echo '<option value="'.$userfield["fieldname"].'" '.($userfield["fieldname"] == $field_user ? 'selected style="font-weight:bold"' : '').'>'.__($userfield["label"],'fields').'</option>';
 					if ($userfield["fieldname"] == $field_user) {
@@ -131,7 +131,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					continue;
 				}
 				if ($item->canView()) {
+					// he'll get all the tables back
 					$itemtable = getTableForItemType($itemtype);
+					
 					$fieldsitemtablewithuser = strtolower("$fieldsitemtableprefix" . "$itemtype" . "$containerName" .'s');
 					if (("$field_user" == 'users_id') or ("$field_user" == 'users_id_tech')) {
 						$iterator_params = [
@@ -166,7 +168,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					foreach ($item_iterator as $data) {
 							$cansee = $item->can($data["id"], READ);
-							$link  = $data["name"];
+							(empty($data["name"])) ? ($link = $data["id"]) : ($link  = $data["name"]);
 							if ($cansee) {
 								$link_item = $item::getFormURLWithID($data['id']);
 								if ($_SESSION["glpiis_ids_visible"] || empty($link)) {
@@ -264,6 +266,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							$Owner->getFromDB($id);
 							$Author = new User();
 							$Author->getFromDB(Session::getLoginUserID());
+							// get the template used
+							// getrawname replaced https://github.com/glpi-project/glpi/blob/10.0/bugfixes/CHANGELOG.md
+							// there was also getRawName() but I'm not sure if it's in the changelog
 							$owner = $Owner->getFriendlyName();
 							$author = $Author->getFriendlyName();
 							echo "<input type='hidden' name='owner' value ='$owner'>";
@@ -333,7 +338,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 				echo "<div class='spaced'>";
 				echo "<form method='post' name='docs_form' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
-				echo "<table class='tab_cadre_fixe'><td style='width:5%'><img src='../pics/arrow-left-top.png'></td><td style='width:5%'>";
+				echo "<table class='tab_cadre_fixe'><td style='width:5%'><img src='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/img/arrow-left-top.png'></td><td style='width:5%'>";
 				echo "<input type='submit' name='delete' class='submit' value=".__('Delete').">";
 				echo "</td><td style='width:90%'></table>";
 				echo "<table class='tab_cadre_fixehov' id='myTable'>";
@@ -501,7 +506,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$upper_content = str_replace("{owner}", $owner, $upper_content);
 				$upper_content = str_replace("{admin}", $author, $upper_content);
 				$footer = nl2br($row["footer"]);
-				$title = $row["name"];
+					$title = $row["title"];
+					$title = str_replace("{owner}", $owner, $title);
+					$title_template = $row["name"];
 				$full_img_name = $row["logo"];
 				$font = $row["font"];
 				$fontsize = $row["fontsize"];
@@ -511,17 +518,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];
 				$email_template = $row["email_template"];
+					$author_name = $row["author_name"];
+					$author_state = $row["author_state"];
 			}
 			
-			$req = $DB->request(
+				$req2 = $DB->request(
 				'glpi_plugin_protocolsmanager_emailconfig',
 				['id' => $email_template ]);
 			
-			if ($row = $req->current()) {
-				$send_user = $row["send_user"];
-				$email_subject = $row["email_subject"];
-				$email_content = $row["email_content"];
-				$recipients = $row["recipients"];
+				if ($row2 = $req2->current()) {
+					$send_user = $row2["send_user"];
+					$email_subject = $row2["email_subject"];
+					$email_content = $row2["email_content"];
+					$recipients = $row2["recipients"];
 			}
 			
 			$comments = $_POST['comments'];
@@ -587,6 +596,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					'debugLayoutInline' => false, // inline frames
 					'debugLayoutPaddingBox' => false // padding box
 				]);
+			
 			$html2pdf->loadHtml($html);
 			$html2pdf->setPaper('A4', $orientation);
 			$html2pdf->render();
@@ -628,6 +638,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			global $DB;
 			
 			$req = $DB->request('SELECT MAX(id) as max FROM glpi_plugin_protocolsmanager_protocols');
+			
 			if ($row = $req->current()) {
 				$nextnum = $row["max"];
 				if (!$nextnum) {
@@ -650,8 +661,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 			if ($row = $req->current()) {
 				$entity = $row["entities_id"];
-			
 			}
+			
 			if (!Session::haveAccessToEntity($entity)) {
 				$entity = Session::getActiveEntity();
 			}
@@ -692,9 +703,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		
 		//send mail notification
 		static function sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id) {
+			
 			global $CFG_GLPI, $DB;
 			
 			$nmail = new GLPIMailer();
+			//$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false); ## TODO replace 2 next lines?
 			$sender=Config::getEmailSender(null,true);
 			$nmail->SetFrom($sender["email"], $sender["name"], false);
 			$recipients_array = explode(';',$recipients);
@@ -853,67 +866,79 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 <script>
 
-$(function(){
-	$(".man_recs").prop('disabled', true);
-	$('.send_type').click(function(){
-		if($(this).prop('id') == "manually"){
-			$(".man_recs").prop('disabled', false);
-			$("#auto_recs").prop('disabled', true);
-		}else{
-			$(".man_recs").prop('disabled', true);
-			$("#auto_recs").prop('disabled', false);
-		}
-	});
-});
-
-$(function(){
-	$(".dialog").dialog({ autoOpen: false, modal: true, height: 500, width: 500 });
-	$("#myTable").on('click','.openDialog',function(){
-		// get the current row
-		var currentRow=$(this).closest("tr");
-		var docid=currentRow.find(".docid").html(); // get current row 1st table cell TD value
-		$('#dialogVal').val(docid);
-		$(".dialog").dialog('open');
+	$(function(){
+		$(".man_recs").prop('disabled', true);
+		$('.send_type').click(function(){
+			if($(this).prop('id') == "manually"){
+				$(".man_recs").prop('disabled', false);
+				$("#auto_recs").prop('disabled', true);
+			}else{
+				$(".man_recs").prop('disabled', true);
+				$("#auto_recs").prop('disabled', false);
+			}
 		});
-});
-
-$(function(){
-	$('.checkall').on('click', function() {
-	$('.child').prop('checked', this.checked)
 	});
-});
 
-$(function(){
-	$('.checkalldoc').on('click', function() {
-		$('.docchild').prop('checked', this.checked)
+	// it used to use jqueryUI, glpi doesn't use it anymore though
+	
+	$(function(){
+		$("#myTable").on('click','.openDialog',function(){
+			// get the current row
+			var currentRow = $(this).closest("tr");
+			// get current row 1st table cell TD value
+			var docid = currentRow.find(".docid").html();
+			
+			$('#dialogVal').val(docid);
+			
+			// display the pop-up
+			$("#motus").modal('show');
+		});
 	});
-});
 
-$(function() {
-		var counter = $('.child').length;
-		var ctr = 0;
+	// OK to make it an option in the plugin?
+	$(function(){
 		
-		$("#addNewRow").on("click", function () {
-			var newRow = $("<tr class='tab_bg_1'>");
-		var cols = "";
-		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:9px;"></td>';
-		cols += '<td class="center"><input type="text" style="width:80%" name="type_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90%" name="man_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90%" name="mod_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90%" name="item_name[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90%" name="serial[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90%" name="otherserial[]"></td>';
-		cols += '<td class="center"><input type="text" style="width:90%" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
-		newRow.append(cols);
-		$("#additional_table").append(newRow);
-		counter++;
-		ctr++;
+		// The default is to check the boxes
+		$('.checkall').prop('checked', true);
+		$('.child').prop('checked', this)
+		
+		// Clicking on the parent changes all the boxes
+		$('.checkall').on('click', function() {
+		$('.child').prop('checked', this.checked)
+		});
 	});
 
-	$("#additional_table").on("click", ".ibtnDel", function (event) {
-		$(this).closest("tr").remove();
-		ctr -= 1
+	$(function(){
+		$('.checkalldoc').on('click', function() {
+			$('.docchild').prop('checked', this.checked)
+		});
 	});
-});
+
+	$(function() {
+			var counter = $('.child').length;
+			var ctr = 0;
+			
+			$("#addNewRow").on("click", function () {
+				var newRow = $("<tr class='tab_bg_1'>");
+			var cols = "";
+			cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:9px;"></td>';
+			cols += '<td class="center"><input type="text" style="width:80%" name="type_name[]"></td>';
+			cols += '<td class="center"><input type="text" style="width:90%" name="man_name[]"></td>';
+			cols += '<td class="center"><input type="text" style="width:90%" name="mod_name[]"></td>';
+			cols += '<td class="center"><input type="text" style="width:90%" name="item_name[]"></td>';
+			cols += '<td class="center"><input type="text" style="width:90%" name="serial[]"></td>';
+			cols += '<td class="center"><input type="text" style="width:90%" name="otherserial[]"></td>';
+			cols += '<td class="center"><input type="text" style="width:90%" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+			newRow.append(cols);
+			$("#additional_table").append(newRow);
+			counter++;
+			ctr++;
+		});
+
+		$("#additional_table").on("click", ".ibtnDel", function (event) {
+			$(this).closest("tr").remove();
+			ctr -= 1
+		});
+	});
 
 </script>

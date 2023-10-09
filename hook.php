@@ -168,6 +168,7 @@ function plugin_protocolsmanager_install() {
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_config (
 					id INT(11) NOT NULL auto_increment,
 					name VARCHAR(255),
+					title varchar(255),
 					font varchar(255),
 					fontsize varchar(255),
 					logo varchar(255),
@@ -180,15 +181,19 @@ function plugin_protocolsmanager_install() {
 					orientation varchar(10),
 					breakword int(2),
 					email_mode int(2),
+					upper_content text,
 					email_template int(2),
+					author_name varchar(255),
+					author_state int(2),
 					PRIMARY KEY (id)
 				) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 		$DB->queryOrDie($query, $DB->error());
 
 		$query2 = "INSERT INTO glpi_plugin_protocolsmanager_config (
-					name, font, fontsize, content, footer, city, serial_mode, orientation, breakword)
+					name, title, font, fontsize, content, footer, city, serial_mode, orientation, breakword, email_mode, author_name, author_state)
 					VALUES ('Equipment report',
+							'Certificate of delivery of {owner}',
 							'Roboto',
 							'9',
 							'User: \n I have read the terms of use of IT equipment in the Example Company.',
@@ -196,6 +201,9 @@ function plugin_protocolsmanager_install() {
 							'Example city',
 							1,
 							'Portrait',
+							1,
+							2,
+							'Test Division',
 							1)";
 
 		$DB->queryOrDie($query2, $DB->error());
@@ -332,6 +340,19 @@ function plugin_protocolsmanager_install() {
 
 	}
 
+	if($DB->tableExists('glpi_plugin_protocolsmanager_emailconfig'))
+	{
+		$query3 = "INSERT INTO glpi_plugin_protocolsmanager_emailconfig (
+			tname, send_user, email_content, email_subject, recipients)
+			VALUES ('Email default',
+					2,
+					'Testmail',
+					'Testmail',
+					'Testmail')";
+					
+		$DB->queryOrDie($query3, $DB->error());
+	}
+	
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
 
 		$query = "CREATE TABLE glpi_plugin_protocolsmanager_protocols (
@@ -364,9 +385,9 @@ function plugin_protocolsmanager_install() {
 
 
 function plugin_protocolsmanager_uninstall() {
-
+	
 	global $DB;
-
+	
 	$tables = array("glpi_plugin_protocolsmanager_protocols",
 		"glpi_plugin_protocolsmanager_config",
 		"glpi_plugin_protocolsmanager_profiles",
@@ -375,10 +396,10 @@ function plugin_protocolsmanager_uninstall() {
 		"glpi_plugin_protocolsmanager_settings",
 		"glpi_plugin_protocolsmanager_confirm"
 	);
-
+	
 	foreach($tables as $table)
 	{$DB->query("DROP TABLE IF EXISTS `$table`;");}
-
+	
 	return true;
 }
 

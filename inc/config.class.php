@@ -5,8 +5,10 @@ require_once dirname(__DIR__) . '/inc/ConfigNewSettingsForms.class.php';
 class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
 	function showFormProtocolsmanager() {
+		
 		global $CFG_GLPI, $DB;
 		$plugin_conf = self::checkRights();
+		
 		if ($plugin_conf == 'w') {
 			self::displaySettings();
 			self::displayContent();
@@ -66,6 +68,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				$template_content = $row["content"];
 				$template_footer = $row["footer"];
 				$template_name = $row["name"];
+				$title = $row["title"];
 				$font = $row["font"];
 				$fontsize = $row["fontsize"];
 				$city = $row["city"];
@@ -75,6 +78,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];
 				$email_template = $row["email_template"];
+				$author_name = $row["author_name"];
+				$author_state = $row["author_state"];
 			}
 			
 		} else {
@@ -82,6 +87,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$template_content = '';
 			$template_footer = '';
 			$template_name = '';
+			$title = '';
 			$font = '';
 			$fontsize = '9';
 			$city = '';
@@ -91,6 +97,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$breakword = 1;
 			$email_mode = 2;
 			$email_template = 1;
+			$author_name = '';
+			$author_state = 1;
 		}
 		
 		
@@ -131,15 +139,17 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		Html::closeForm();
 		echo "</div>";
 	
-		
+		//echo "<div class='center'>";
 		echo "<form name='form' action='config.form.php' method='post'  enctype='multipart/form-data'>";
 		echo "<input type='hidden' name='MAX_FILE_SIZE' value=1948000>";
 		echo "<input type='hidden' name='mode' value='$mode'>";
 		echo "<table class='tab_cadre_fixe'>";
 		//echo "<tr><th></th>";
 		echo "<tr><th colspan='3'>".__('Create','protocolsmanager')." ".__('template','protocolsmanager')."<a href='https://github.com/Wolvverine/protocolsmanager/wiki/Using-the-plugin' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
-		echo "<tr><td>".__('Template name','protocolsmanager')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='$template_name'></td></tr>";			
+		echo "<tr><td>".__('Template name','protocolsmanager')."*</td><td colspan='2'><input type='text' name='template_name' style='width:80%;' value='".htmlspecialchars($template_name,ENT_QUOTES)."'></td></tr>";
+		echo "<tr><td></td><td colspan='2'><small class='text-muted'>".__('You can use {owner} here.', 'protocolsmanager')."</small></td></tr>";
 		echo "<tr><td>" . __('Font','protocolsmanager') . "</td><td colspan='2'><select name='font' style='width:150px'>";
+		
 			foreach($fonts as $code => $fontname) {
 				echo "<option value='".$code."' ";
 				if ($code == $font) {
@@ -167,10 +177,12 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "checked='checked'";
 		echo ">" . __('Disabled') . "</td></tr>";
 		
-		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='$city'></td></tr>";
-		echo "<tr><td>".__('Upper Content','protocolsmanager')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_uppercontent'>".$template_uppercontent."</textarea></td></tr>";
-		echo "<tr><td>".__('Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".$template_content."</textarea></td></tr>";
-		echo "<tr><td>".__('Footer','protocolsmanager')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".$template_footer."</textarea></td></tr>";
+		echo "<tr><td>".__('City')."</td><td colspan='2'><input type='text' name='city' style='width:80%;' value='".htmlspecialchars($city,ENT_QUOTES)."'></td></tr>";
+		echo "<tr><td>".__('Upper Content','protocolsmanager')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_uppercontent'>".htmlspecialchars($template_uppercontent,ENT_QUOTES)."</textarea></td></tr>";
+		echo "<tr><td></td><td colspan='2'><small class='text-muted'>".__('You can use {owner} or {admin} here.', 'protocolsmanager')."</small></td></tr>";
+		echo "<tr><td>".__('Content')."</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' cols='50' rows'8' name='template_content'>".htmlspecialchars($template_content,ENT_QUOTES)."</textarea></td></tr>";
+		echo "<tr><td></td><td colspan='2'><small class='text-muted'>".__('You can use {owner} or {admin} here.', 'protocolsmanager')."</small></td></tr>";
+		echo "<tr><td>".__('Footer','protocolsmanager')."</td><td class='middle' colspan='2'><textarea style='width:80%; height:100px;' cols='45' rows'4' name='footer_text'>".htmlspecialchars($template_footer,ENT_QUOTES)."</textarea></td></tr>";
 		echo "<tr><td>".__('Orientation')."</td><td colspan='2'><select name='orientation' style='width:150px'>";
 			foreach($orientations as $vals => $valname) {
 				echo "<option value='".$vals."' ";
@@ -180,14 +192,14 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				echo ">".$valname."</option>";
 			}	
 		echo "</select></td></tr>";
-		echo "<tr><td>".__('Serial number')."</td><td><input type='radio' name='serial_mode' value='1' ";
+		echo "<tr><td>".__('Serial number')."</td><td><label><input type='radio' name='serial_mode' value='1' ";
 		if ($serial_mode == 1)
 			echo "checked='checked'";
-		echo ">" . __('serial and inventory number in separate columns','protocolsmanager') . "</td>";
-		echo "<td><input type='radio' name='serial_mode' value='2' ";
+		echo ">" . __('serial and inventory number in separate columns','protocolsmanager') . "</label></td>";
+		echo "<td><label><input type='radio' name='serial_mode' value='2' ";
 		if ($serial_mode == 2)
 			echo "checked='checked'";
-		echo ">" . __("serial or inventory number if serial doesn't exists",'protocolsmanager') . "</td></tr>";
+		echo ">" . __("serial or inventory number if serial doesn't exists",'protocolsmanager') . "</label></td></tr>";
 		echo "<tr><td>".__('Logo')."</td><td colspan='2'><input type='file' name='logo' accept='image/png, image/jpeg'>";
 		if (isset($logo)) {
 			$full_img_name = GLPI_ROOT.'/files/_pictures/'.$logo;
@@ -199,15 +211,15 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "&nbsp&nbsp<input type='checkbox' name='img_delete' value='$img_delete'>&nbsp ".__('Delete')." ".__('File');
 		}
 		echo "</td></tr>";
-		echo "<tr><td>".__('Enable email autosending','protocolsmanager')."</td><td><input type='radio' name='email_mode' value='1'";
+		echo "<tr><td>".__('Enable email autosending','protocolsmanager')."</td><td><label><input type='radio' name='email_mode' value='1'";
 		if ($email_mode == 1)
 			echo "checked='checked'";
-		echo ">" . __('Enabled') . "</td>";
-		echo "<td><input type='radio' name='email_mode' value='2'";
+		echo ">" . __('Enabled') . "</label></td>";
+		echo "<td><label><input type='radio' name='email_mode' value='2'";
 		if ($email_mode == 2)
 			echo "checked='checked'";
-		echo ">" . __('Disabled') . "</td></tr>";
-		echo "<tr><td>".__('Email template','protocolsmanager')."</td><td colspan='2'><select name='email_template' style='width:150px'>";
+		echo ">" . __('Disabled') . "</label></td></tr>";
+		echo "<tr><td>".__('Email template','protocolsmanager')."</td><td colspan='2'><select name='email_template' required style='width:150px'>";
 			foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
 				echo '<option value=';
 				echo $list["id"];
@@ -217,8 +229,28 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				echo '>';
 				echo $list["tname"];
 				echo '</option>';
-			}	
+			}
 		echo "</select></td></tr>";
+		/**
+		 *
+		 */
+		echo "<tr><td>".__('Select who should generate the pdf', 'protocolsmanager')."</td>";
+		
+		if($author_state == 2)
+		{
+			echo "<td><label><input type='radio' name='author_state' value='1'> ".__('The user who generates the document', 'protocolsmanager')."</label></td>";
+			echo "<td><input type='radio' name='author_state' value='2' checked='checked'> <input type='text' name='author_name' value='".htmlspecialchars($author_name,ENT_QUOTES)."'/></td>";
+
+		}
+		else {
+			echo "<td><label><input type='radio' name='author_state' value='1' checked='checked'> ".__('The user who generates the document', 'protocolsmanager')."</label></td>";
+			echo "<td><input type='radio' name='author_state' value='2'> <input type='text' name='author_name' value='".htmlspecialchars($author_name,ENT_QUOTES)."'/></td>";
+		}
+
+		echo "</tr>";
+		/**
+		*
+		*/
 		echo "</table>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save' class='submit'></td>";
 		Html::closeForm();
@@ -268,7 +300,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$email_subject = '';
 			$email_content = '';
 			$recipients = '';
-			$email_edit_id=0;
+			$email_edit_id = 0;
 		}
 		
 		//email template edit
@@ -278,17 +310,17 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "<table class='tab_cadre_fixe'>";
 		echo "<tr><th colspan='3'>".__('Create')." ".__('email template')."<a href='https://github.com/Wolvverine/protocolsmanager/wiki/Email-sending-configuration' target='_blank'><img src='../img/help.png' width='20px' height='20px' align='right'></a></th></tr>";
 		echo "<tr><td>".__('Template name')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='tname' style='width:80%;' value='$tname'></td></tr>";
-		echo "<tr><td>".__('Send to user')."</td><td><input type='radio' name='send_user' value='1' class='eboxes' ";
+		echo "<tr><td>".__('Send to user')."</td><td><label><input type='radio' name='send_user' value='1' class='eboxes' ";
 		if ($send_user == 1)
 			echo "checked='checked'";
-		echo ">".__('Send to user')."</td>";
-		echo "<td><input type='radio' name='send_user' value='2' class='eboxes' ";
+		echo ">".__('Send to user')."</label></td>";
+		echo "<td><label><input type='radio' name='send_user' value='2' class='eboxes' ";
 		if ($send_user == 2)
 			echo "checked='checked'";
-		echo ">".__("don't send to user") . "</td></tr>";
-		echo "<tr><td>".__('Email content')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows'8' name='email_content'>".$email_content."</textarea></td></tr>";
-		echo "<tr><td>".__('Email subject')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='email_subject' style='width:80%;' value='$email_subject'></td></tr>";
-		echo "<tr><td>".__('Add emails - use ; to separate')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows '8' name='recipients'>".$recipients."</textarea></td></tr>";
+		echo ">".__("don't send to user") . "</label></td></tr>";
+		echo "<tr><td>".__('Email content')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows'8' name='email_content'>".htmlspecialchars($email_content,ENT_QUOTES)."</textarea></td></tr>";
+		echo "<tr><td>".__('Email subject')."*</td><td colspan='2' class='middle'><input type='text' class='eboxes' name='email_subject' style='width:80%;' value='".htmlspecialchars($email_subject,ENT_QUOTES)."'></td></tr>";
+		echo "<tr><td>".__('Add emails - use ; to separate')."*</td><td colspan='2' class='middle'><textarea style='width:80%; height:100px;' class='eboxes' cols='50' rows '8' name='recipients'>".htmlspecialchars($recipients,ENT_QUOTES)."</textarea></td></tr>";
 		echo "</table>";
 		echo "<input type='hidden' name='email_edit_id' value=$email_edit_id>";
 		echo "<table class='tab_cadre_fixe'><td style='text-align:right;'><input type='submit' name='save_email' class='submit' id='email_submit'></td>";
@@ -303,24 +335,51 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	static function saveConfigs() {
 		global $DB, $CFG_GLPI;
 		
-		if (empty($_POST["template_name"])) {
+		if (empty($_POST["template_name"]) || empty($_POST["email_template"]) || empty($_POST["title"])) {
 			Session::AddMessageAfterRedirect('Fill mandatory fields', 'WARNING', true);
 		} else {
 		
+			// in general, these are either mandatory fields or default text that cannot be changed but has a value other than null.
 			$template_name = $_POST['template_name'];
-			$template_uppercontent = $_POST['template_uppercontent'];
-			$template_content = $_POST['template_content'];
-			$template_footer = $_POST['footer_text'];
+			$title = $_POST['title'];
 			$font = $_POST["font"];
 			$fontsize = $_POST["fontsize"];
-			$city = $_POST["city"];
-			$mode = $_POST["mode"];
 			$serial_mode = $_POST["serial_mode"];
 			$orientation = $_POST["orientation"];
-			$breakword = $_POST["breakword"];
-			$email_mode = $_POST["email_mode"];
-			$email_template = $_POST["email_template"];
+
+			if(isset($_POST["template_uppercontent"])) {
+				$template_uppercontent = $_POST['template_uppercontent'];
+			}
 			
+			if(isset($_POST["template_content"])) {
+				$template_content = $_POST['template_content'];
+			}
+
+			if(isset($_POST["footer_text"])) {
+				$template_footer = $_POST['footer_text'];
+			}
+
+			if(isset($_POST["city"])) {
+				$city = $_POST["city"];
+			}
+
+			if(isset($_POST["mode"])) {
+				$mode = $_POST["mode"];
+			}
+
+			if(isset($_POST["breakword"])) {
+				$breakword = $_POST["breakword"];
+			}
+
+			if(isset($_POST["email_mode"])) {
+				$email_mode = $_POST["email_mode"];
+			}
+
+			if(isset($_POST["email_template"])) {
+				$email_template = $_POST["email_template"];
+			}
+			
+			$full_img_name = self::uploadImage();
 			
 			if (isset($_POST['img_delete'])) {
 				
@@ -331,14 +390,26 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 					]
 				);
 			}
+
+			if (isset($_POST["author_name"])) {
+				$author_name = $_POST["author_name"];
+
+			}
+			if (isset($_POST["author_state"])) {
+				$author_state = $_POST["author_state"];
+
+			}
+
+			// TODO : concatenated when fields are empty
+
 			
-			$full_img_name = self::uploadImage();
 			
 			//if new template
 			if ($mode == 0) {
 				
 				$DB->insert('glpi_plugin_protocolsmanager_config', [
 					'name' => $template_name,
+					'title' => $title,
 					'upper_content' => $template_uppercontent,
 					'content' => $template_content,
 					'footer' => $template_footer,
@@ -350,7 +421,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 					'orientation' => $orientation,
 					'breakword' => $breakword,
 					'email_mode' => $email_mode,
-					'email_template' =>$email_template
+					'email_template' => $email_template,
+					'author_name' => $author_name,
+					'author_state' => $author_state
 					]
 				);
 			}
@@ -358,11 +431,18 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			//if edit template
 			if ($mode != 0) {
 				
+				// when selected and saved again
+				// the value is equal to "X\" instead of "X".
+				
+				// ideally check the value of $email_template
+				$email_template = preg_replace('/[^A-Za-z0-9\-]/','',$email_template);
+				
 				//if logo is uploaded
 				if (isset($full_img_name)) {
 					
 					$DB->update('glpi_plugin_protocolsmanager_config', [
 							'name' => $template_name,
+							'title' => $title,
 							'content' => $template_content,
 							'upper_content' => $template_uppercontent,
 							'footer' => $template_footer,
@@ -374,15 +454,56 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 							'orientation' => $orientation,
 							'breakword' => $breakword,
 							'email_mode' => $email_mode,
-							'email_template' =>$email_template
+							'email_template' => $email_template,
+							'author_name' => $author_name,
+							'author_state' => $author_state
 						], [
 							'id' => $mode
 						]
 					);
 				} else {
-					
-					$DB->update('glpi_plugin_protocolsmanager_config', [
+					if(!$city)
+					{
+						$city = '';
+					}
+					if(!$template_uppercontent)
+					{
+						$template_uppercontent = '';
+					}
+					if(!$template_content)
+					{
+						$template_content = '';
+					}
+					if(!$template_footer)
+					{
+						$template_footer = '';
+					}
+					if(!isset($email_mode))
+					{
+						$DB->update('glpi_plugin_protocolsmanager_config', [
 							'name' => $template_name,
+							'title' => $title,
+							'content' => $template_content,
+							'upper_content' => $template_uppercontent,
+							'footer' => $template_footer,
+							'font' => $font,
+							'fontsize' => $fontsize,
+							'city' => $city,
+							'serial_mode' => $serial_mode,
+							'orientation' => $orientation,
+							'breakword' => $breakword,
+							'email_template' => $email_template,
+							'author_name' => $author_name,
+							'author_state' => $author_state
+						], [
+							'id' => $mode
+						]
+					);
+					}
+					else {
+						$DB->update('glpi_plugin_protocolsmanager_config', [
+							'name' => $template_name,
+							'title' => $title,
 							'content' => $template_content,
 							'upper_content' => $template_uppercontent,
 							'footer' => $template_footer,
@@ -393,14 +514,16 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 							'orientation' => $orientation,
 							'breakword' => $breakword,
 							'email_mode' => $email_mode,
-							'email_template' =>$email_template
+							'email_template' => $email_template,
+							'author_name' => $author_name,
+							'author_state' => $author_state
 						], [
 							'id' => $mode
 						]
 					);
+					}
 				}
 			}
-			
 			Session::AddMessageAfterRedirect('Config saved');
 		}
 	}
