@@ -12,6 +12,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		if ($plugin_conf == 'w') {
 			self::displaySettings();
 			self::displayContent();
+			Html::footer(); //for js files loading and possibility to upload files
 		} else {
 			echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__('Access denied')."</div>";
 		}

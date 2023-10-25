@@ -166,9 +166,36 @@ class ConfigNewSettingsForms {
 		
 		$title = isset($temlateData['template_title']) ? $temlateData['template_title'] : 'message title';
 		$body = isset($temlateData['template_body']) ? $temlateData['template_body'] : 'message body';
+		global $DB;
+ 		$mailPictReqest =  $DB->request(
+            "settings_new",
+            "`option_name` = 'mail_pict1'"
+        );
 
+		$mailPict ='';
+		foreach ($mailPictReqest as $row) {
+            $mailPict = $row['option_value'];
+		}
+		
+// $mailPict = 'mail_pict_folder/mail_pict1.jpg';
 		echo "<form method='post' action='config.form.php' >
 							  <input type='hidden' name='menu_mode' value='e'>
+							  <tr class='tab_bg_1 remindersEmails' style='padding-top: 20px;'>
+									<td class='center' width='7%' id='td_fileupload'>
+									<input type='hidden' id='hidd_fileupload' value='default1' />
+									<div id='div_html_file'>
+										" .  Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]) .  "
+										</div>
+										<script>										
+											$('#td_fileupload').bind('DOMSubtreeModified', function() {
+												$.mailPicture();
+											});
+										</script>
+									</td>
+									<td class='center' width='7%' id='td_fileupload_pict'>
+										<img src='" . User::getURLForPicture($mailPict) . "' width='400px' id='fileupload_pict_src'>
+									</td>
+									</tr>
 							   <tr class='tab_bg_1' style='padding-top: 20px;'>
 									<td class='center' width='7%' style='padding-top: 20px;'>
 										". __('sign email template','protocolsmanager') . "
@@ -187,7 +214,7 @@ class ConfigNewSettingsForms {
 								</td>
 								
 								<td class='center' width='7%'>
-										<input type='submit' name='email_template_new' class='submit' value='".__('Save','protocolsmanager')."'>
+										<input type='submit' name='email_template_new' class='submit' value='".__('Save','protocolsmanager')."'>																			
 								 </td>
 								</tr>
 								";

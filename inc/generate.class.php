@@ -837,6 +837,24 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$email_subject = (!empty($email_subject)) ? $email_subject : $subject;
 				$email_content .= $button->createSignProtocolButton($body_message, $CFG_GLPI);
 			}
+			
+			$mailPictReqest =  $DB->request(
+				"settings_new",
+				"`option_name` = 'mail_pict1'"
+			);
+			
+			$mailPict ='';
+			foreach ($mailPictReqest as $row) {
+				$mailPict = $row['option_value'];
+			}
+			
+			$mailPict = str_replace('.jpg', '_min.jpg', $mailPict); // if miniature
+			$emb1 = GLPI_ROOT."/files/_pictures/".$mailPict;
+			$nmail->AddEmbeddedImage($emb1, 'logo_2u');
+			
+			$email_content = "<img src='cid:logo_2u'/>".$email_content;
+			$nmail->Subject = $email_subject;
+			
 			$nmail->Body = htmlspecialchars_decode($email_content); // HTML in e-mail
 			$nmail->IsHtml(true);
 			$nmail->AltBody = strip_tags(htmlspecialchars_decode($email_content)); // for text mode - clean html tags

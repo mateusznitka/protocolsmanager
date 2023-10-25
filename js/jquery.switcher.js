@@ -50,4 +50,48 @@
 			$switcher.insertBefore($checkbox);
 		});
 	};
+	
+$.mailPicture = function (){
+		
+		var pictTmpName = $(`input:hidden[name^='_picture[']`).val();
+		var pictOnceCheck = $("#hidd_fileupload").val();
+		var pictToken = $('input[name="_glpi_csrf_token"]').val();
+		if(pictTmpName && pictOnceCheck == 'default1'){
+			document.getElementById("hidd_fileupload").value="updated1";				
+ 			let dane = {'_glpi_csrf_token': pictToken,
+						'_picture': pictTmpName
+			}; 
+			jQuery.ajax({
+				url:"../config/update.config.picture.ajax.php",
+				type: "POST",
+				 dataType : "json",
+				data: dane,
+				success: function(data){
+					if (data.result == "res_ok") {
+							$('input[name="_glpi_csrf_token"]').val(data.token);
+							document.getElementById("fileupload_pict_src").src = data.imageHtml;
+
+							var list = document.getElementsByClassName("ti ti-circle-x pointer");
+							for (var i=0; i<list.length; i++)
+								list[i].click();
+							
+							var start = Date.now(),
+							now = start;
+							while (now - start < 5000) {
+								now = Date.now();
+							}
+							 document.getElementById("hidd_fileupload").value="default1";	
+							 displayAjaxMessageAfterRedirect();
+							}
+							else
+								alert("Error. Try to refresh page");
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					alert("nie success");
+				}
+			});
+		}
+		
+	};
+		
 })(jQuery);
