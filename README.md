@@ -1,4 +1,4 @@
-# ***ACTIVE FORK working with v11***
+# End of support, but you have ***ACTIVE FORK working with v11***
 There are some forks of Protocols Manager actively maintained by other users and working with GLPI v10 and v11:
 
 https://github.com/CanMik/protocolsmanager
