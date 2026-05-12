@@ -65,7 +65,8 @@ PHP 7.1 or higher
 1. More customization
 2. Give an idea...
 ## Contact 
-mateusznitka01@gmail.com
+[mtnt.pl](https://mtnt.pl/#contact)
+
 ## Buy me a coffee :)
 If you like my work, you can support me by a donate here:
 
