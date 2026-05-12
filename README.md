@@ -73,6 +73,6 @@ If you like my work, you can support me by a donate here:
 <a href="https://www.buymeacoffee.com/mateusznitka" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
 
 ## Supporters
-Thanks to Nomino for supporting this project - [nomino.pl](https://nomino.pl/)
+Thanks to Nomino for supporting this project.
 
 ![Nomino](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/logo-nomino.png)
