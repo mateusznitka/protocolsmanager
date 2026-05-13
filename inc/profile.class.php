@@ -1,79 +1,100 @@
 <?php
 
-class PluginProtocolsmanagerProfile extends CommonDBTM
+class PluginProtocolsmanagerProfile extends Profile
 {
-	function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-		return self::createTabEntry('Protocols manager');
-	}
+    public static $rightname = 'profile';
 
-	static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-		
-		global $CFG_GLPI, $DB;
-		$profile_id = $item->getID();
-		self::showRightsForm($profile_id);
-		return true;
-	}
-	
-	static function showRightsForm($profile_id) {
-		global $CFG_GLPI, $DB;
-		
-		$req = $DB->request(
-			'glpi_plugin_protocolsmanager_profiles',
-			['profile_id' => $profile_id]);
-			
-		if ($row = $req->next()) {
-			$plugin_conf = $row['plugin_conf'];
-			$tab_access = $row['tab_access'];
-		}
-			
-		if (count($req) == 0) {
-			$edit_flag = 1;
-			$plugin_conf ="";
-			$tab_access ="";
-		} else {
-			$edit_flag = 0;
-		}
-		
-		echo "<form name='profiles' action='". $CFG_GLPI["root_doc"] ."/plugins/protocolsmanager/front/profile.form.php' method='post'>";
-		echo "<div class='center'>";
-		echo "<table class='tab_cadre_fixehov'>";
-		echo "<tr class='tab_bg_5'><th colspan='2'>Protocols manager</th></tr>";
-		echo "<tr class='tab_bg_2'><td width=30%>Plugin configuration</td><td>";
-		Html::showCheckbox(['name' => 'plugin_conf', 'checked' => $plugin_conf, 'value' => 'w']);
-		echo "</td></tr>";		
-		echo "<tr class='tab_bg_2'><td width=30%>Protocols mananger tab access</td><td>";
-		Html::showCheckbox(['name' => 'tab_access', 'checked' => $tab_access, 'value' => 'w']);
-		echo "</td></tr>";
-		echo "<tr class='tab_bg_5'><th colspan='2'>";
-		echo "<input type='submit' class='submit' name='update'>";
-		echo "<input type='hidden' name='profile_id' value='$profile_id'>";
-		echo "<input type='hidden' name='edit_flag' value='$edit_flag'>";
-		echo "</th></tr>";
-		echo "</table>";
-		Html::closeForm();
-		echo "</div>";
-	}
-	
-	static function updateRights() {
-		global $DB;
-				
-		if ($_POST['edit_flag'] == 1) {
-			$DB->insert('glpi_plugin_protocolsmanager_profiles', [
-				'profile_id' => $_POST['profile_id'],
-				'plugin_conf' => $_POST['plugin_conf'],
-				'tab_access' => $_POST['tab_access']
-				]
-			);
-		} else if ($_POST['edit_flag'] == 0){
-			$DB->update('glpi_plugin_protocolsmanager_profiles', [
-				'plugin_conf' => $_POST['plugin_conf'],
-				'tab_access' => $_POST['tab_access']
-				], [
-					'profile_id' => $_POST['profile_id']
-				]
-			);
-		}
-	}
+    public static function getAllRights()
+    {
+        return [
+            [
+                'itemtype' => 'PluginProtocolsmanagerConfig',
+                'label'    => __('Plugin configuration', 'protocolsmanager'),
+                'field'    => 'plugin_protocolsmanager_config',
+                'rights'   => [READ => __('Access')],
+            ],
+            [
+                'itemtype' => 'PluginProtocolsmanagerGenerate',
+                'label'    => __('Protocols tab access', 'protocolsmanager'),
+                'field'    => 'plugin_protocolsmanager_tab',
+                'rights'   => [READ => __('Access')],
+            ],
+        ];
+    }
 
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        if ($item instanceof Profile) {
+            if ($item->fields['interface'] == 'central') {
+                return self::createTabEntry('Protocols manager');
+            }
+        }
+        return '';
+    }
+
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item instanceof Profile) {
+            $profile = new self();
+            self::addDefaultProfileInfos($item->getID(), [
+                'plugin_protocolsmanager_config' => 0,
+                'plugin_protocolsmanager_tab'    => 0,
+            ]);
+            $profile->showForm($item->fields['id']);
+        }
+        return true;
+    }
+
+    public static function addDefaultProfileInfos($profiles_id, $rights)
+    {
+        $profileRight = new ProfileRight();
+        foreach ($rights as $right => $value) {
+            if (!countElementsInTable('glpi_profilerights', ['profiles_id' => $profiles_id, 'name' => $right])) {
+                $profileRight->add([
+                    'profiles_id' => $profiles_id,
+                    'name'        => $right,
+                    'rights'      => $value,
+                ]);
+                $_SESSION['glpiactiveprofile'][$right] = $value;
+            }
+        }
+    }
+
+    public static function createFirstAccess($profiles_id)
+    {
+        self::addDefaultProfileInfos($profiles_id, [
+            'plugin_protocolsmanager_config' => ALLSTANDARDRIGHT,
+            'plugin_protocolsmanager_tab'    => READ,
+        ]);
+    }
+
+    public function showForm($ID, $options = [])
+    {
+        $canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
+
+        echo "<div class='firstbloc'>";
+        if ($canedit) {
+            $profile = new Profile();
+            echo "<form method='post' action='" . $profile->getFormURL() . "'>";
+        }
+
+        $profile = new Profile();
+        $profile->getFromDB($ID);
+
+        $profile->displayRightsChoiceMatrix(self::getAllRights(), [
+            'canedit'       => $canedit,
+            'default_class' => 'tab_bg_2',
+            'title'         => 'Protocols manager',
+        ]);
+
+        if ($canedit) {
+            echo "<div class='center'>";
+            echo Html::hidden('id', ['value' => $ID]);
+            echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+            echo "</div>\n";
+            Html::closeForm();
+        }
+        echo "</div>";
+        return true;
+    }
 }
-?>
