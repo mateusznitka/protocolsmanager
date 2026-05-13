@@ -1,10 +1,7 @@
-# End of support, but you have ***ACTIVE FORK working with v11***
-There are some forks of Protocols Manager actively maintained by other users and working with GLPI v10 and v11:
-
-https://github.com/CanMik/protocolsmanager
-
 ## Protocols Manager
 GLPI Plugin to make PDF reports with user inventory.
+
+*I am back and working on update plugin to work with GLPI 11*
 ## Features
 * Making PDFs with all or selected user inventory
 * Saving protocols in GLPI Documents
