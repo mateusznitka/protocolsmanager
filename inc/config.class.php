@@ -6,7 +6,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	function showFormProtocolsmanager() {
 		global $CFG_GLPI, $DB;
 		$plugin_conf = self::checkRights();
-		if ($plugin_conf == 'w') {	
+		if ($plugin_conf) {
 			self::displayContent();	
 		} else {
 			echo "<div align='center'><br><img src='".$CFG_GLPI['root_doc']."/pics/warning.png'><br>".__("Access denied")."</div>";
@@ -15,17 +15,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
 	
 	static function checkRights() {
-		global $DB;
-		$active_profile = $_SESSION['glpiactiveprofile']['id'];
-		$req = $DB->request('glpi_plugin_protocolsmanager_profiles',
-						['profile_id' => $active_profile]);
-						
-		if ($row = $req->next()) {
-			$plugin_conf = $row["plugin_conf"];
-		} else {
-			$plugin_conf = "";
-		}
-		return $plugin_conf;
+		return Session::haveRight('plugin_protocolsmanager_config', READ);
 	}
 	
 	static function displayContent() {
@@ -46,46 +36,41 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 	
 	static function displayContentConfig() {
 		global $CFG_GLPI, $DB;
-		
+
+		$mode                  = 0;
+		$template_name         = '';
+		$template_uppercontent = '';
+		$template_content      = '';
+		$template_footer       = '';
+		$font                  = '';
+		$fontsize              = '9';
+		$city                  = '';
+		$logo                  = null;
+		$serial_mode           = 1;
+		$orientation           = 'Portrait';
+		$breakword             = 1;
+		$email_mode            = 2;
+		$email_template        = 1;
+
 		if (isset($_POST["edit_id"])) {
-			
-			$edit_id = $_POST['edit_id'];
+			$edit_id = (int) $_POST['edit_id'];
 			$mode = $edit_id;
-			
-			$req = $DB->request(
-				'glpi_plugin_protocolsmanager_config',
-				['id' => $edit_id ]);
-				
-			if ($row = $req->next()) {
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'WHERE' => ['id' => $edit_id]]) as $row) {
+				$template_name         = $row["name"];
 				$template_uppercontent = $row["upper_content"];
-				$template_content = $row["content"];
-				$template_footer = $row["footer"];
-				$template_name = $row["name"];
-				$font = $row["font"];
-				$fontsize = $row["fontsize"];
-				$city = $row["city"];
-				$logo = $row["logo"];
-				$serial_mode = $row["serial_mode"];
-				$orientation = $row["orientation"];
-				$breakword = $row["breakword"];
-				$email_mode = $row["email_mode"];
-				$email_template = $row["email_template"];
+				$template_content      = $row["content"];
+				$template_footer       = $row["footer"];
+				$font                  = $row["font"];
+				$fontsize              = $row["fontsize"];
+				$city                  = $row["city"];
+				$logo                  = $row["logo"];
+				$serial_mode           = $row["serial_mode"];
+				$orientation           = $row["orientation"];
+				$breakword             = $row["breakword"];
+				$email_mode            = $row["email_mode"];
+				$email_template        = $row["email_template"];
+				break;
 			}
-			
-		} else {
-			$template_uppercontent = '';
-			$template_content = '';
-			$template_footer = '';
-			$template_name = '';
-			$font = '';
-			$fontsize = '9';
-			$city = '';
-			$mode = 0; //if mode 0 then you creating new template instead of edit
-			$serial_mode = 1;
-			$orientation = "p";
-			$breakword = 1;
-			$email_mode = 2;
-			$email_template = 1;
 		}
 		
 		
@@ -144,7 +129,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			}
 		echo "</select></td></tr>";
 		
-		echo "<tr><td>Font size</td><td colspan='2'><select name='fontsize' style='width:150px'";
+		echo "<tr><td>Font size</td><td colspan='2'><select name='fontsize' style='width:150px'>";
 			foreach($fontsizes as $fsize => $fsizes) {
 				echo "<option value='".$fsize."' ";
 				if ($fsize == $fontsize) {
@@ -152,7 +137,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				}
 				echo ">".$fsizes."</option>";
 			}
-			
+		echo "</select></td></tr>";
+
 		echo "<tr><td>Word breaking</td><td><input type='radio' name='breakword' value=1 ";
 		if ($breakword == 1)
 			echo "checked='checked'";
@@ -203,7 +189,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			echo "checked='checked'";
 		echo "> OFF</td></tr>";
 		echo "<tr><td>".__('Email template')."</td><td colspan='2'><select name='email_template' style='width:150px'>";
-			foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig']) as $uid => $list) {
 				echo '<option value=';
 				echo $list["id"];
 				if ($uid == $email_template) {
@@ -243,19 +229,16 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		echo "</div>";
 		
 		if (isset($_POST["email_edit_id"])) {
-			
+
 			$email_edit_id = $_POST['email_edit_id'];
-			
-			$req = $DB->request(
-				'glpi_plugin_protocolsmanager_emailconfig',
-				['id' => $email_edit_id ]);
-				
-			if ($row = $req->next()) {
+
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig', 'WHERE' => ['id' => $email_edit_id]]) as $row) {
 				$tname = $row["tname"];
 				$send_user = $row["send_user"];
 				$email_subject = $row["email_subject"];
 				$email_content = $row["email_content"];
 				$recipients = $row["recipients"];
+				break;
 			}
 		} else {
 			$tname = '';
@@ -299,7 +282,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		global $DB, $CFG_GLPI;
 		
 		if (empty($_POST["template_name"])) {
-			Session::AddMessageAfterRedirect('Fill mandatory fields', 'WARNING', true);
+			Session::addMessageAfterRedirect('Fill mandatory fields', 'WARNING', true);
 		} else {
 		
 			$template_name = $_POST['template_name'];
@@ -319,7 +302,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			
 			if (isset($_POST['img_delete'])) {
 				
-				$DB->update('glpi_plugin_protocolsmanager_config', [
+				$DB->update('glpi_plugin_protocolsmanager_configs', [
 						'logo' => $full_img_name
 					], [
 						'id' => $mode
@@ -332,7 +315,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			//if new template
 			if ($mode == 0) {
 				
-				$DB->insert('glpi_plugin_protocolsmanager_config', [
+				$DB->insert('glpi_plugin_protocolsmanager_configs', [
 					'name' => $template_name,
 					'upper_content' => $template_uppercontent,
 					'content' => $template_content,
@@ -356,7 +339,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				//if logo is uploaded
 				if (isset($full_img_name)) {
 					
-					$DB->update('glpi_plugin_protocolsmanager_config', [
+					$DB->update('glpi_plugin_protocolsmanager_configs', [
 							'name' => $template_name,
 							'content' => $template_content,
 							'upper_content' => $template_uppercontent,
@@ -376,7 +359,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 					);
 				} else {
 					
-					$DB->update('glpi_plugin_protocolsmanager_config', [
+					$DB->update('glpi_plugin_protocolsmanager_configs', [
 							'name' => $template_name,
 							'content' => $template_content,
 							'upper_content' => $template_uppercontent,
@@ -396,7 +379,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				}
 			}
 			
-			Session::AddMessageAfterRedirect('Config saved');
+			Session::addMessageAfterRedirect('Config saved');
 		}		
 	
 	}
@@ -405,7 +388,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		global $DB, $CFG_GLPI;
 		
 		if (empty($_POST["email_subject"]) || empty($_POST["email_content"]) || empty($_POST["recipients"]) || empty($_POST["tname"])) {
-			Session::AddMessageAfterRedirect('Fill mandatory fields', 'WARNING', true);
+			Session::addMessageAfterRedirect('Fill mandatory fields', 'WARNING', true);
 		} else {
 			
 		
@@ -443,7 +426,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				
 			}
 			
-			Session::AddMessageAfterRedirect('Config saved');
+			Session::addMessageAfterRedirect('Config saved');
 		}
 
 	}
@@ -451,59 +434,77 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 
 	static function showConfigs() {
 		global $DB, $CFG_GLPI;
-		$configs = [];
-		
+
+		$action = $CFG_GLPI['root_doc'] . '/plugins/protocolsmanager/front/config.form.php';
+
 		echo "<div class='spaced' id='show_configs'>";
 		echo "<table class='tab_cadre_fixehov' style='width:90%;'>";
 		echo "<tr class='tab_bg_1'><th colspan='3'>".__('Templates')."</th></tr>";
 		echo "<tr class='tab_bg_1'><td class='center'><b>".__('Name')."</b></td>";
-		echo "<td class='center' colspan=2'><b>".__('Action')."</b></td></tr>";
-		
-		foreach ($DB->request(
-			'glpi_plugin_protocolsmanager_config') as $config_data => $configs) {
-				
-				echo "<tr class='tab_bg_1'><td class='center'>";
-				echo $configs['name'];
-				echo "</td>";
-				$conf_id = $configs['id'];
-				echo "<td class='center' width='7%'>
-						<form method='post' action='config.form.php'><input type='hidden' value='$conf_id' name='edit_id'><input type='submit' name='edit' value=".__('Edit')." class='submit'></td>";
-						echo "<input type='hidden' name='menu_mode' value='t'>";
-						Html::closeForm();	
-						echo "<td class='center' width='7%'><form method='post' action='config.form.php'><input type='hidden' value='$conf_id' name='conf_id'><input type='submit' name='delete' value=".__('Delete')." class='submit'></td></tr>";
-						Html::closeForm();				
-			}
+		echo "<td class='center' colspan='2'><b>".__('Action')."</b></td></tr>";
+
+		foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs']) as $configs) {
+			$conf_id = $configs['id'];
+			echo "<tr class='tab_bg_1'>";
+			echo "<td class='center'>" . htmlspecialchars($configs['name']) . "</td>";
+
+			echo "<td class='center' width='7%'>";
+			echo "<form method='post' action='$action'>";
+			echo "<input type='hidden' name='edit_id' value='$conf_id'>";
+			echo "<input type='hidden' name='menu_mode' value='t'>";
+			echo "<input type='submit' name='edit' value='" . __('Edit') . "' class='submit'>";
+			Html::closeForm();
+			echo "</td>";
+
+			echo "<td class='center' width='7%'>";
+			echo "<form method='post' action='$action'>";
+			echo "<input type='hidden' name='conf_id' value='$conf_id'>";
+			echo "<input type='hidden' name='menu_mode' value='t'>";
+			echo "<input type='submit' name='delete' value='" . __('Delete') . "' class='submit'>";
+			Html::closeForm();
+			echo "</td>";
+
+			echo "</tr>";
+		}
 		echo "</table></div>";
 	}
 	
 	static function showEmailConfigs() {
 		global $DB, $CFG_GLPI;
-		$emailconfigs = [];
-		
+
+		$action = $CFG_GLPI['root_doc'] . '/plugins/protocolsmanager/front/config.form.php';
+
 		echo "<div class='spaced' id='show_emailconfigs'>";
 		echo "<table class='tab_cadre_fixehov' style='width:90%;'>";
 		echo "<tr class='tab_bg_1'><th colspan='4'>".__('Templates')."</th></tr>";
 		echo "<tr class='tab_bg_1'><td class='center'><b>".__('Name')."</b></td>";
 		echo "<td class='center'><b>".__('Recipients')."</b></td>";
-		echo "<td class='center' colspan=2'><b>".__('Action')."</b></td></tr>";
-		
-		foreach ($DB->request(
-			'glpi_plugin_protocolsmanager_emailconfig') as $configs_data => $emailconfigs) {
-				
-				echo "<tr class='tab_bg_1'><td class='center'>";
-				echo $emailconfigs['tname'];
-				echo "</td>";
-				echo "<td class='center'>";
-				echo $emailconfigs['recipients'];
-				echo "</td>";
-				$email_conf_id = $emailconfigs['id'];
-				echo "<td class='center' width='7%'>
-						<form method='post' action='config.form.php'><input type='hidden' value='$email_conf_id' name='email_edit_id'><input type='submit' name='email_edit' value=".__('Edit')." class='submit'></td>";
-						echo "<input type='hidden' name='menu_mode' value='e'>";
-						Html::closeForm();	
-						echo "<td class='center' width='7%'><form method='post' action='config.form.php'><input type='hidden' value='$email_conf_id' name='email_conf_id'><input type='submit' name='delete_email' value=".__('Delete')." class='submit'></td></tr>";
-						Html::closeForm();				
-			}
+		echo "<td class='center' colspan='2'><b>".__('Action')."</b></td></tr>";
+
+		foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig']) as $emailconfigs) {
+			$email_conf_id = $emailconfigs['id'];
+			echo "<tr class='tab_bg_1'>";
+			echo "<td class='center'>" . htmlspecialchars($emailconfigs['tname']) . "</td>";
+			echo "<td class='center'>" . htmlspecialchars($emailconfigs['recipients']) . "</td>";
+
+			echo "<td class='center' width='7%'>";
+			echo "<form method='post' action='$action'>";
+			echo "<input type='hidden' name='email_edit_id' value='$email_conf_id'>";
+			echo "<input type='hidden' name='menu_mode' value='e'>";
+			echo "<input type='submit' name='email_edit' value='" . __('Edit') . "' class='submit'>";
+			Html::closeForm();
+			echo "</td>";
+
+			echo "<td class='center' width='7%'>";
+			echo "<form method='post' action='$action'>";
+			echo "<input type='hidden' name='email_conf_id' value='$email_conf_id'>";
+			echo "<input type='hidden' name='menu_mode' value='e'>";
+			echo "<input type='submit' name='delete_email' value='" . __('Delete') . "' class='submit'>";
+			Html::closeForm();
+			echo "</td>";
+
+			echo "</tr>";
+		}
 		echo "</table></div>";
 	}
 	
@@ -546,7 +547,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$conf_id = $_POST['conf_id'];
 		
 		$DB->delete(
-			'glpi_plugin_protocolsmanager_config', [
+			'glpi_plugin_protocolsmanager_configs', [
 				'id' => $conf_id
 			]
 		);	
