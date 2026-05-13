@@ -1,10 +1,6 @@
 <?php
 
-//$autoload = dirname(__DIR__) . '/vendor/autoload.php';
-//require_once $autoload;
-
-//use Spipu\Html2Pdf\Html2Pdf;
-require_once dirname(__DIR__) . '/dompdf/autoload.inc.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -20,7 +16,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$tab_access = self::checkRights();
 		
-			if ($tab_access == 'w') {	
+			if ($tab_access) {
 				$PluginProtocolsmanagerGenerate = new self();
 				$PluginProtocolsmanagerGenerate->showContent($item);	
 			} else {
@@ -28,19 +24,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 		}
 		
-		//check if logged user have rights to plugin
 		static function checkRights() {
-			global $DB;
-			$active_profile = $_SESSION['glpiactiveprofile']['id'];
-			$req = $DB->request('glpi_plugin_protocolsmanager_profiles',
-							['profile_id' => $active_profile]);
-							
-			if ($row = $req->next()) {
-				$tab_access = $row["tab_access"];
-			} else {
-				$tab_access = "";
-			}
-			return $tab_access;
+			return Session::haveRight('plugin_protocolsmanager_tab', READ);
 		}
 		
 		
@@ -58,8 +43,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
 			echo "<select name='list' style='font-size:14px; width:95%'>";
-				foreach ($doc_types = $DB->request('glpi_plugin_protocolsmanager_config', 
-				['FIELDS' => ['glpi_plugin_protocolsmanager_config' => ['id', 'name']]]) as $uid => $list) {
+				foreach ($doc_types = $DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'FIELDS' => ['glpi_plugin_protocolsmanager_configs' => ['id', 'name']]]) as $uid => $list) {
 					echo '<option value="';
 					echo $list["id"];
 					echo '">';
@@ -103,12 +87,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					$item_iterator = $DB->request($iterator_params);
 					$type_name = $item->getTypeName();
 					
-					while ($data = $item_iterator->next()) {
+					foreach ($item_iterator as $data) {
 						$cansee = $item->can($data["id"], READ);
 						   $link   = $data["name"];
 							if ($cansee) {
 								$link_item = $item::getFormURLWithID($data['id']);
-								if ($_SESSION["glpiis_ids_visible"] || empty($link)) {
+								if (!empty($_SESSION["glpiis_ids_visible"]) || empty($link)) {
 								 $link = sprintf(__('%1$s (%2$s)'), $link, $data["id"]);
 								}
 								$link = "<a href='".$link_item."'>".$link."</a>";
@@ -129,12 +113,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								
 								$man_id = $data["manufacturers_id"];
 														
-								$req = $DB->request(
-									'glpi_manufacturers',
-									['id' => $man_id ]);
-								
-								if ($row = $req->next()) {
+								$man_name = '';
+								foreach ($DB->request(['FROM' => 'glpi_manufacturers', 'WHERE' => ['id' => $man_id]]) as $row) {
 									$man_name = $row["name"];
+									break;
 								}
 								
 								$modeltypes = ["computer", "phone", "monitor", "networkequipment", "printer", "peripheral"];
@@ -144,12 +126,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 									if(isset($data[$prefix.'models_id']) && !empty($data[$prefix.'models_id'])) {
 										$mod_id = $data[$prefix.'models_id'];
 										
-										$req2 = $DB->request(
-											'glpi_'.$prefix.'models',
-											['id' => $mod_id ]);
-											
-										if ($row2 = $req2->next()) {
+										foreach ($DB->request(['FROM' => 'glpi_'.$prefix.'models', 'WHERE' => ['id' => $mod_id]]) as $row2) {
 											$mod_name = $row2["name"];
+											break;
 										}
 									}
 								}
@@ -243,7 +222,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
 
-				foreach ($DB->request('glpi_plugin_protocolsmanager_emailconfig') as $uid => $list) {
+				foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig']) as $uid => $list) {
 					echo '<option value="';
 					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"]."|".$list["send_user"];
 					echo '">';
@@ -254,8 +233,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</select><br><br><input type='submit' name='send' class='submit' value=".__('Send').">";
 				echo "<input type='hidden' name='author' value='$author'>";
 				echo "<input type='hidden' name='owner' value='$owner'>";
+				echo "<input type='hidden' name='user_id' value='$id'>";
 				Html::closeForm();
-				echo "</div>"; 
+				echo "</div>";
 				
 				//add custom row
 				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
@@ -292,9 +272,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$exports = [];
 			$doc_counter = 0;
 			
-			foreach ($DB->request(
-				'glpi_plugin_protocolsmanager_protocols',
-				['user_id' => $id ]) as $export_data => $exports) {
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_protocols', 'WHERE' => ['user_id' => $id]]) as $export_data => $exports) {
 					
 					
 					echo "<tr class='tab_bg_1'>";
@@ -362,11 +340,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$prot_num = self::getDocNumber();
 			
-			$req = $DB->request(
-				'glpi_plugin_protocolsmanager_config',
-				['id' => $doc_no ]);
-				
-			if ($row = $req->next()) {
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'WHERE' => ['id' => $doc_no]]) as $row) {
 				$content = nl2br($row["content"]);
 				$content = str_replace("{cur_date}", date("d.m.Y"), $content);
 				$content = str_replace("{owner}", $owner, $content);
@@ -386,17 +360,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];
 				$email_template = $row["email_template"];
+				break;
 			}
 			
-			$req = $DB->request(
-				'glpi_plugin_protocolsmanager_emailconfig',
-				['id' => $email_template ]);
-				
-			if ($row = $req->next()) {
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig', 'WHERE' => ['id' => $email_template]]) as $row) {
 				$send_user = $row["send_user"];
 				$email_subject = $row["email_subject"];
 				$email_content = $row["email_content"];
 				$recipients = $row["recipients"];
+				break;
 			}
 			
 			$comments = $_POST['comments'];
@@ -483,29 +455,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		static function getDocNumber() {
 			global $DB;
 			
-			$req = $DB->request('SELECT MAX(id) as max FROM glpi_plugin_protocolsmanager_protocols');
-			if ($row = $req->next()) {
-				$nextnum = $row["max"];
-				if (!$nextnum) {
-					return 1;
-				}
-				else {
-					$nextnum++;
-					return $nextnum;
-				}
+			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_protocols', 'ORDER' => 'id DESC', 'LIMIT' => 1]) as $row) {
+				return $row['id'] + 1;
 			}
+			return 1;
 		}
 		
 		//create GLPI document
 		static function createDoc($doc_name, $notes, $id) {
 			global $DB, $CFG_GLPI;
 			
-			$req = $DB->request(
-					'glpi_users',
-					['id' => $id ]);
-			
-			if ($row = $req->next()) {
+			$entity = 0;
+			foreach ($DB->request(['FROM' => 'glpi_users', 'WHERE' => ['id' => $id]]) as $row) {
 				$entity = $row["entities_id"];
+				break;
 			}
 			
 			$input = [];
@@ -549,45 +512,40 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			global $CFG_GLPI, $DB;
 			$nmail = new GLPIMailer();
 			
-			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$nmail->setFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 			
 			$recipients_array = explode(';',$recipients);
 			
-			$req = $DB->request(
-					'glpi_documents',
-					['id' => $doc_id ]);
-			
-			if ($row = $req->next()) {
+			$path = '';
+			$filename = '';
+			foreach ($DB->request(['FROM' => 'glpi_documents', 'WHERE' => ['id' => $doc_id]]) as $row) {
 				$path = $row["filepath"];
 				$filename = $row["filename"];
+				break;
 			}
-			
+
 			$fullpath = GLPI_ROOT."/files/".$path;
-			
-			$req2 = $DB->request(
-					'glpi_useremails',
-					['users_id' => $id, 'is_default' => 1]);
-					
-			if ($row2 = $req2->next()) {
+
+			$owner_email = '';
+			foreach ($DB->request(['FROM' => 'glpi_useremails', 'WHERE' => ['users_id' => $id, 'is_default' => 1]]) as $row2) {
 				$owner_email = $row2["email"];
+				break;
 			}
-			
+
 			if ($send_user == 1) {
-				$nmail->AddAddress($owner_email);
-			}			
-			
-			foreach($recipients_array as $recipient) {
-				
-				$nmail->AddAddress($recipient); //do konfiguracji
+				$nmail->addAddress($owner_email);
 			}
-			
-			$nmail->Subject = $email_subject; //do konfiguracji
+
+			foreach($recipients_array as $recipient) {
+				$nmail->addAddress($recipient);
+			}
+
+			$nmail->Subject = $email_subject;
 			$nmail->addAttachment($fullpath, $filename);
 			$nmail->Body = $email_content;
 			
-			if (!$nmail->Send()) {
+			if (!$nmail->send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
-				GLPINetwork::addErrorMessageAfterRedirect();
 				return false;
 			} else {
 				
@@ -609,7 +567,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$nmail = new GLPIMailer();
 			
-			$nmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$nmail->setFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 			
 			$doc_id = $_POST["doc_id"];
 			
@@ -651,42 +609,39 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
 			
 			$recipients_array = explode(';',$recipients);
-			
-			$req2 = $DB->request(
-					'glpi_useremails',
-					['users_id' => $id, 'is_default' => 1]);
-					
-			if ($row2 = $req2->next()) {
+
+			$owner_email = '';
+			foreach ($DB->request(['FROM' => 'glpi_useremails', 'WHERE' => ['users_id' => $id, 'is_default' => 1]]) as $row2) {
 				$owner_email = $row2["email"];
+				break;
 			}
 			
 			if ($send_user == 1) {
-				$nmail->AddAddress($owner_email);
+				$nmail->addAddress($owner_email);
 			}			
 			
 			foreach($recipients_array as $recipient) {
 				
-				$nmail->AddAddress($recipient); //do konfiguracji
+				$nmail->addAddress($recipient); //do konfiguracji
 			}			
 			
-			$req = $DB->request(
-					'glpi_documents',
-					['id' => $doc_id ]);
-			
-			if ($row = $req->next()) {
+			$path = '';
+			$filename = '';
+			foreach ($DB->request(['FROM' => 'glpi_documents', 'WHERE' => ['id' => $doc_id]]) as $row) {
 				$path = $row["filepath"];
 				$filename = $row["filename"];
+				break;
 			}
-			
+
 			$fullpath = GLPI_ROOT."/files/".$path;
-			
-			$nmail->IsHtml(true);
+
+			$nmail->isHTML(true);
 			
 			$nmail->Subject = $email_subject; //do konfiguracji
 			$nmail->addAttachment($fullpath, $filename);
 			$nmail->Body = nl2br(stripcslashes($email_content));
 			
-			if (!$nmail->Send()) {
+			if (!$nmail->send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
 				return false;
 			} else {
