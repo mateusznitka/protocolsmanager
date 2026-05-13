@@ -1,0 +1,18 @@
+{
+    "name": "mateusznitka/protocolsmanager",
+    "description": "GLPI plugin to generate configurable PDF protocols from user inventory",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Mateusz Nitka"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "dompdf/dompdf": "^3.0"
+    },
+    "config": {
+        "vendor-dir": "vendor"
+    }
+}
