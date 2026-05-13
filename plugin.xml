@@ -48,10 +48,9 @@
 	</authors>
 	<versions>
 	   <version>
-		  <num>1.4</num>
-		  <compatibility>9.5</compatibility>
-		  <compatibility>9.4</compatibility>
-		  <compatibility>9.3</compatibility>
+		  <num>2.0.0</num>
+		  <compatibility>11.0</compatibility>
+		  <compatibility>10.0</compatibility>
 	   </version>
 	</versions>
 	<langs>
