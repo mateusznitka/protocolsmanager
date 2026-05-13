@@ -1,12 +1,14 @@
 <?php
 
 function plugin_version_protocolsmanager() {
-	return array('name'           => "Protocols manager",
-                'version'        => '1.4.2',
-                'author'         => 'Mateusz Nitka',
-                'license'        => 'GPLv3+',
-                'homepage'       => 'https://github.com/mateusznitka/protocolsmanager',
-                'minGlpiVersion' => '9.3');
+    return [
+        'name'           => "Protocols manager",
+        'version'        => '2.0.0',
+        'author'         => 'Mateusz Nitka',
+        'license'        => 'GPLv3+',
+        'homepage'       => 'https://github.com/mateusznitka/protocolsmanager',
+        'minGlpiVersion' => '10.0',
+    ];
 }
 
 function plugin_protocolsmanager_check_config() {
@@ -14,12 +16,12 @@ function plugin_protocolsmanager_check_config() {
 }
  
 
-function plugin_protocolsmanager_check_prerequisites() { 
-		if (GLPI_VERSION>=9.3){
-                return true;
-        } else {
-                echo "GLPI version NOT compatible. Requires GLPI 9.3";
-        }
+function plugin_protocolsmanager_check_prerequisites() {
+    if (version_compare(GLPI_VERSION, '10.0', '>=')) {
+        return true;
+    }
+    echo "This plugin requires GLPI 10.0 or higher.";
+    return false;
 }
 
 function plugin_init_protocolsmanager() {
@@ -29,13 +31,11 @@ function plugin_init_protocolsmanager() {
 	
 	$PLUGIN_HOOKS['config_page']['protocolsmanager'] = 'front/config.form.php';
    
-	Plugin::registerClass('PluginProtocolsmanagerGenerate', array('addtabon' => array('User')));
-	
-	Plugin::registerClass('PluginProtocolsmanagerProfile', array('addtabon' => array('Profile')));
-	
-	Plugin::registerClass('PluginProtocolsmanagerConfig', array('addtabon' => array('Config')));
-	
-	$PLUGIN_HOOKS['add_css']['protocolsmanager'] = 'css/styles.css';
+    Plugin::registerClass('PluginProtocolsmanagerGenerate', ['addtabon' => ['User']]);
+    Plugin::registerClass('PluginProtocolsmanagerProfile', ['addtabon' => ['Profile']]);
+    Plugin::registerClass('PluginProtocolsmanagerConfig', ['addtabon' => ['Config']]);
+
+    $PLUGIN_HOOKS['add_css']['protocolsmanager'] = 'css/styles.css';
 	
 }
 
