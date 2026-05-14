@@ -42,7 +42,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand'	action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
-			echo "<select name='list' style='font-size:14px; width:95%'>";
+			echo "<select name='list' class='form-select' style='width:95%'>";
 				foreach ($doc_types = $DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'FIELDS' => ['glpi_plugin_protocolsmanager_configs' => ['id', 'name']]]) as $uid => $list) {
 					echo '<option value="';
 					echo $list["id"];
@@ -56,14 +56,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<tr><td></td><td colspan='2'><input type='text' name='notes' placeholder='".__('Note')."' style='width:89%; font-size:14px; padding: 2px'></td><td></td></tr>";
 			echo "</table>";
 			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
-			$header = "<th width='10'><input type='checkbox' class='checkall' style='height:16px; width: 16px;'></th>";
-			$header .= "<th>".__('Type')."</th>";
-			$header .= "<th>".__('Manufacturer');
+			$header = "<th width='10' class='center'>" . Html::getCheckAllAsCheckbox('additional_table') . "</th>";
+			$header .= "<th class='center'>".__('Type')."</th>";
+			$header .= "<th class='center'>".__('Manufacturer');
 			$header .= " ".__('Model')."</th>";
-			$header .= "<th>".__('Name')."</th>";
-			$header .= "<th>".__('Serial number')."</th>";
-			$header .= "<th>".__('Inventory number')."</th>";
-			$header .= "<th>".__('Comments')."</th></tr>";
+			$header .= "<th class='center'>".__('Name')."</th>";
+			$header .= "<th class='center'>".__('Serial number')."</th>";
+			$header .= "<th class='center'>".__('Inventory number')."</th>";
+			$header .= "<th class='center'>".__('Comments')."</th></tr>";
 			echo $header;
 			
 			foreach ($type_user as $itemtype) {
@@ -104,7 +104,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							
 							echo "<tr class='tab_bg_1'>";
 							echo "<td width='10'>";
-							echo "<input type='checkbox' name='number[]' value='$counter' class='child' style='height:16px; width: 16px;'>";
+							echo "<input type='checkbox' name='number[]' value='$counter' class='form-check-input massive_action_checkbox' checked>";
 							echo "</td>";	
 							echo "<td class='center'>$type_name</td>";
 							echo "<td class='center'>";
@@ -207,21 +207,23 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>";
 				
 				
-				//send email popup
-				echo "<div class='dialog' title='".__('Send')." email'><p>Select recipients from template or enter manually to send email</p><br><br>";	
+				//send email modal
+				echo "<div class='modal fade' id='emailModal' tabindex='-1'>";
+				echo "<div class='modal-dialog'>";
+				echo "<div class='modal-content'>";
+				echo "<div class='modal-header'>";
+				echo "<h5 class='modal-title'>".__('Send')." email</h5>";
+				echo "<button type='button' class='btn-close' data-bs-dismiss='modal'></button>";
+				echo "</div>";
+				echo "<div class='modal-body'>";
 				echo "<form method='post' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
-				
 				echo "<input type='hidden' id='dialogVal' name='doc_id' value=''>";
-				echo "<input type='radio' name='send_type' id='manually' class='send_type' value='1'><b> Enter recipients manually </b><br><br>";
-				echo "<textarea style='width:90%; height:30px' name='em_list' class='man_recs' placeholder='Recipients (use ; to separate emails)'></textarea><br><br>";
-				echo "<input type='text' style='width:90%' name='email_subject' class='man_recs' placeholder='Subject'><br><br>";
-				echo "<textarea style='width:90%; height:80px' name='email_content' class='man_recs' placeholder='Content'></textarea><br><br>";
-
-				
-				echo "<input type='radio' name='send_type' id='auto' class='send_type' value='2'><b> Select recipients from template</b><br><br>";
-				
-				echo "<select name='e_list' id='auto_recs' disabled='disabled' style='font-size:14px; width:95%'>";
-
+				echo "<div class='mb-2'><input type='radio' name='send_type' id='manually' class='send_type' value='1'> <b>".__('Enter recipients manually')."</b></div>";
+				echo "<textarea class='form-control man_recs mb-2' name='em_list' rows='2' placeholder='".__('Recipients (use ; to separate emails)')."'></textarea>";
+				echo "<input type='text' class='form-control man_recs mb-2' name='email_subject' placeholder='".__('Subject')."'>";
+				echo "<textarea class='form-control man_recs mb-3' name='email_content' rows='3' placeholder='".__('Content')."'></textarea>";
+				echo "<div class='mb-2'><input type='radio' name='send_type' id='auto' class='send_type' value='2'> <b>".__('Select recipients from template')."</b></div>";
+				echo "<select name='e_list' id='auto_recs' disabled='disabled' class='form-select mb-3'>";
 				foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig']) as $uid => $list) {
 					echo '<option value="';
 					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"]."|".$list["send_user"];
@@ -229,12 +231,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo $list["tname"]." - ".$list["recipients"];
 					echo '</option>';
 				}
-
-				echo "</select><br><br><input type='submit' name='send' class='submit' value=".__('Send').">";
+				echo "</select>";
+				echo "<input type='submit' name='send' class='btn btn-primary' value='".__('Send')."'>";
 				echo "<input type='hidden' name='author' value='$author'>";
 				echo "<input type='hidden' name='owner' value='$owner'>";
 				echo "<input type='hidden' name='user_id' value='$id'>";
 				Html::closeForm();
+				echo "</div>";
+				echo "</div>";
+				echo "</div>";
 				echo "</div>";
 				
 				//add custom row
@@ -246,14 +251,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "<input type='submit' name='delete' class='submit' value=".__('Delete').">";
 				echo "</td><td style='width:90%'></table>";
 				echo "<table class='tab_cadre_fixehov' id='myTable'>";
-				echo "<th width='10'><input type='checkbox' class='checkalldoc' style='height:16px; width: 16px;'></th>";
-				$header2 = "<th>".__('Name')."</th>";
-				$header2 .= "<th>".__('Type')."</th>";
-				$header2 .= "<th>".__('Date')."</th>";
-				$header2 .= "<th>".__('File')."</th>";
-				$header2 .= "<th>".__('Creator')."</th>";
-				$header2 .= "<th>".__('Comment')."</th>";
-				$header2 .= "<th>".__('Send email')."</th></tr>";
+				echo "<th width='10' class='center'><input type='checkbox' class='checkalldoc' style='height:16px; width: 16px;'></th>";
+				$header2 = "<th class='center'>".__('Name')."</th>";
+				$header2 .= "<th class='center'>".__('Type')."</th>";
+				$header2 .= "<th class='center'>".__('Date')."</th>";
+				$header2 .= "<th class='center'>".__('File')."</th>";
+				$header2 .= "<th class='center'>".__('Creator')."</th>";
+				$header2 .= "<th class='center'>".__('Comment')."</th>";
+				$header2 .= "<th class='center'>".__('Send email')."</th></tr>";
 				echo $header2;
 				
 				self::getAllForUser($id);
@@ -325,6 +330,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			global $DB, $CFG_GLPI;
 			
+			if (empty($_POST['number'])) {
+				Session::addMessageAfterRedirect(__('No items selected'), false, ERROR);
+				Html::back();
+				return;
+			}
 			$number = $_POST['number'];
 			$type_name = $_POST['type_name'];
 			$man_name = $_POST['man_name'];
@@ -680,26 +690,12 @@ $(function(){
 });
 
 $(function(){
-	
-	$(".dialog").dialog({ autoOpen: false, modal: true, height: 500, width: 500 });
- 
 	$("#myTable").on('click','.openDialog',function(){
-         // get the current row
-        var currentRow=$(this).closest("tr"); 
-         
-        var docid=currentRow.find(".docid").html(); // get current row 1st table cell TD value
-
+		var currentRow=$(this).closest("tr");
+		var docid=currentRow.find(".docid").html();
 		$('#dialogVal').val(docid);
-		$(".dialog").dialog('open');
-		
-		});        
- 
-});
-
-$(function(){
-    $('.checkall').on('click', function() {
-        $('.child').prop('checked', this.checked)
-    });
+		bootstrap.Modal.getOrCreateInstance(document.getElementById('emailModal')).show();
+	});
 });
 
 $(function(){
@@ -710,7 +706,7 @@ $(function(){
 
 $(function() {
 
-	var counter = $('.child').length;
+	var counter = $('input[name="number[]"]').length;
 	
 	var ctr = 0;
 	
