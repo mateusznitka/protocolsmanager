@@ -66,6 +66,7 @@ footer
 <br>
 <table id="items" cellspacing="0">
 <?php 
+	if (!empty($number)) :
 	//if no comments, there is no comments column
 	if (empty(array_filter($comments))) {
 		
@@ -205,7 +206,8 @@ footer
 		}
 
 	}
-		
+	endif;
+
 
 ?>
 </table>
