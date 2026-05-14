@@ -24,6 +24,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 		}
 		
+		static function getIcon() {
+			return 'ti ti-clipboard-list';
+		}
+
 		static function checkRights() {
 			return Session::haveRight('plugin_protocolsmanager_tab', READ);
 		}
@@ -38,7 +42,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$rand = mt_rand();
 			
 			$counter = 0;
-			
+
+			$Owner = new User();
+			$Owner->getFromDB($id);
+			$Author = new User();
+			$Author->getFromDB(Session::getLoginUserID());
+			$owner = $Owner->getName();
+			$author = $Author->getName();
+
 			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand'	action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
 			echo "<td class='center' style ='width:25%'>";
@@ -55,16 +66,18 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<td style='width:30%'></td></tr>";
 			echo "<tr><td></td><td colspan='2'><input type='text' name='notes' placeholder='".__('Note')."' style='width:89%; font-size:14px; padding: 2px'></td><td></td></tr>";
 			echo "</table>";
-			echo "<div class='spaced'><table class='tab_cadre_fixehov' id='additional_table'>";
-			$header = "<th width='10' class='center'>" . Html::getCheckAllAsCheckbox('additional_table') . "</th>";
-			$header .= "<th class='center'>".__('Type')."</th>";
-			$header .= "<th class='center'>".__('Manufacturer');
+			echo "<div class='spaced'><table class='table table-hover table-sm' id='additional_table'>";
+			echo "<thead>";
+			$header = "<tr><th width='10'>" . Html::getCheckAllAsCheckbox('additional_table') . "</th>";
+			$header .= "<th class='text-uppercase'>".__('Type')."</th>";
+			$header .= "<th class='text-uppercase'>".__('Manufacturer');
 			$header .= " ".__('Model')."</th>";
-			$header .= "<th class='center'>".__('Name')."</th>";
-			$header .= "<th class='center'>".__('Serial number')."</th>";
-			$header .= "<th class='center'>".__('Inventory number')."</th>";
-			$header .= "<th class='center'>".__('Comments')."</th></tr>";
+			$header .= "<th class='text-uppercase'>".__('Name')."</th>";
+			$header .= "<th class='text-uppercase'>".__('Serial number')."</th>";
+			$header .= "<th class='text-uppercase'>".__('Inventory number')."</th>";
+			$header .= "<th class='text-uppercase'>".__('Comments')."</th></tr>";
 			echo $header;
+			echo "</thead><tbody>";
 			
 			foreach ($type_user as $itemtype) {
 				if (!($item = getItemForItemtype($itemtype))) {
@@ -106,8 +119,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<td width='10'>";
 							echo "<input type='checkbox' name='number[]' value='$counter' class='form-check-input massive_action_checkbox' checked>";
 							echo "</td>";	
-							echo "<td class='center'>$type_name</td>";
-							echo "<td class='center'>";
+							echo "<td>$type_name</td>";
+							echo "<td>";
 							
 							if (isset($data["manufacturers_id"]) && !empty($data["manufacturers_id"])) {
 								
@@ -143,8 +156,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								$mod_name = '';
 							}
 							echo "</td>";
-							echo "<td class='center'>$link</td>";
-							echo "<td class='center'>";
+							echo "<td>$link</td>";
+							echo "<td>";
 							
 							if (isset($data["serial"]) && !empty($data["serial"])) {
 								$serial = $data["serial"];
@@ -155,7 +168,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							}
 							
 							echo "</td>";
-							echo "<td class='center'>";
+							echo "<td>";
 							
 							if (isset($data["otherserial"]) && !empty($data["otherserial"])) {
 								$otherserial = $data["otherserial"];
@@ -169,29 +182,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							
 							if (isset($data["name"]) && !empty($data["name"])) {
 								$item_name = $data["name"];
-							}
-							else
+							} else {
 								$item_name = '';
-							
-							$Owner = new User();
-							$Owner->getFromDB($id);
-							$Author = new User();
-							$Author->getFromDB(Session::getLoginUserID());
-							$owner = $Owner->getName();
-							$author = $Author->getName();
-							
-							
-							echo "<input type='hidden' name='owner' value ='$owner'>";
-							echo "<input type='hidden' name='author' value ='$author'>";
+							}
+
+							echo "<td>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
 							echo "<input type='hidden' name='man_name[]' value='$man_name'>";
 							echo "<input type='hidden' name='mod_name[]' value='$mod_name'>";
 							echo "<input type='hidden' name='serial[]' value='$serial'>";
 							echo "<input type='hidden' name='otherserial[]' value='$otherserial'>";
 							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
-							echo "<input type='hidden' name='user_id' value='$id'>";
-							
-							echo "<td class='center'><input type='text' name='comments[]'></td>";
+							echo "<input type='text' name='comments[]' class='form-control form-control-sm'>";
+							echo "</td>";
 							echo "</tr>";
 
 							
@@ -202,11 +205,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				
 			}				
 				
-				echo "</table>";
+				echo "</tbody></table>";
+				echo "<input type='hidden' name='owner' value='$owner'>";
+				echo "<input type='hidden' name='author' value='$author'>";
+				echo "<input type='hidden' name='user_id' value='$id'>";
 				Html::closeForm();
 				echo "</div>";
-				
-				
+
+
 				//send email modal
 				echo "<div class='modal fade' id='emailModal' tabindex='-1'>";
 				echo "<div class='modal-dialog'>";
@@ -243,26 +249,27 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>";
 				
 				//add custom row
-				echo "<div class='spaced'><button class='addNewRow' id='addNewRow' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;'>Add Custom Fields</button></div>";
+				echo "<div class='spaced'><button class='btn btn-sm btn-outline-secondary' id='addNewRow' type='button'><i class='ti ti-plus'></i> Add Custom Fields</button></div>";
 				
+				echo "<hr class='my-4'>";
 				echo "<div class='spaced'>";
 				echo "<form method='post' name='docs_form' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
-				echo "<table class='tab_cadre_fixe'><td style='width:5%'><img src='../pics/arrow-left-top.png'></td><td style='width:5%'>";
-				echo "<input type='submit' name='delete' class='submit' value=".__('Delete').">";
-				echo "</td><td style='width:90%'></table>";
-				echo "<table class='tab_cadre_fixehov' id='myTable'>";
-				echo "<th width='10' class='center'><input type='checkbox' class='checkalldoc' style='height:16px; width: 16px;'></th>";
-				$header2 = "<th class='center'>".__('Name')."</th>";
-				$header2 .= "<th class='center'>".__('Type')."</th>";
-				$header2 .= "<th class='center'>".__('Date')."</th>";
-				$header2 .= "<th class='center'>".__('File')."</th>";
-				$header2 .= "<th class='center'>".__('Creator')."</th>";
-				$header2 .= "<th class='center'>".__('Comment')."</th>";
-				$header2 .= "<th class='center'>".__('Send email')."</th></tr>";
+				echo "<div class='mb-2'><button type='submit' name='delete' class='btn btn-sm btn-outline-danger'><i class='ti ti-trash'></i> ".__('Delete')."</button></div>";
+				echo "<table class='table table-hover table-sm' id='myTable'>";
+				echo "<thead>";
+				$header2 = "<tr><th width='10'>" . Html::getCheckAllAsCheckbox('myTable') . "</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Name')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Type')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Date')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('File')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Creator')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Comment')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Send email')."</th></tr>";
 				echo $header2;
+				echo "</thead><tbody>";
 				
 				self::getAllForUser($id);
-				echo "</table>";
+				echo "</tbody></table>";
 				Html::closeForm();
 				echo "</div>";
 				
@@ -282,39 +289,39 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					echo "<tr class='tab_bg_1'>";
 					
-					echo "<td class='center'>";
-					echo "<input type='checkbox' name='docnumber[]' value='".$exports['document_id']."' class='docchild' style='height:16px; width: 16px;'>";
+					echo "<td>";
+					echo "<input type='checkbox' name='docnumber[]' value='".$exports['document_id']."' class='form-check-input massive_action_checkbox'>";
 					echo "</td>";
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					$Doc = new Document();
 					$Doc->getFromDB($exports['document_id']);
 					echo $Doc->getLink();
 					echo "</td>";
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					echo $exports['document_type'];
 					echo "</td>";
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					echo $exports['gen_date'];
 					echo "</td>";
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					echo $Doc->getDownloadLink();
 					echo "</td>";
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					echo $exports['author'];
 					echo "</td>";
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					echo $Doc->getField("comment");
 					echo "</td>";					
 					
-					echo "<td class='center'>";
+					echo "<td>";
 					echo "<span class='docid' style='display:none'>".$exports['document_id']."</span>";
-					echo "<a class='openDialog' style='background-color:#8ec547; color:#fff; cursor:pointer; font:bold 12px Arial, Helvetica; border:0; padding:5px;' href='#'>".__('Send')."</a>";
+					echo "<a class='btn btn-sm btn-outline-primary openDialog' href='#'>".__('Send')."</a>";
 					echo "</td>";
 
 					
@@ -698,11 +705,6 @@ $(function(){
 	});
 });
 
-$(function(){
-    $('.checkalldoc').on('click', function() {
-        $('.docchild').prop('checked', this.checked)
-    });
-});
 
 $(function() {
 
@@ -714,13 +716,13 @@ $(function() {
         var newRow = $("<tr class='tab_bg_1'>");
         var cols = "";
 		
-		cols += '<td><input type="button" class="ibtnDel" value="&#10006" style="background-color:red; font-size:9px;"></td>';
-        cols += '<td class="center"><input type="text" style="width:80% " name="type_name[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="man_name[]"><input type="hidden" name="mod_name[]" value=""></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="item_name[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="serial[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="otherserial[]"></td>';
-        cols += '<td class="center"><input type="text" style="width:90% "name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+		cols += '<td style="vertical-align: middle; text-align: center;"><button type="button" class="btn btn-sm btn-outline-danger ibtnDel" style="padding: 0; width: 1.75rem; height: 1.75rem;"><i class="ti ti-trash"></i></button></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="type_name[]"></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="man_name[]"><input type="hidden" name="mod_name[]" value=""></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="item_name[]"></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="serial[]"></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="otherserial[]"></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
 
         newRow.append(cols);
         $("#additional_table").append(newRow);
