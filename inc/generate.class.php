@@ -391,6 +391,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];
 				$email_template = $row["email_template"];
+				$header_color = $row["header_color"] ?? '#dee2e6';
 				break;
 			}
 			
@@ -405,7 +406,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$comments = $_POST['comments'];
 		
 			if (!isset($font) || empty($font)) {
-				$font = 'dejavusans';
+				$font = 'DejaVu Sans';
 			}
 
 			if (!isset($fontsize) || empty($fontsize)) {
@@ -449,8 +450,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			ob_start();
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();
+			$font_cache_dir = GLPI_UPLOAD_DIR . '/protocolsmanager/';
+			if (!is_dir($font_cache_dir)) {
+				mkdir($font_cache_dir, 0755, true);
+			}
 			$options = new Options();
-			$options -> set('defaultFont', $font);
+			$options->set('defaultFont', $font);
+			$options->setChroot(GLPI_ROOT);
+			$options->setFontDir(GLPI_ROOT . '/plugins/protocolsmanager/fonts/');
+			$options->setFontCache($font_cache_dir);
 			$html2pdf = new Dompdf($options);
 			$html2pdf->loadHtml($html);
 			$html2pdf->setPaper('A4', $orientation);
@@ -514,6 +522,18 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$input["comment"] = $notes;
 			$doc->check(-1, CREATE, $input);
 			$document_id = $doc->add($input);
+
+			$document_item = new Document_Item();
+			$document_item->add([
+				'documents_id' => $document_id,
+				'itemtype'     => 'User',
+				'items_id'     => $id,
+				'entities_id'  => $entity,
+				'is_recursive' => 0,
+				'date_mod'     => date("Y-m-d H:i:s"),
+				'users_id'     => Session::getLoginUserID(),
+			]);
+
 			return $document_id;
 		}
 		
