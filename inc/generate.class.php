@@ -50,10 +50,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$owner = $Owner->getName();
 			$author = $Author->getName();
 
-			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand'	action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
-			echo "<table class='tab_cadre_fixe'><tr><td style ='width:25%'></td>";
-			echo "<td class='center' style ='width:25%'>";
-			echo "<select name='list' class='form-select' style='width:95%'>";
+			echo "<div class='card mb-4'>";
+			echo "<div class='card-header'><i class='ti ti-clipboard-plus'></i> ".__('Generate new document')."</div>";
+			echo "<div class='card-body'>";
+			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
+			echo "<p class='text-muted small mb-2'><strong>1.</strong> ".__('Choose a template and add an optional note')."</p>";
+			echo "<div class='row mb-3'>";
+			echo "<div class='col-md-4'>";
+			echo "<label class='form-label'>".__('Template')."</label>";
+			echo "<select name='list' class='form-select'>";
 				foreach ($doc_types = $DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'FIELDS' => ['glpi_plugin_protocolsmanager_configs' => ['id', 'name']]]) as $uid => $list) {
 					echo '<option value="';
 					echo $list["id"];
@@ -61,12 +66,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo $list["name"];
 					echo '</option>';
 				}
-			echo "</select></td>";
-			echo "<td style='width:10%'><input type='submit' name='generate' class='submit' value='".__('Create')."'></td>";
-			echo "<td style='width:30%'></td></tr>";
-			echo "<tr><td></td><td colspan='2'><input type='text' name='notes' placeholder='".__('Note')."' style='width:89%; font-size:14px; padding: 2px'></td><td></td></tr>";
-			echo "</table>";
-			echo "<div class='spaced'><table class='table table-hover table-sm' id='additional_table'>";
+			echo "</select>";
+			echo "</div>";
+			echo "<div class='col-md-5'>";
+			echo "<label class='form-label'>".__('Note')." <small class='text-muted'>(" . __('visible in generated documents list') . ")</small></label>";
+			echo "<input type='text' name='notes' class='form-control' placeholder='".__('Optional')."'>";
+			echo "</div>";
+			echo "</div>"; // row
+			echo "<p class='text-muted small mb-2'><strong>2.</strong> ".__('Select assets to include in the document')."</p>";
+			echo "<table class='table table-hover table-sm' id='additional_table'>";
 			echo "<thead>";
 			$header = "<tr><th width='10'>" . Html::getCheckAllAsCheckbox('additional_table') . "</th>";
 			$header .= "<th class='text-uppercase'>".__('Type')."</th>";
@@ -206,11 +214,18 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}				
 				
 				echo "</tbody></table>";
+				echo "<div class='mt-2'>";
+				echo "<button class='btn btn-sm btn-outline-secondary' id='addNewRow' type='button'><i class='ti ti-plus'></i> Add Custom Fields</button>";
+				echo "</div>";
+				echo "<div class='d-flex justify-content-end mt-3'>";
+				echo "<button type='submit' name='generate' class='btn btn-primary'><i class='ti ti-file-plus'></i> ".__('Generate document')."</button>";
+				echo "</div>";
 				echo "<input type='hidden' name='owner' value='$owner'>";
 				echo "<input type='hidden' name='author' value='$author'>";
 				echo "<input type='hidden' name='user_id' value='$id'>";
 				Html::closeForm();
-				echo "</div>";
+				echo "</div>"; // card-body
+				echo "</div>"; // card
 
 
 				//send email modal
@@ -248,11 +263,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>";
 				echo "</div>";
 				
-				//add custom row
-				echo "<div class='spaced'><button class='btn btn-sm btn-outline-secondary' id='addNewRow' type='button'><i class='ti ti-plus'></i> Add Custom Fields</button></div>";
-				
-				echo "<hr class='my-4'>";
-				echo "<div class='spaced'>";
+				echo "<div class='card mt-4'>";
+				echo "<div class='card-header'><i class='ti ti-files'></i> ".__('Generated documents')."</div>";
+				echo "<div class='card-body'>";
 				echo "<form method='post' name='docs_form' action='".$CFG_GLPI["root_doc"]."/plugins/protocolsmanager/front/generate.form.php'>";
 				echo "<div class='mb-2'><button type='submit' name='delete' class='btn btn-sm btn-outline-danger'><i class='ti ti-trash'></i> ".__('Delete')."</button></div>";
 				echo "<table class='table table-hover table-sm' id='myTable'>";
@@ -271,8 +284,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				self::getAllForUser($id);
 				echo "</tbody></table>";
 				Html::closeForm();
-				echo "</div>";
-				
+				echo "</div>"; // card-body
+				echo "</div>"; // card
+
 				return true;
 	
 		}
