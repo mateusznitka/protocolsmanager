@@ -6,6 +6,7 @@
 body
 {
 	font-size: <?php echo $fontsize; ?>;
+	font-family: '<?php echo $font; ?>';
 }
 footer 
 { 
@@ -18,7 +19,7 @@ footer
 
 #items th
 {
-	border: solid 0.5px black; padding: 2px;
+	border: solid 0.5px black; padding: 2px; background-color: <?php echo $header_color; ?>;
 }
 
 #items td

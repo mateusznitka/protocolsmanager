@@ -51,6 +51,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 		$breakword             = 1;
 		$email_mode            = 2;
 		$email_template        = 1;
+		$header_color          = '#dee2e6';
 
 		if (isset($_POST["edit_id"])) {
 			$edit_id = (int) $_POST['edit_id'];
@@ -69,20 +70,22 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				$breakword             = $row["breakword"];
 				$email_mode            = $row["email_mode"];
 				$email_template        = $row["email_template"];
+				$header_color          = $row["header_color"] ?? '#dee2e6';
 				break;
 			}
 		}
 		
 		
-		$fonts = array('Courier' => 'Courier',
-						'Helvetica' => 'Helvetica', 
-						'Times' => 'Times',
-						'Istok' => 'Istok',
-						'UbuntuMono' => 'UbuntuMono',
-						'Roboto' => 'Roboto',
-						'Liberation-Sans' => 'Liberation-Sans',
-						'DroidSerif' => 'DroidSerif',
-						'DejaVu Sans' => 'DejaVu Sans');
+		$fonts = [
+						'DejaVu Sans'      => 'DejaVu Sans',
+						'DejaVu Serif'     => 'DejaVu Serif',
+						'DejaVu Sans Mono' => 'DejaVu Sans Mono',
+						'Roboto'           => 'Roboto',
+						'Lato'             => 'Lato',
+						'Courier'          => 'Courier',
+						'Helvetica'        => 'Helvetica',
+						'Times'            => 'Times',
+					];
 						
 		$fontsizes = array('7' => '7',
 							'8' => '8',
@@ -95,7 +98,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 							'Landscape' => 'Landscape');
 		
 		if (!isset($font)) {
-			$font='freesans';
+			$font='dejavusans';
 		}
 		
 		echo "<div class='center'>";
@@ -138,6 +141,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				echo ">".$fsizes."</option>";
 			}
 		echo "</select></td></tr>";
+
+		echo "<tr><td>".__('Table header color')."</td><td colspan='2'><input type='color' name='header_color' value='".$header_color."'></td></tr>";
 
 		echo "<tr><td>Word breaking</td><td><input type='radio' name='breakword' value=1 ";
 		if ($breakword == 1)
@@ -298,6 +303,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			$breakword = $_POST["breakword"];
 			$email_mode = $_POST["email_mode"];
 			$email_template = $_POST["email_template"];
+			$header_color = $_POST["header_color"];
 
 			
 			if (isset($_POST['img_delete'])) {
@@ -316,19 +322,20 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 			if ($mode == 0) {
 				
 				$DB->insert('glpi_plugin_protocolsmanager_configs', [
-					'name' => $template_name,
-					'upper_content' => $template_uppercontent,
-					'content' => $template_content,
-					'footer' => $template_footer,
-					'logo' => $full_img_name,
-					'font' => $font,
-					'fontsize' => $fontsize,
-					'city' => $city,
-					'serial_mode' => $serial_mode,
-					'orientation' => $orientation,
-					'breakword' => $breakword,
-					'email_mode' => $email_mode,
-					'email_template' =>$email_template
+					'name'         => $template_name,
+					'upper_content'=> $template_uppercontent,
+					'content'      => $template_content,
+					'footer'       => $template_footer,
+					'logo'         => $full_img_name,
+					'font'         => $font,
+					'fontsize'     => $fontsize,
+					'city'         => $city,
+					'serial_mode'  => $serial_mode,
+					'orientation'  => $orientation,
+					'breakword'    => $breakword,
+					'email_mode'   => $email_mode,
+					'email_template' => $email_template,
+					'header_color' => $header_color,
 					]
 				);
 			}
@@ -340,38 +347,40 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 				if (isset($full_img_name)) {
 					
 					$DB->update('glpi_plugin_protocolsmanager_configs', [
-							'name' => $template_name,
-							'content' => $template_content,
+							'name'          => $template_name,
+							'content'       => $template_content,
 							'upper_content' => $template_uppercontent,
-							'footer' => $template_footer,
-							'logo' => $full_img_name,
-							'font' => $font,
-							'fontsize' => $fontsize,
-							'city' => $city,
-							'serial_mode' => $serial_mode,
-							'orientation' => $orientation,
-							'breakword' => $breakword,
-							'email_mode' => $email_mode,
-							'email_template' =>$email_template
+							'footer'        => $template_footer,
+							'logo'          => $full_img_name,
+							'font'          => $font,
+							'fontsize'      => $fontsize,
+							'city'          => $city,
+							'serial_mode'   => $serial_mode,
+							'orientation'   => $orientation,
+							'breakword'     => $breakword,
+							'email_mode'    => $email_mode,
+							'email_template'=> $email_template,
+							'header_color'  => $header_color,
 						], [
 							'id' => $mode
 						]
 					);
 				} else {
-					
+
 					$DB->update('glpi_plugin_protocolsmanager_configs', [
-							'name' => $template_name,
-							'content' => $template_content,
+							'name'          => $template_name,
+							'content'       => $template_content,
 							'upper_content' => $template_uppercontent,
-							'footer' => $template_footer,
-							'font' => $font,
-							'fontsize' => $fontsize,
-							'city' => $city,
-							'serial_mode' => $serial_mode,
-							'orientation' => $orientation,
-							'breakword' => $breakword,
-							'email_mode' => $email_mode,
-							'email_template' =>$email_template
+							'footer'        => $template_footer,
+							'font'          => $font,
+							'fontsize'      => $fontsize,
+							'city'          => $city,
+							'serial_mode'   => $serial_mode,
+							'orientation'   => $orientation,
+							'breakword'     => $breakword,
+							'email_mode'    => $email_mode,
+							'email_template'=> $email_template,
+							'header_color'  => $header_color,
 						], [
 							'id' => $mode
 						]

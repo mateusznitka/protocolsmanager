@@ -29,20 +29,22 @@ function plugin_protocolsmanager_install() {
 			email_mode int,
 			email_template int,
 			upper_content text,
+			header_color varchar(7),
 			PRIMARY KEY (id)
 		) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
 		$DB->insert('glpi_plugin_protocolsmanager_configs', [
-			'name'        => 'Equipment report',
-			'font'        => 'Roboto',
-			'fontsize'    => '9',
-			'content'     => "User: \n I have read the terms of use of IT equipment in the Example Company.",
-			'footer'      => "Example Company \n Example Street 21 \n 01-234 Example City",
-			'city'        => 'Example city',
-			'serial_mode' => 1,
-			'orientation' => 'Portrait',
-			'breakword'   => 1,
-			'email_mode'  => 2,
+			'name'         => 'Equipment report',
+			'font'         => 'DejaVu Sans',
+			'fontsize'     => '9',
+			'content'      => "User: \n I have read the terms of use of IT equipment in the Example Company.",
+			'footer'       => "Example Company \n Example Street 21 \n 01-234 Example City",
+			'city'         => 'Example city',
+			'serial_mode'  => 1,
+			'orientation'  => 'Portrait',
+			'breakword'    => 1,
+			'email_mode'   => 2,
+			'header_color' => '#dee2e6',
 		]);
 	}
 
