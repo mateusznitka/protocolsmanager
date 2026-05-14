@@ -91,11 +91,11 @@ footer
 			foreach ($number as $key) {
 				if (isset($type_name[$key])) {
 				echo '<tr><td>'. $lp . '</td>';
-				echo '<td>' . $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
-				echo '<td>' .$item_name[$key] .'</td>';
-				echo '<td>'. $serial[$key] .'</td>';
-				echo '<td>'. $otherserial[$key] .'</td></tr>';
+				echo '<td>' . ($type_name[$key] ?? '') .'</td>';
+				echo '<td>'. ($man_name[$key] ?? '') .' '. ($mod_name[$key] ?? ''). '</td>';
+				echo '<td>' .($item_name[$key] ?? '') .'</td>';
+				echo '<td>'. ($serial[$key] ?? '') .'</td>';
+				echo '<td>'. ($otherserial[$key] ?? '') .'</td></tr>';
 				}
 				$lp++;
 			}
@@ -159,12 +159,12 @@ footer
 			foreach ($number as $key){
 				if (isset($type_name[$key])){
 				echo '<tr><td>'. $lp . '</td>';
-				echo '<td>'. $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
-				echo '<td>'. $item_name[$key]. '</td>';
-				echo '<td>' . $serial[$key] .'</td>';
-				echo '<td>'. $otherserial[$key] .'</td>';
-				echo '<td>'. $comments[$key] .'</td></tr>';
+				echo '<td>'. ($type_name[$key] ?? '') .'</td>';
+				echo '<td>'. ($man_name[$key] ?? '') .' '. ($mod_name[$key] ?? ''). '</td>';
+				echo '<td>'. ($item_name[$key] ?? '') .'</td>';
+				echo '<td>' . ($serial[$key] ?? '') .'</td>';
+				echo '<td>'. ($otherserial[$key] ?? '') .'</td>';
+				echo '<td>'. ($comments[$key] ?? '') .'</td></tr>';
 				}
 				$lp++;
 			}
@@ -194,11 +194,11 @@ footer
 				} //if no serial, get inventory number
 				if (isset($type_name[$key])){
 				echo '<tr><td>'. $lp . '</td>';
-				echo '<td>'. $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
-				echo '<td>'. $item_name[$key] .'</td>';
-				echo '<td>' . $serial[$key] .'</td>';
-				echo '<td>'. $comments[$key] .'</td></tr>';
+				echo '<td>'. ($type_name[$key] ?? '') .'</td>';
+				echo '<td>'. ($man_name[$key] ?? '') .' '. ($mod_name[$key] ?? ''). '</td>';
+				echo '<td>'. ($item_name[$key] ?? '') .'</td>';
+				echo '<td>' . ($serial[$key] ?? '') .'</td>';
+				echo '<td>'. ($comments[$key] ?? '') .'</td></tr>';
 				}
 				$lp++;
 			}
