@@ -81,10 +81,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 						'DejaVu Serif'     => 'DejaVu Serif',
 						'DejaVu Sans Mono' => 'DejaVu Sans Mono',
 						'Roboto'           => 'Roboto',
-						'Lato'             => 'Lato',
-						'Courier'          => 'Courier',
+						'Noto Serif'       => 'Noto Serif',
 						'Helvetica'        => 'Helvetica',
-						'Times'            => 'Times',
 					];
 						
 		$fontsizes = array('7' => '7',

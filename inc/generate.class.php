@@ -450,6 +450,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			ob_start();
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();
+
+			$fd = GLPI_ROOT . '/plugins/protocolsmanager/fonts/';
+			$html = str_replace('</head>', "<style>
+				@font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Regular.ttf');font-weight:normal;}
+				@font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Bold.ttf');font-weight:bold;}
+				@font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Regular.ttf');font-weight:normal;}
+				@font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Bold.ttf');font-weight:bold;}
+			</style></head>", $html);
+
 			$font_cache_dir = GLPI_UPLOAD_DIR . '/protocolsmanager/';
 			if (!is_dir($font_cache_dir)) {
 				mkdir($font_cache_dir, 0755, true);
