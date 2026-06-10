@@ -32,6 +32,9 @@ function plugin_protocolsmanager_install() {
 			upper_content text,
 			header_color varchar(7),
 			is_default tinyint(1) NOT NULL DEFAULT 0,
+			show_state tinyint(1) NOT NULL DEFAULT 0,
+			logo_height tinyint NOT NULL DEFAULT 20,
+			logo_align varchar(10) NOT NULL DEFAULT 'left',
 			PRIMARY KEY (id)
 		) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
@@ -49,6 +52,9 @@ function plugin_protocolsmanager_install() {
 			'email_mode'   => 2,
 			'header_color' => '#dee2e6',
 			'is_default'   => 0,
+			'show_state'   => 0,
+			'logo_height'  => 20,
+			'logo_align'   => 'left',
 		]);
 	}
 

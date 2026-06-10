@@ -37,11 +37,11 @@ footer
 <body>
 <?php 
 	if ($islogo == 1) {
-
-		echo '<img src="';
-		echo $logo;
-		echo '" style="display: block; width: 100%; height: 20mm;">';
-
+		$logo_height = $logo_height ?? 20;
+		$logo_align  = $logo_align  ?? 'left';
+		echo '<div style="text-align: ' . htmlspecialchars($logo_align) . ';">';
+		echo '<img src="' . $logo . '" style="height: ' . (int)$logo_height . 'mm; width: auto; max-width: 100%;">';
+		echo '</div>';
 	}
 ?>
 	<table style="border: none; width: 100%;">
@@ -68,6 +68,7 @@ footer
 <table id="items" cellspacing="0">
 <?php
 	$man_mode    = $man_mode    ?? 1;
+	$show_state  = $show_state  ?? 0;
 	$lp_th_attr  = ($breakword == 1) ? ' style="width:5%"' : '';
 	$has_comments = !empty(array_filter($comments));
 
@@ -88,6 +89,9 @@ footer
 		echo '<th>' . __('Inventory number') . '</th>';
 	} else {
 		echo '<th>' . __('Serial number') . '</th>';
+	}
+	if ($show_state) {
+		echo '<th>' . __('Status') . '</th>';
 	}
 	if ($has_comments) {
 		echo '<th>' . __('Comments') . '</th>';
@@ -118,6 +122,9 @@ footer
 			echo '<td>' . ($otherserial[$key] ?? '') . '</td>';
 		} else {
 			echo '<td>' . $serial_val . '</td>';
+		}
+		if ($show_state) {
+			echo '<td>' . htmlspecialchars($state_name[$key] ?? '') . '</td>';
 		}
 		if ($has_comments) {
 			echo '<td>' . ($comments[$key] ?? '') . '</td>';
