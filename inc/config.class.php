@@ -90,7 +90,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
     }
 
     static function showConfigs() {
-        global $DB;
+        global $DB, $CFG_GLPI;
+        $action = $CFG_GLPI['root_doc'] . '/plugins/protocolsmanager/front/config.form.php';
 
         $has_rows = false;
         $rows     = [];
@@ -135,17 +136,23 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             $email_badge = $email_mode == 1
                 ? '<span class="badge bg-success">ON</span>'
                 : '<span class="badge border border-secondary text-secondary">OFF</span>';
-            $default_badge = $is_default
-                ? ' <span class="badge bg-primary ms-1">' . __('Default') . '</span>'
+            $star_icon = $is_default
+                ? '<i class="ti ti-star-filled text-warning ms-1"></i>'
                 : '';
 
             echo '<tr>';
             echo "<td>$i</td>";
-            echo '<td>' . htmlspecialchars($conf['name'] ?? '') . $default_badge . '</td>';
+            echo '<td>' . htmlspecialchars($conf['name'] ?? '') . $star_icon . '</td>';
             echo '<td>' . htmlspecialchars($conf['font'] ?? '') . '</td>';
             echo '<td>' . htmlspecialchars($conf['orientation'] ?? '') . '</td>';
             echo "<td>$email_badge</td>";
-            echo '<td>';
+            $star_btn_class = $is_default ? 'btn-warning' : 'btn-outline-secondary';
+            $star_btn_icon  = $is_default ? 'ti-star-filled' : 'ti-star';
+            $toggle_url = $action . '?toggle_default=1&id=' . $id . '&_glpi_csrf_token=' . Session::getNewCSRFToken();
+            echo '<td class="text-nowrap">';
+            echo "<a href='" . htmlspecialchars($toggle_url) . "' class='btn btn-sm $star_btn_class me-1'"
+                . " title='" . ($is_default ? __('Unset default') : __('Set as default')) . "'>"
+                . "<i class='ti $star_btn_icon'></i></a>";
             echo "<button type='button' class='btn btn-sm btn-outline-secondary me-1 btn-edit-template'"
                 . " data-id='$id'"
                 . " data-name='$name'"
@@ -163,7 +170,6 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
                 . " data-email-mode='$email_mode'"
                 . " data-email-template='$email_template'"
                 . " data-logo='$logo'"
-                . " data-is-default='$is_default'"
                 . " data-bs-toggle='modal' data-bs-target='#modal-template'>"
                 . "<i class='ti ti-edit'></i></button>";
             echo "<button type='button' class='btn btn-sm btn-outline-danger btn-delete'"
@@ -347,11 +353,6 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<label class="form-check-label" for="man-mode-2">' . __('Separate columns') . '</label></div>';
         echo '</div>';
 
-        echo '<div class="col-md-4 d-flex align-items-end pb-1">';
-        echo '<div class="form-check">';
-        echo '<input class="form-check-input" type="checkbox" name="is_default" id="tpl-is-default" value="1">';
-        echo '<label class="form-check-label" for="tpl-is-default">' . __('Default template') . '</label>';
-        echo '</div></div>';
 
         echo '<div class="col-md-6">';
         $logo_tip = htmlspecialchars('PNG or JPEG, max ~2 MB. Displayed at full width at the top of the document, height fixed at 20 mm.');
@@ -583,7 +584,6 @@ document.addEventListener('DOMContentLoaded', function () {
             li.textContent = ''; li.dataset.logo = '';
             document.getElementById('tpl-logo-delete-wrap').style.display = 'none';
             document.getElementById('tpl-img-delete').checked = false;
-            document.getElementById('tpl-is-default').checked = false;
         });
     }
 
@@ -625,7 +625,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 logoWrap.style.display = 'none';
             }
             document.getElementById('tpl-img-delete').checked = false;
-            document.getElementById('tpl-is-default').checked = d.isDefault === '1';
         });
     });
 
@@ -759,12 +758,6 @@ JS;
         $email_mode            = $_POST["email_mode"];
         $email_template        = $_POST["email_template"];
         $header_color          = $_POST["header_color"];
-        $is_default            = isset($_POST["is_default"]) ? 1 : 0;
-
-        if ($is_default) {
-            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], [true]);
-        }
-
         $full_img_name = null;
         if (!empty($_FILES['logo']['name'])) {
             $full_img_name = self::uploadImage();
@@ -785,7 +778,6 @@ JS;
             'email_mode'     => $email_mode,
             'email_template' => $email_template,
             'header_color'   => $header_color,
-            'is_default'     => $is_default,
         ];
 
         if ($mode === 0) {
@@ -857,6 +849,20 @@ JS;
             }
         }
         return null;
+    }
+
+    static function toggleDefault(int $id) {
+        global $DB;
+        $current = 0;
+        foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'WHERE' => ['id' => $id], 'FIELDS' => ['is_default']]) as $row) {
+            $current = (int)$row['is_default'];
+        }
+        if ($current) {
+            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], ['id' => $id]);
+        } else {
+            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], [true]);
+            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 1], ['id' => $id]);
+        }
     }
 
     static function deleteConfigs() {

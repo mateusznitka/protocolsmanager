@@ -76,12 +76,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<div class='col-md-4'>";
 			echo "<label class='form-label'>".__('Template')."</label>";
 			echo "<select name='list' class='form-select'>";
-				foreach ($doc_types = $DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'FIELDS' => ['glpi_plugin_protocolsmanager_configs' => ['id', 'name']]]) as $uid => $list) {
-					echo '<option value="';
-					echo $list["id"];
-					echo '">';
-					echo $list["name"];
-					echo '</option>';
+				foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'FIELDS' => ['id', 'name', 'is_default']]) as $list) {
+					$selected = !empty($list['is_default']) ? ' selected' : '';
+					echo '<option value="' . (int)$list['id'] . '"' . $selected . '>'
+						. htmlspecialchars($list['name']) . '</option>';
 				}
 			echo "</select>";
 			echo "</div>";
