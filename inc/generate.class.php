@@ -31,6 +31,23 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		static function checkRights() {
 			return Session::haveRight('plugin_protocolsmanager_tab', READ);
 		}
+
+		// Copies TTF font files to a writable cache dir and returns the dir path.
+		// php-font-lib writes .ufm metrics alongside TTF files, so FontDir must be writable.
+		static function prepareFontDir() {
+			$src = GLPI_ROOT . '/plugins/protocolsmanager/fonts/';
+			$dst = GLPI_UPLOAD_DIR . '/protocolsmanager/fonts/';
+			if (!is_dir($dst)) {
+				mkdir($dst, 0755, true);
+			}
+			foreach (glob($src . '*.ttf') as $ttf) {
+				$target = $dst . basename($ttf);
+				if (!file_exists($target)) {
+					copy($ttf, $target);
+				}
+			}
+			return $dst;
+		}
 		
 		
 		//show plugin content
@@ -451,7 +468,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			include dirname(__FILE__).'/template.php';
 			$html = ob_get_clean();
 
-			$fd = GLPI_ROOT . '/plugins/protocolsmanager/fonts/';
+			$fd = self::prepareFontDir();
 			$html = str_replace('</head>', "<style>
 				@font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Regular.ttf');font-weight:normal;}
 				@font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Bold.ttf');font-weight:bold;}
@@ -459,15 +476,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				@font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Bold.ttf');font-weight:bold;}
 			</style></head>", $html);
 
-			$font_cache_dir = GLPI_UPLOAD_DIR . '/protocolsmanager/';
-			if (!is_dir($font_cache_dir)) {
-				mkdir($font_cache_dir, 0755, true);
-			}
+			$font_cache_dir = $fd;
 			$options = new Options();
 			$options->set('defaultFont', $font);
-			$options->setChroot(GLPI_ROOT);
-			$options->setFontDir(GLPI_ROOT . '/plugins/protocolsmanager/fonts/');
-			$options->setFontCache($font_cache_dir);
+			$options->setChroot('/');
+			$options->setFontDir($fd);
+			$options->setFontCache($fd);
 			$html2pdf = new Dompdf($options);
 			$html2pdf->loadHtml($html);
 			$html2pdf->setPaper('A4', $orientation);

@@ -1,77 +1,37 @@
 <?php
-	
-	include ('../../../inc/includes.php');
-	
-	Session::haveRight("config", UPDATE);
-	
-	Html::header(PluginProtocolsmanagerConfig::getTypeName(1),
-               $_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");
-			   
-	$PluginProtocolsmanagerConfig = new PluginProtocolsmanagerConfig();
-	
-	if (isset($_REQUEST['save'])) {
-		$PluginProtocolsmanagerConfig::saveConfigs();
-		$_SESSION['menu_mode'] = 't';
-		Html::back();
-		unset($_SESSION["menu_mode"]);
-	}	
-	
-	if (isset($_REQUEST['delete'])) {
-		$PluginProtocolsmanagerConfig::deleteConfigs();
-		$_SESSION['menu_mode'] = 't';
-		Html::back();
-		unset($_SESSION["menu_mode"]);
-	}
 
-	if (isset($_REQUEST['save_email'])) {
-		$PluginProtocolsmanagerConfig::saveEmailConfigs();
-		$_SESSION['menu_mode'] = 'e';
-		Html::back();
-		unset($_SESSION["menu_mode"]);
-	}	
-	
-	if (isset($_REQUEST['delete_email'])) {
-		$PluginProtocolsmanagerConfig::deleteEmailConfigs();
-		$_SESSION['menu_mode'] = 'e';
-		Html::back();
-		unset($_SESSION["menu_mode"]);
-	}	
-	
-	if (isset($_REQUEST['cancel'])) {
-		$_SESSION['menu_mode'] = 't';
-		Html::back();
-		unset($_SESSION["menu_mode"]);
-	}	
-	
-	if (isset($_REQUEST['cancel_email'])) {
-		$_SESSION['menu_mode'] = 'e';
-		Html::back();
-		unset($_SESSION["menu_mode"]);
-	}
-	
+include('../../../inc/includes.php');
 
-	
-	$PluginProtocolsmanagerConfig->showFormProtocolsmanager();
-	unset($_SESSION["menu_mode"]);
-	
-	
-?>
+Session::haveRight("config", UPDATE);
 
-<script>
+Html::header(PluginProtocolsmanagerConfig::getTypeName(1),
+             $_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");
 
-/* $(function(){
-	$("#template_button").click(function(){
-		$("#template_settings").show();
-		$("#show_configs").show();
-		$("#email_settings").hide();
-		$("#show_emailconfigs").hide();
-	});	
-	$("#email_button").click(function(){
-		$("#template_settings").hide();
-		$("#show_configs").hide();
-		$("#email_settings").show();
-		$("#show_emailconfigs").show();
-	});
-});	*/
+$PluginProtocolsmanagerConfig = new PluginProtocolsmanagerConfig();
 
-</script>
+global $CFG_GLPI;
+$base_url = $CFG_GLPI['root_doc'] . '/plugins/protocolsmanager/front/config.form.php';
+
+if (!empty($_REQUEST['save'])) {
+    $PluginProtocolsmanagerConfig::saveConfigs();
+    Html::redirect($base_url);
+}
+
+if (!empty($_REQUEST['delete'])) {
+    $PluginProtocolsmanagerConfig::deleteConfigs();
+    Html::redirect($base_url);
+}
+
+if (!empty($_REQUEST['save_email'])) {
+    $PluginProtocolsmanagerConfig::saveEmailConfigs();
+    Html::redirect($base_url . '?tab=email');
+}
+
+if (!empty($_REQUEST['delete_email'])) {
+    $PluginProtocolsmanagerConfig::deleteEmailConfigs();
+    Html::redirect($base_url . '?tab=email');
+}
+
+$PluginProtocolsmanagerConfig->showFormProtocolsmanager();
+
+Html::footer();

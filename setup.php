@@ -14,6 +14,19 @@ function plugin_version_protocolsmanager() {
 function plugin_protocolsmanager_check_config() {
     return true;
 }
+
+function plugin_protocolsmanager_getMenuContent() {
+    global $CFG_GLPI;
+    $page = $CFG_GLPI['root_doc'] . '/plugins/protocolsmanager/front/config.form.php';
+    return [
+        'title' => 'Protocols Manager',
+        'icon'  => 'ti ti-file-description',
+        'page'  => $page,
+        'links' => [
+            'search' => $page,
+        ],
+    ];
+}
  
 
 function plugin_protocolsmanager_check_prerequisites() {
@@ -28,8 +41,8 @@ function plugin_init_protocolsmanager() {
 	global $PLUGIN_HOOKS;
 
 	$PLUGIN_HOOKS['csrf_compliant']['protocolsmanager'] = true;
-	
-	$PLUGIN_HOOKS['config_page']['protocolsmanager'] = 'front/config.form.php';
+	$PLUGIN_HOOKS['config_page']['protocolsmanager']   = 'front/config.form.php';
+	$PLUGIN_HOOKS['menu_toadd']['protocolsmanager']    = ['config' => 'PluginProtocolsmanagerConfig'];
    
     Plugin::registerClass('PluginProtocolsmanagerGenerate', ['addtabon' => ['User']]);
     Plugin::registerClass('PluginProtocolsmanagerProfile', ['addtabon' => ['Profile']]);
