@@ -14,7 +14,7 @@ footer
 }
 #items
 {
-	border: solid 0.5px black; width:100%; position: relative; table-layout: auto;
+	border: solid 0.5px black; width:100%; position: relative; table-layout: <?php echo ($breakword == 1) ? 'fixed' : 'auto'; ?>;
 }
 
 #items th
@@ -25,9 +25,9 @@ footer
 #items td
 {
 	border: solid 0.5px black; padding: 2px;
-	<?php 
+	<?php
 	if ($breakword == 1) {
-		echo 'word-wrap: break-word;';
+		echo 'word-wrap: break-word; overflow-wrap: break-word;';
 	}
 	?>
 }
@@ -66,150 +66,67 @@ footer
 </table>
 <br>
 <table id="items" cellspacing="0">
-<?php 
+<?php
+	$man_mode    = $man_mode    ?? 1;
+	$lp_th_attr  = ($breakword == 1) ? ' style="width:5%"' : '';
+	$has_comments = !empty(array_filter($comments));
+
 	if (!empty($number)) :
-	//if no comments, there is no comments column
-	if (empty(array_filter($comments))) {
-		
-		//if serial and inventory in different columns
-		if ($serial_mode == 1) {
-			
-			echo '<tr>
-				<th></th>
-				<th>'; 
-				echo __('Type');
-				echo "</th><th>"; 
-				echo __('Model');
-				echo "</th><th>";
-				echo __('Name');				
-				echo "</th><th>"; 
-				echo __('Serial number'); 
-				echo "</th><th>";
-				echo __('Inventory number'); 
-				echo "</th>
-			</tr>";
-			
-			$lp = 1;
-			foreach ($number as $key) {
-				if (isset($type_name[$key])) {
-				echo '<tr><td>'. $lp . '</td>';
-				echo '<td>' . ($type_name[$key] ?? '') .'</td>';
-				echo '<td>'. ($man_name[$key] ?? '') .' '. ($mod_name[$key] ?? ''). '</td>';
-				echo '<td>' .($item_name[$key] ?? '') .'</td>';
-				echo '<td>'. ($serial[$key] ?? '') .'</td>';
-				echo '<td>'. ($otherserial[$key] ?? '') .'</td></tr>';
-				}
-				$lp++;
-			}
-		}
 
-		//if serial and inventory in one column
-		if ($serial_mode == 2) {
-			
-			echo "<tr>
-				<th></th>
-				<th>"; 
-				echo __('Type');
-				echo "</th><th>"; 
-				echo __('Model'); 
-				echo "</th><th>"; 
-				echo __('Name'); 
-				echo "</th><th>";
-				echo __('Serial number');
-				echo "</th>
-			</tr>";
-			
-			$lp = 1;
-			foreach ($number as $key) {
-				if (empty($serial[$key])) {
-					$serial[$key]=$otherserial[$key];
-				} //if no serial, get inventory number
-				if (isset($type_name[$key])){
-				echo '<tr><td>'. $lp .'</td>';
-				echo '<td>'. $type_name[$key] .'</td>';
-				echo '<td>'. $man_name[$key] .' '. $mod_name[$key]. '</td>';
-				echo '<td>'. $item_name[$key] .'</td>';
-				echo '<td>'. $serial[$key] .'</td></tr>';
-				}
-				$lp++;
-			}
-		}
-
+	// Build header
+	echo '<tr><th' . $lp_th_attr . '></th>';
+	echo '<th>' . __('Type') . '</th>';
+	if ($man_mode == 2) {
+		echo '<th>' . __('Manufacturer') . '</th>';
+		echo '<th>' . __('Model') . '</th>';
+	} else {
+		echo '<th>' . __('Model') . '</th>';
 	}
-	else {
-		//if at least one comment, there will be comment column
-		if ($serial_mode == 1) {
-			
-			echo "<tr>
-				<th></th>
-				<th>"; 
-				echo __('Type');
-				echo "</th><th>"; 
-				echo __('Model'); 
-				echo "</th><th>"; 
-				echo __('Name'); 
-				echo "</th><th>"; 
-				echo __('Serial number'); 
-				echo "</th><th>";
-				echo __('Inventory number'); 
-				echo "</th><th>";
-				echo __('Comments'); 
-				echo "</th>
-			</tr>";
-			
-			$lp = 1;
-			foreach ($number as $key){
-				if (isset($type_name[$key])){
-				echo '<tr><td>'. $lp . '</td>';
-				echo '<td>'. ($type_name[$key] ?? '') .'</td>';
-				echo '<td>'. ($man_name[$key] ?? '') .' '. ($mod_name[$key] ?? ''). '</td>';
-				echo '<td>'. ($item_name[$key] ?? '') .'</td>';
-				echo '<td>' . ($serial[$key] ?? '') .'</td>';
-				echo '<td>'. ($otherserial[$key] ?? '') .'</td>';
-				echo '<td>'. ($comments[$key] ?? '') .'</td></tr>';
-				}
-				$lp++;
-			}
-		}
-
-		if ($serial_mode == 2) {
-			
-			echo "<tr>
-				<th></th>
-				<th>"; 
-				echo __('Type');
-				echo "</th><th>"; 
-				echo __('Model'); 
-				echo "</th><th>"; 
-				echo __('Name'); 
-				echo "</th><th>";
-				echo __('Serial number'); 
-				echo "</th><th>";
-				echo __('Comments'); 
-				echo "</th>
-			</tr>";
-			
-			$lp = 1;
-			foreach ($number as $key){
-				if (empty($serial[$key])) {
-					$serial[$key]=$otherserial[$key];
-				} //if no serial, get inventory number
-				if (isset($type_name[$key])){
-				echo '<tr><td>'. $lp . '</td>';
-				echo '<td>'. ($type_name[$key] ?? '') .'</td>';
-				echo '<td>'. ($man_name[$key] ?? '') .' '. ($mod_name[$key] ?? ''). '</td>';
-				echo '<td>'. ($item_name[$key] ?? '') .'</td>';
-				echo '<td>' . ($serial[$key] ?? '') .'</td>';
-				echo '<td>'. ($comments[$key] ?? '') .'</td></tr>';
-				}
-				$lp++;
-			}
-		}
-
+	echo '<th>' . __('Name') . '</th>';
+	if ($serial_mode == 1) {
+		echo '<th>' . __('Serial number') . '</th>';
+		echo '<th>' . __('Inventory number') . '</th>';
+	} else {
+		echo '<th>' . __('Serial number') . '</th>';
 	}
+	if ($has_comments) {
+		echo '<th>' . __('Comments') . '</th>';
+	}
+	echo '</tr>';
+
+	// Build rows
+	$lp = 1;
+	foreach ($number as $key) {
+		if (!isset($type_name[$key])) { $lp++; continue; }
+
+		$serial_val = $serial[$key] ?? '';
+		if ($serial_mode == 2 && empty($serial_val)) {
+			$serial_val = $otherserial[$key] ?? '';
+		}
+
+		echo '<tr><td>' . $lp . '</td>';
+		echo '<td>' . ($type_name[$key] ?? '') . '</td>';
+		if ($man_mode == 2) {
+			echo '<td>' . ($man_name[$key] ?? '') . '</td>';
+			echo '<td>' . ($mod_name[$key] ?? '') . '</td>';
+		} else {
+			echo '<td>' . ($man_name[$key] ?? '') . ' ' . ($mod_name[$key] ?? '') . '</td>';
+		}
+		echo '<td>' . ($item_name[$key] ?? '') . '</td>';
+		if ($serial_mode == 1) {
+			echo '<td>' . ($serial[$key] ?? '') . '</td>';
+			echo '<td>' . ($otherserial[$key] ?? '') . '</td>';
+		} else {
+			echo '<td>' . $serial_val . '</td>';
+		}
+		if ($has_comments) {
+			echo '<td>' . ($comments[$key] ?? '') . '</td>';
+		}
+		echo '</tr>';
+		$lp++;
+	}
+
 	endif;
-
-
 ?>
 </table>
 

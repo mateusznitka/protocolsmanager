@@ -1,3 +1,5 @@
 vendor/
 CHANGELOG.md
 notes.md
+fonts/*_*.ttf
+fonts/*.ufm

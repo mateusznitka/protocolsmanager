@@ -293,7 +293,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$header2 .= "<th class='text-uppercase'>".__('Date')."</th>";
 				$header2 .= "<th class='text-uppercase'>".__('File')."</th>";
 				$header2 .= "<th class='text-uppercase'>".__('Creator')."</th>";
-				$header2 .= "<th class='text-uppercase'>".__('Comment')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Note')."</th>";
 				$header2 .= "<th class='text-uppercase'>".__('Send email')."</th></tr>";
 				echo $header2;
 				echo "</thead><tbody>";
@@ -404,6 +404,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$fontsize = $row["fontsize"];
 				$city = $row["city"];
 				$serial_mode = $row["serial_mode"];
+				$man_mode    = $row["man_mode"] ?? 1;
 				$orientation = $row["orientation"];
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];

@@ -119,24 +119,29 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             $font           = htmlspecialchars($conf['font']           ?? '', ENT_QUOTES);
             $fontsize       = htmlspecialchars($conf['fontsize']       ?? '9', ENT_QUOTES);
             $header_color   = htmlspecialchars($conf['header_color']   ?? '#dee2e6', ENT_QUOTES);
-            $breakword      = (int)($conf['breakword']      ?? 1);
+            $breakword      = (int)($conf['breakword']      ?? 0);
             $city           = htmlspecialchars($conf['city']           ?? '', ENT_QUOTES);
             $orientation    = htmlspecialchars($conf['orientation']    ?? 'Portrait', ENT_QUOTES);
             $serial_mode    = (int)($conf['serial_mode']    ?? 1);
+            $man_mode       = (int)($conf['man_mode']       ?? 1);
             $upper_content  = htmlspecialchars($conf['upper_content']  ?? '', ENT_QUOTES);
             $content        = htmlspecialchars($conf['content']        ?? '', ENT_QUOTES);
             $footer         = htmlspecialchars($conf['footer']         ?? '', ENT_QUOTES);
             $email_mode     = (int)($conf['email_mode']     ?? 2);
             $email_template = (int)($conf['email_template'] ?? 0);
             $logo           = htmlspecialchars($conf['logo']           ?? '', ENT_QUOTES);
+            $is_default     = (int)($conf['is_default']     ?? 0);
 
             $email_badge = $email_mode == 1
                 ? '<span class="badge bg-success">ON</span>'
                 : '<span class="badge border border-secondary text-secondary">OFF</span>';
+            $default_badge = $is_default
+                ? ' <span class="badge bg-primary ms-1">' . __('Default') . '</span>'
+                : '';
 
             echo '<tr>';
             echo "<td>$i</td>";
-            echo '<td>' . htmlspecialchars($conf['name'] ?? '') . '</td>';
+            echo '<td>' . htmlspecialchars($conf['name'] ?? '') . $default_badge . '</td>';
             echo '<td>' . htmlspecialchars($conf['font'] ?? '') . '</td>';
             echo '<td>' . htmlspecialchars($conf['orientation'] ?? '') . '</td>';
             echo "<td>$email_badge</td>";
@@ -151,12 +156,14 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
                 . " data-city='$city'"
                 . " data-orientation='$orientation'"
                 . " data-serial-mode='$serial_mode'"
+                . " data-man-mode='$man_mode'"
                 . " data-upper-content='$upper_content'"
                 . " data-content='$content'"
                 . " data-footer='$footer'"
                 . " data-email-mode='$email_mode'"
                 . " data-email-template='$email_template'"
                 . " data-logo='$logo'"
+                . " data-is-default='$is_default'"
                 . " data-bs-toggle='modal' data-bs-target='#modal-template'>"
                 . "<i class='ti ti-edit'></i></button>";
             echo "<button type='button' class='btn btn-sm btn-outline-danger btn-delete'"
@@ -305,17 +312,21 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '</div>';
 
         echo '<div class="col-md-4">';
-        echo '<label class="form-label d-block">' . __('Word breaking') . '</label>';
+        $breakword_tip = htmlspecialchars('On: long words wrap inside cells, column widths are fixed (equal share). Off: column widths adjust to content dynamically.');
+        echo '<label class="form-label d-block">' . __('Word breaking')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $breakword_tip . '"></i></label>';
         echo '<div class="form-check form-check-inline">';
-        echo '<input class="form-check-input" type="radio" name="breakword" id="breakword-on" value="1" checked>';
+        echo '<input class="form-check-input" type="radio" name="breakword" id="breakword-on" value="1">';
         echo '<label class="form-check-label" for="breakword-on">On</label></div>';
         echo '<div class="form-check form-check-inline">';
-        echo '<input class="form-check-input" type="radio" name="breakword" id="breakword-off" value="0">';
+        echo '<input class="form-check-input" type="radio" name="breakword" id="breakword-off" value="0" checked>';
         echo '<label class="form-check-label" for="breakword-off">Off</label></div>';
         echo '</div>';
 
         echo '<div class="col-md-4">';
-        echo '<label class="form-label d-block">' . __('Serial number') . '</label>';
+        $serial_tip = htmlspecialchars('Separate columns: serial number and inventory number in separate columns. One column: shows serial number, or inventory number if serial is missing.');
+        echo '<label class="form-label d-block">' . __('Serial number') . ' / ' . __('Inventory number')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $serial_tip . '"></i></label>';
         echo '<div class="form-check form-check-inline">';
         echo '<input class="form-check-input" type="radio" name="serial_mode" id="serial-mode-1" value="1" checked>';
         echo '<label class="form-check-label" for="serial-mode-1">' . __('Separate columns') . '</label></div>';
@@ -323,6 +334,35 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<input class="form-check-input" type="radio" name="serial_mode" id="serial-mode-2" value="2">';
         echo '<label class="form-check-label" for="serial-mode-2">' . __('One column') . '</label></div>';
         echo '</div>';
+
+        echo '<div class="col-md-4">';
+        $man_tip = htmlspecialchars('One column: manufacturer and model shown together (e.g. "Dell OptiPlex 7090"). Separate columns: manufacturer and model in separate columns.');
+        echo '<label class="form-label d-block">' . __('Manufacturer') . ' / ' . __('Model')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $man_tip . '"></i></label>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="man_mode" id="man-mode-1" value="1" checked>';
+        echo '<label class="form-check-label" for="man-mode-1">' . __('One column') . '</label></div>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="man_mode" id="man-mode-2" value="2">';
+        echo '<label class="form-check-label" for="man-mode-2">' . __('Separate columns') . '</label></div>';
+        echo '</div>';
+
+        echo '<div class="col-md-4 d-flex align-items-end pb-1">';
+        echo '<div class="form-check">';
+        echo '<input class="form-check-input" type="checkbox" name="is_default" id="tpl-is-default" value="1">';
+        echo '<label class="form-check-label" for="tpl-is-default">' . __('Default template') . '</label>';
+        echo '</div></div>';
+
+        echo '<div class="col-md-6">';
+        $logo_tip = htmlspecialchars('PNG or JPEG, max ~2 MB. Displayed at full width at the top of the document, height fixed at 20 mm.');
+        echo '<label class="form-label">' . __('Logo')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $logo_tip . '"></i></label>';
+        echo '<input type="file" class="form-control" name="logo" id="tpl-logo" accept="image/png,image/jpeg">';
+        echo '<div class="mt-1 small text-muted" id="tpl-logo-info"></div>';
+        echo '<div class="form-check mt-1" id="tpl-logo-delete-wrap" style="display:none">';
+        echo '<input class="form-check-input" type="checkbox" name="img_delete" id="tpl-img-delete" value="1">';
+        echo '<label class="form-check-label text-danger" for="tpl-img-delete">' . __('Delete') . ' ' . __('File') . '</label>';
+        echo '</div></div>';
 
         echo '</div>'; // row basic
 
@@ -337,40 +377,38 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<input type="text" class="form-control" name="city" id="tpl-city">';
         echo '</div>';
 
+        $ph_tip = htmlspecialchars('{cur_date} — current date, {owner} — asset owner name, {admin} — logged-in user name');
+
         echo '<div class="col-12">';
-        echo '<label class="form-label">' . __('Upper Content') . '</label>';
+        echo '<label class="form-label">' . __('Upper Content')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $ph_tip . '"></i></label>';
         echo '<textarea class="form-control" name="template_uppercontent" id="tpl-upper-content" rows="3"></textarea>';
         echo '</div>';
 
         echo '<div class="col-12">';
-        echo '<label class="form-label">' . __('Content') . '</label>';
+        echo '<label class="form-label">' . __('Content')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $ph_tip . '"></i></label>';
         echo '<textarea class="form-control" name="template_content" id="tpl-content" rows="3"></textarea>';
         echo '</div>';
 
         echo '<div class="col-12">';
-        echo '<label class="form-label">' . __('Footer') . '</label>';
+        echo '<label class="form-label">' . __('Footer')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $ph_tip . '"></i></label>';
         echo '<textarea class="form-control" name="footer_text" id="tpl-footer" rows="2"></textarea>';
         echo '</div>';
 
         echo '</div>'; // row content
 
-        // ── Section: Logo & Email ──────────────────────────────────
+        // ── Section: Email ─────────────────────────────────────────
         echo '<div class="d-flex align-items-center gap-2 mb-3">'
-            . '<small class="text-uppercase fw-semibold text-secondary text-nowrap">' . __('Logo and email') . '</small>'
+            . '<small class="text-uppercase fw-semibold text-secondary text-nowrap">' . __('Email') . '</small>'
             . '<hr class="flex-grow-1 m-0"></div>';
         echo '<div class="row g-3">';
 
-        echo '<div class="col-12">';
-        echo '<label class="form-label">' . __('Logo') . '</label>';
-        echo '<input type="file" class="form-control" name="logo" id="tpl-logo" accept="image/png,image/jpeg">';
-        echo '<div class="mt-1 small text-muted" id="tpl-logo-info"></div>';
-        echo '<div class="form-check mt-1" id="tpl-logo-delete-wrap" style="display:none">';
-        echo '<input class="form-check-input" type="checkbox" name="img_delete" id="tpl-img-delete" value="1">';
-        echo '<label class="form-check-label text-danger" for="tpl-img-delete">' . __('Delete') . ' ' . __('File') . '</label>';
-        echo '</div></div>';
-
         echo '<div class="col-md-6">';
-        echo '<label class="form-label d-block">' . __('Enable email autosending') . '</label>';
+        $email_tip = htmlspecialchars('When ON, an email is automatically sent after generating the protocol, using the selected email template below.');
+        echo '<label class="form-label d-block">' . __('Enable email autosending')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $email_tip . '"></i></label>';
         echo '<div class="form-check form-check-inline">';
         echo '<input class="form-check-input" type="radio" name="email_mode" id="email-mode-on" value="1">';
         echo '<label class="form-check-label" for="email-mode-on">ON</label></div>';
@@ -530,10 +568,11 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('tpl-font').value        = 'DejaVu Sans';
             document.getElementById('tpl-fontsize').value    = '9';
             document.getElementById('tpl-header-color').value = '#dee2e6';
-            var bw1 = document.getElementById('breakword-on');  if (bw1) bw1.checked = true;
+            var bw0 = document.getElementById('breakword-off'); if (bw0) bw0.checked = true;
             document.getElementById('tpl-city').value        = '';
             var op = document.getElementById('orientation-portrait'); if (op) op.checked = true;
             var sm1 = document.getElementById('serial-mode-1'); if (sm1) sm1.checked = true;
+            var mm1 = document.getElementById('man-mode-1'); if (mm1) mm1.checked = true;
             document.getElementById('tpl-upper-content').value = '';
             document.getElementById('tpl-content').value     = '';
             document.getElementById('tpl-footer').value      = '';
@@ -544,6 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
             li.textContent = ''; li.dataset.logo = '';
             document.getElementById('tpl-logo-delete-wrap').style.display = 'none';
             document.getElementById('tpl-img-delete').checked = false;
+            document.getElementById('tpl-is-default').checked = false;
         });
     }
 
@@ -564,6 +604,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (ori) ori.checked = true;
             var sm = document.querySelector('input[name="serial_mode"][value="' + d.serialMode + '"]');
             if (sm) sm.checked = true;
+            var mm = document.querySelector('input[name="man_mode"][value="' + d.manMode + '"]');
+            if (mm) mm.checked = true;
             document.getElementById('tpl-upper-content').value = d.upperContent;
             document.getElementById('tpl-content').value     = d.content;
             document.getElementById('tpl-footer').value      = d.footer;
@@ -583,6 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 logoWrap.style.display = 'none';
             }
             document.getElementById('tpl-img-delete').checked = false;
+            document.getElementById('tpl-is-default').checked = d.isDefault === '1';
         });
     });
 
@@ -629,6 +672,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var bw  = document.querySelector('input[name="breakword"]:checked');
             var ori = document.querySelector('input[name="orientation"]:checked');
             var sm  = document.querySelector('input[name="serial_mode"]:checked');
+            var mm  = document.querySelector('input[name="man_mode"]:checked');
             var logoInfo = document.getElementById('tpl-logo-info');
 
             var payload = {
@@ -636,10 +680,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 font:                  document.getElementById('tpl-font').value,
                 fontsize:              document.getElementById('tpl-fontsize').value,
                 header_color:          document.getElementById('tpl-header-color').value,
-                breakword:             bw  ? bw.value  : '1',
+                breakword:             bw  ? bw.value  : '0',
                 city:                  document.getElementById('tpl-city').value,
                 orientation:           ori ? ori.value : 'Portrait',
                 serial_mode:           sm  ? sm.value  : '1',
+                man_mode:              mm  ? mm.value  : '1',
                 template_uppercontent: document.getElementById('tpl-upper-content').value,
                 template_content:      document.getElementById('tpl-content').value,
                 footer_text:           document.getElementById('tpl-footer').value,
@@ -708,11 +753,17 @@ JS;
         $city                  = $_POST["city"];
         $mode                  = (int) $_POST["mode"];
         $serial_mode           = $_POST["serial_mode"];
+        $man_mode              = (int)($_POST["man_mode"] ?? 1);
         $orientation           = $_POST["orientation"];
         $breakword             = $_POST["breakword"];
         $email_mode            = $_POST["email_mode"];
         $email_template        = $_POST["email_template"];
         $header_color          = $_POST["header_color"];
+        $is_default            = isset($_POST["is_default"]) ? 1 : 0;
+
+        if ($is_default) {
+            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], [true]);
+        }
 
         $full_img_name = null;
         if (!empty($_FILES['logo']['name'])) {
@@ -728,11 +779,13 @@ JS;
             'fontsize'       => $fontsize,
             'city'           => $city,
             'serial_mode'    => $serial_mode,
+            'man_mode'       => $man_mode,
             'orientation'    => $orientation,
             'breakword'      => $breakword,
             'email_mode'     => $email_mode,
             'email_template' => $email_template,
             'header_color'   => $header_color,
+            'is_default'     => $is_default,
         ];
 
         if ($mode === 0) {
