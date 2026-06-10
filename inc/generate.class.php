@@ -616,11 +616,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 
 			if ($send_user == 1) {
-				$nmail->addAddress($owner_email);
+				$nmail->addAddress($owner_email, '');
 			}
 
 			foreach($recipients_array as $recipient) {
-				$nmail->addAddress($recipient);
+				$nmail->addAddress(trim($recipient), '');
 			}
 
 			$nmail->Subject = $email_subject;
@@ -700,14 +700,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 			
 			if ($send_user == 1) {
-				$nmail->addAddress($owner_email);
-			}			
-			
+				$nmail->addAddress($owner_email, '');
+			}
+
 			foreach($recipients_array as $recipient) {
-				
-				$nmail->addAddress($recipient); //do konfiguracji
-			}			
-			
+				$nmail->addAddress(trim($recipient), '');
+			}
+
 			$path = '';
 			$filename = '';
 			foreach ($DB->request(['FROM' => 'glpi_documents', 'WHERE' => ['id' => $doc_id]]) as $row) {
