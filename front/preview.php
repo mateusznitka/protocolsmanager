@@ -20,6 +20,7 @@ $breakword    = isset($_POST['breakword'])       ? (int)$_POST['breakword'] : 1;
 $city         = !empty($_POST['city'])           ? $_POST['city']         : '';
 $orientation  = !empty($_POST['orientation'])    ? $_POST['orientation']  : 'Portrait';
 $serial_mode  = !empty($_POST['serial_mode'])    ? (int)$_POST['serial_mode'] : 1;
+$man_mode     = !empty($_POST['man_mode'])       ? (int)$_POST['man_mode']    : 1;
 $title        = !empty($_POST['template_name'])  ? nl2br(htmlspecialchars($_POST['template_name'])) : 'Preview';
 $upper_content = !empty($_POST['template_uppercontent']) ? nl2br($_POST['template_uppercontent']) : '';
 $content      = !empty($_POST['template_content'])       ? nl2br($_POST['template_content'])      : '';

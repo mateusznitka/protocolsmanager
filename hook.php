@@ -22,6 +22,7 @@ function plugin_protocolsmanager_install() {
 			footer text,
 			city varchar(255),
 			serial_mode int,
+			man_mode int NOT NULL DEFAULT 1,
 			column1 varchar(255),
 			column2 varchar(255),
 			orientation varchar(10),
@@ -30,6 +31,7 @@ function plugin_protocolsmanager_install() {
 			email_template int,
 			upper_content text,
 			header_color varchar(7),
+			is_default tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id)
 		) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
@@ -41,10 +43,12 @@ function plugin_protocolsmanager_install() {
 			'footer'       => "Example Company \n Example Street 21 \n 01-234 Example City",
 			'city'         => 'Example city',
 			'serial_mode'  => 1,
+			'man_mode'     => 1,
 			'orientation'  => 'Portrait',
-			'breakword'    => 1,
+			'breakword'    => 0,
 			'email_mode'   => 2,
 			'header_color' => '#dee2e6',
+			'is_default'   => 0,
 		]);
 	}
 
