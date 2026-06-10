@@ -32,6 +32,11 @@ if (!empty($_REQUEST['delete_email'])) {
     Html::redirect($base_url . '?tab=email');
 }
 
+if (!empty($_REQUEST['toggle_default'])) {
+    $PluginProtocolsmanagerConfig::toggleDefault((int)$_REQUEST['id']);
+    Html::redirect($base_url);
+}
+
 $PluginProtocolsmanagerConfig->showFormProtocolsmanager();
 
 Html::footer();
