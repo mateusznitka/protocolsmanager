@@ -132,6 +132,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             $email_template = (int)($conf['email_template'] ?? 0);
             $logo           = htmlspecialchars($conf['logo']           ?? '', ENT_QUOTES);
             $is_default     = (int)($conf['is_default']     ?? 0);
+            $show_state     = (int)($conf['show_state']     ?? 0);
+            $logo_height    = (int)($conf['logo_height']    ?? 20);
+            $logo_align     = htmlspecialchars($conf['logo_align']    ?? 'left', ENT_QUOTES);
 
             $email_badge = $email_mode == 1
                 ? '<span class="badge bg-success">ON</span>'
@@ -170,6 +173,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
                 . " data-email-mode='$email_mode'"
                 . " data-email-template='$email_template'"
                 . " data-logo='$logo'"
+                . " data-show-state='$show_state'"
+                . " data-logo-height='$logo_height'"
+                . " data-logo-align='$logo_align'"
                 . " data-bs-toggle='modal' data-bs-target='#modal-template'>"
                 . "<i class='ti ti-edit'></i></button>";
             echo "<button type='button' class='btn btn-sm btn-outline-danger btn-delete'"
@@ -353,9 +359,18 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<label class="form-check-label" for="man-mode-2">' . __('Separate columns') . '</label></div>';
         echo '</div>';
 
+        echo '<div class="col-md-4">';
+        $state_tip = htmlspecialchars('Adds a "Status" column to the PDF table showing the GLPI status/state of each asset (e.g. "In use", "Available").');
+        echo '<label class="form-label d-block">' . __('Status column')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $state_tip . '"></i></label>';
+        echo '<div class="form-check">';
+        echo '<input class="form-check-input" type="checkbox" name="show_state" id="tpl-show-state" value="1">';
+        echo '<label class="form-check-label" for="tpl-show-state">' . __('Show in PDF') . '</label>';
+        echo '</div>';
+        echo '</div>';
 
         echo '<div class="col-md-6">';
-        $logo_tip = htmlspecialchars('PNG or JPEG, max ~2 MB. Displayed at full width at the top of the document, height fixed at 20 mm.');
+        $logo_tip = htmlspecialchars('PNG or JPEG, max ~2 MB. Height is set in mm; width is auto-calculated to preserve aspect ratio.');
         echo '<label class="form-label">' . __('Logo')
             . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $logo_tip . '"></i></label>';
         echo '<input type="file" class="form-control" name="logo" id="tpl-logo" accept="image/png,image/jpeg">';
@@ -364,6 +379,24 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<input class="form-check-input" type="checkbox" name="img_delete" id="tpl-img-delete" value="1">';
         echo '<label class="form-check-label text-danger" for="tpl-img-delete">' . __('Delete') . ' ' . __('File') . '</label>';
         echo '</div></div>';
+
+        echo '<div class="col-md-2">';
+        echo '<label class="form-label">' . __('Height') . ' (mm)</label>';
+        echo '<input type="number" class="form-control" name="logo_height" id="tpl-logo-height" value="20" min="5" max="100">';
+        echo '</div>';
+
+        echo '<div class="col-md-4">';
+        echo '<label class="form-label d-block">' . __('Logo alignment') . '</label>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="logo_align" id="logo-align-left" value="left" checked>';
+        echo '<label class="form-check-label" for="logo-align-left">' . __('Left') . '</label></div>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="logo_align" id="logo-align-center" value="center">';
+        echo '<label class="form-check-label" for="logo-align-center">' . __('Center') . '</label></div>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="logo_align" id="logo-align-right" value="right">';
+        echo '<label class="form-check-label" for="logo-align-right">' . __('Right') . '</label></div>';
+        echo '</div>';
 
         echo '</div>'; // row basic
 
@@ -584,6 +617,9 @@ document.addEventListener('DOMContentLoaded', function () {
             li.textContent = ''; li.dataset.logo = '';
             document.getElementById('tpl-logo-delete-wrap').style.display = 'none';
             document.getElementById('tpl-img-delete').checked = false;
+            document.getElementById('tpl-show-state').checked = false;
+            document.getElementById('tpl-logo-height').value = '20';
+            var laLeft = document.getElementById('logo-align-left'); if (laLeft) laLeft.checked = true;
         });
     }
 
@@ -625,6 +661,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 logoWrap.style.display = 'none';
             }
             document.getElementById('tpl-img-delete').checked = false;
+            document.getElementById('tpl-show-state').checked = d.showState === '1';
+            document.getElementById('tpl-logo-height').value = d.logoHeight || '20';
+            var laEl = document.querySelector('input[name="logo_align"][value="' + (d.logoAlign || 'left') + '"]');
+            if (laEl) laEl.checked = true;
         });
     });
 
@@ -687,7 +727,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 template_uppercontent: document.getElementById('tpl-upper-content').value,
                 template_content:      document.getElementById('tpl-content').value,
                 footer_text:           document.getElementById('tpl-footer').value,
-                logo_existing:         logoInfo ? (logoInfo.dataset.logo || '') : ''
+                logo_existing:         logoInfo ? (logoInfo.dataset.logo || '') : '',
+                show_state:            document.getElementById('tpl-show-state').checked ? '1' : '0',
+                logo_height:           document.getElementById('tpl-logo-height').value,
+                logo_align:            (function(){ var r = document.querySelector('input[name="logo_align"]:checked'); return r ? r.value : 'left'; })()
             };
 
             // Get a fresh CSRF token, then POST to preview
@@ -753,6 +796,9 @@ JS;
         $mode                  = (int) $_POST["mode"];
         $serial_mode           = $_POST["serial_mode"];
         $man_mode              = (int)($_POST["man_mode"] ?? 1);
+        $show_state            = !empty($_POST["show_state"]) ? 1 : 0;
+        $logo_height           = !empty($_POST["logo_height"]) ? (int)$_POST["logo_height"] : 20;
+        $logo_align            = in_array($_POST["logo_align"] ?? '', ['left','center','right']) ? $_POST["logo_align"] : 'left';
         $orientation           = $_POST["orientation"];
         $breakword             = $_POST["breakword"];
         $email_mode            = $_POST["email_mode"];
@@ -773,6 +819,9 @@ JS;
             'city'           => $city,
             'serial_mode'    => $serial_mode,
             'man_mode'       => $man_mode,
+            'show_state'     => $show_state,
+            'logo_height'    => $logo_height,
+            'logo_align'     => $logo_align,
             'orientation'    => $orientation,
             'breakword'      => $breakword,
             'email_mode'     => $email_mode,

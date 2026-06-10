@@ -209,6 +209,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								$item_name = '';
 							}
 
+							$state_name_val = '';
+							if (!empty($data['states_id'])) {
+								$state_name_val = Dropdown::getDropdownName('glpi_states', $data['states_id']);
+							}
+
 							echo "<td>";
 							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
 							echo "<input type='hidden' name='man_name[]' value='$man_name'>";
@@ -216,6 +221,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<input type='hidden' name='serial[]' value='$serial'>";
 							echo "<input type='hidden' name='otherserial[]' value='$otherserial'>";
 							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
+							echo "<input type='hidden' name='state_name[]' value='" . htmlspecialchars($state_name_val, ENT_QUOTES) . "'>";
 							echo "<input type='text' name='comments[]' class='form-control form-control-sm'>";
 							echo "</td>";
 							echo "</tr>";
@@ -403,6 +409,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$city = $row["city"];
 				$serial_mode = $row["serial_mode"];
 				$man_mode    = $row["man_mode"] ?? 1;
+				$show_state  = (int)($row["show_state"] ?? 0);
+				$logo_height = (int)($row["logo_height"] ?? 20);
+				$logo_align  = in_array($row["logo_align"] ?? '', ['left','center','right']) ? $row["logo_align"] : 'left';
 				$orientation = $row["orientation"];
 				$breakword = $row["breakword"];
 				$email_mode = $row["email_mode"];
@@ -419,7 +428,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				break;
 			}
 			
-			$comments = $_POST['comments'];
+			$comments   = $_POST['comments'];
+			$state_name = $_POST['state_name'] ?? [];
 		
 			if (!isset($font) || empty($font)) {
 				$font = 'DejaVu Sans';
@@ -778,7 +788,7 @@ $(function() {
         cols += '<td><input type="text" class="form-control form-control-sm" name="item_name[]"></td>';
         cols += '<td><input type="text" class="form-control form-control-sm" name="serial[]"></td>';
         cols += '<td><input type="text" class="form-control form-control-sm" name="otherserial[]"></td>';
-        cols += '<td><input type="text" class="form-control form-control-sm" name="comments[]"><input type="hidden" name="number[]" value="' + counter + '"></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="comments[]"><input type="hidden" name="state_name[]" value=""><input type="hidden" name="number[]" value="' + counter + '"></td>';
 
         newRow.append(cols);
         $("#additional_table").append(newRow);

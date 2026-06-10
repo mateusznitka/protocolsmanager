@@ -21,6 +21,9 @@ $city         = !empty($_POST['city'])           ? $_POST['city']         : '';
 $orientation  = !empty($_POST['orientation'])    ? $_POST['orientation']  : 'Portrait';
 $serial_mode  = !empty($_POST['serial_mode'])    ? (int)$_POST['serial_mode'] : 1;
 $man_mode     = !empty($_POST['man_mode'])       ? (int)$_POST['man_mode']    : 1;
+$show_state   = !empty($_POST['show_state'])     ? 1 : 0;
+$logo_height  = !empty($_POST['logo_height'])    ? (int)$_POST['logo_height'] : 20;
+$logo_align   = in_array($_POST['logo_align'] ?? '', ['left','center','right']) ? $_POST['logo_align'] : 'left';
 $title        = !empty($_POST['template_name'])  ? nl2br(htmlspecialchars($_POST['template_name'])) : 'Preview';
 $upper_content = !empty($_POST['template_uppercontent']) ? nl2br($_POST['template_uppercontent']) : '';
 $content      = !empty($_POST['template_content'])       ? nl2br($_POST['template_content'])      : '';
@@ -54,6 +57,7 @@ $author     = $sample_author;
 $comments   = [null, null, null];
 
 $number = [1, 2, 3];
+$state_name  = [1 => 'In use',      2 => 'In use',           3 => 'Available'];
 $type_name   = [1 => 'Computer',    2 => 'Monitor',          3 => 'Printer'];
 $man_name    = [1 => 'Dell',        2 => 'LG',               3 => 'HP'];
 $mod_name    = [1 => 'OptiPlex 7090', 2 => 'UltraSharp 27"', 3 => 'LaserJet Pro'];
