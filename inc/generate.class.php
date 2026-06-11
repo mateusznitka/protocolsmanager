@@ -71,7 +71,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "<div class='card-header'><i class='ti ti-clipboard-plus'></i> ".__('Generate new document')."</div>";
 			echo "<div class='card-body'>";
 			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
-			echo "<p class='text-muted small mb-2'><strong>1.</strong> ".__('Choose a template and add an optional note')."</p>";
+			echo "<p class='text-muted small mb-2'><strong>1.</strong> ".__('Choose a template and add an optional comment')."</p>";
 			echo "<div class='row mb-3'>";
 			echo "<div class='col-md-4'>";
 			echo "<label class='form-label'>".__('Template')."</label>";
@@ -84,7 +84,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			echo "</select>";
 			echo "</div>";
 			echo "<div class='col-md-5'>";
-			echo "<label class='form-label'>".__('Note')." <small class='text-muted'>(" . __('visible in generated documents list') . ")</small></label>";
+			echo "<label class='form-label'>".__('Comment')." <small class='text-muted'>(" . __('visible in generated documents list') . ")</small></label>";
 			echo "<input type='text' name='notes' class='form-control' placeholder='".__('Optional')."'>";
 			echo "</div>";
 			echo "</div>"; // row
@@ -98,7 +98,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$header .= "<th class='text-uppercase'>".__('Name')."</th>";
 			$header .= "<th class='text-uppercase'>".__('Serial number')."</th>";
 			$header .= "<th class='text-uppercase'>".__('Inventory number')."</th>";
-			$header .= "<th class='text-uppercase'>".__('Comments')."</th></tr>";
+			$header .= "<th class='text-uppercase'>".__('Note')."</th></tr>";
 			echo $header;
 			echo "</thead><tbody>";
 			
@@ -297,7 +297,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$header2 .= "<th class='text-uppercase'>".__('Date')."</th>";
 				$header2 .= "<th class='text-uppercase'>".__('File')."</th>";
 				$header2 .= "<th class='text-uppercase'>".__('Creator')."</th>";
-				$header2 .= "<th class='text-uppercase'>".__('Note')."</th>";
+				$header2 .= "<th class='text-uppercase'>".__('Comment')."</th>";
 				$header2 .= "<th class='text-uppercase'>".__('Send email')."</th></tr>";
 				echo $header2;
 				echo "</thead><tbody>";
@@ -420,6 +420,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				break;
 			}
 			
+			$send_user     = 2;
+			$email_subject = '';
+			$email_content = '';
+			$recipients    = '';
 			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig', 'WHERE' => ['id' => $email_template]]) as $row) {
 				$send_user = $row["send_user"];
 				$email_subject = $row["email_subject"];
@@ -502,10 +506,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$doc_id = self::createDoc($doc_name, $notes, $id);
 			
-			if ($email_mode == 1) {
-				
+			if ($email_mode == 1 && !empty($recipients)) {
 				self::sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id);
-				
 			}
 			
 			$gen_date = date('Y-m-d H:i:s');
