@@ -94,7 +94,7 @@ footer
 		echo '<th>' . __('Status') . '</th>';
 	}
 	if ($has_comments) {
-		echo '<th>' . __('Comments') . '</th>';
+		echo '<th>' . __('Note') . '</th>';
 	}
 	echo '</tr>';
 

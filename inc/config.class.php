@@ -39,7 +39,8 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<div class="p-3">';
 
         // Nav-tabs
-        echo '<ul class="nav nav-tabs mb-3" id="configTabs" role="tablist">';
+        echo '<div class="d-flex justify-content-between align-items-center mb-3">';
+        echo '<ul class="nav nav-tabs flex-grow-1 mb-0 border-0" id="configTabs" role="tablist">';
         echo '<li class="nav-item" role="presentation">';
         echo '<button class="nav-link active" id="tab-templates-btn" data-bs-toggle="tab" data-bs-target="#tab-templates" type="button" role="tab">';
         echo __('Templates settings') . '</button></li>';
@@ -47,6 +48,10 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<button class="nav-link" id="tab-email-btn" data-bs-toggle="tab" data-bs-target="#tab-email" type="button" role="tab">';
         echo __('Email settings') . '</button></li>';
         echo '</ul>';
+        echo '<a href="https://github.com/mateusznitka/protocolsmanager/wiki" target="_blank" rel="noopener"'
+            . ' class="btn btn-sm btn-outline-secondary ms-3 flex-shrink-0">'
+            . '<i class="ti ti-help me-1"></i>Help</a>';
+        echo '</div>';
 
         echo '<div class="tab-content">';
 
@@ -77,6 +82,9 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '</div></div></div>';
 
         echo '</div>'; // tab-content
+        echo '<div class="text-end mt-3">';
+        echo '<small class="text-muted">by <a href="https://mtnt.pl/blog/en/" target="_blank" rel="noopener" class="text-muted">Mateusz Nitka</a></small>';
+        echo '</div>';
         echo '</div>'; // p-3
 
         self::renderTemplateModal($action);
