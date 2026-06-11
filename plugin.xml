@@ -50,7 +50,6 @@
 	   <version>
 		  <num>2.0.0</num>
 		  <compatibility>11.0</compatibility>
-		  <compatibility>10.0</compatibility>
 	   </version>
 	</versions>
 	<langs>

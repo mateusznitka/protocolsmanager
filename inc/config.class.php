@@ -332,7 +332,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '</div>';
 
         echo '<div class="col-md-4">';
-        $breakword_tip = htmlspecialchars('On: long words wrap inside cells, column widths are fixed (equal share). Off: column widths adjust to content dynamically.');
+        $breakword_tip = htmlspecialchars('ON: long words wrap inside cells, column widths are fixed. OFF: column widths adjust to content dynamically.');
         echo '<label class="form-label d-block">' . __('Word breaking')
             . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $breakword_tip . '"></i></label>';
         echo '<div class="form-check form-check-inline">';
@@ -368,7 +368,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '</div>';
 
         echo '<div class="col-md-4">';
-        $state_tip = htmlspecialchars('Adds a "Status" column to the PDF table showing the GLPI status/state of each asset (e.g. "In use", "Available").');
+        $state_tip = htmlspecialchars('Adds a Status column to the PDF table showing the GLPI status/state of each asset.');
         echo '<label class="form-label d-block">' . __('Status column')
             . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $state_tip . '"></i></label>';
         echo '<div class="form-check">';
@@ -467,7 +467,10 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             echo '<option value="' . (int)$etpl['id'] . '">'
                 . htmlspecialchars($etpl['tname'] ?? '') . '</option>';
         }
-        echo '</select></div>';
+        echo '</select>';
+        echo '<div class="invalid-feedback" id="email-template-feedback">'
+            . __('Select an email template or disable autosending.') . '</div>';
+        echo '</div>';
 
         echo '</div>'; // row logo & email
 
@@ -705,6 +708,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // ── Template modal: email template validation ─────────────────
+    var modalTplForm = document.querySelector('#modal-template form');
+    if (modalTplForm) {
+        modalTplForm.addEventListener('submit', function (e) {
+            var em   = document.querySelector('input[name="email_mode"]:checked');
+            var etpl = document.getElementById('tpl-email-template');
+            if (em && em.value === '1' && etpl && (etpl.value === '0' || etpl.value === '')) {
+                e.preventDefault();
+                etpl.classList.add('is-invalid');
+                var fb = document.getElementById('email-template-feedback');
+                if (fb) fb.style.display = 'block';
+                etpl.focus();
+            }
+        });
+        document.querySelectorAll('input[name="email_mode"]').forEach(function (r) {
+            r.addEventListener('change', function () {
+                var etpl = document.getElementById('tpl-email-template');
+                if (etpl) { etpl.classList.remove('is-invalid'); }
+            });
+        });
+        document.getElementById('tpl-email-template').addEventListener('change', function () {
+            this.classList.remove('is-invalid');
+        });
+    }
+
     // ── Template preview (fetch → blob → new tab) ────────────────
     var _previewUrl = $js_preview_url;
     var _tokenUrl   = $js_token_url;
@@ -791,6 +819,12 @@ JS;
 
         if (empty($_POST["template_name"])) {
             Session::addMessageAfterRedirect('Fill mandatory fields', 'WARNING', true);
+            return;
+        }
+
+        if (!empty($_POST["email_mode"]) && (int)$_POST["email_mode"] === 1
+                && empty($_POST["email_template"])) {
+            Session::addMessageAfterRedirect('Email autosending is ON but no email template is selected.', 'WARNING', true);
             return;
         }
 
