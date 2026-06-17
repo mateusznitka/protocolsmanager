@@ -51,7 +51,7 @@ If you have an idea, bug or problem - please create an issue.
 2. Copy protocolsmanager folder to GLPI plugins directory
 3. Go to GLPI Plugin Menu and click 'install' and then 'activate'
 
-![Setup](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/setup.gif)
+![Setup](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/setup-new.gif)
 
 ## Updating
 
@@ -63,11 +63,11 @@ If you have an idea, bug or problem - please create an issue.
 
 1. Go to Profiles and click on profile you want to add permissions to plugin
 2. Select permissions and save
-3. Go to Plugins -> Protocols manager
-4. Edit default or create new template: Fill all or some textboxes, choose your font, logo and other options.
+3. Go to Setup -> Protocols manager
+4. Edit default or create new template: Fill all or some textboxes, choose your font, logo and other options
 5. You can set default template
 
-![Preparing](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/config.gif)
+![Preparing](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/config-new.gif)
 
 ## Using the plugin
 
@@ -81,7 +81,7 @@ If you have an idea, bug or problem - please create an issue.
 8. Your protocol is on list above now, you can open it in new tab. It is available in Managament -> Documents too.
 9. You can delete all or some protocols by selecting them and click "Delete".
 
-![Generate](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/generate_standard.gif)
+![Generate](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/generate-new.gif)
 
 ## Notes
 
