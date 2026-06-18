@@ -67,7 +67,7 @@ If you have an idea, bug or problem - please create an issue.
 4. Edit default or create new template: Fill all or some textboxes, choose your font, logo and other options
 5. You can set default template
 
-![Preparing](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/config-new.gif)
+![Preparing](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/generate-new.gif)
 
 ## Using the plugin
 
@@ -81,7 +81,7 @@ If you have an idea, bug or problem - please create an issue.
 8. Your protocol is on list above now, you can open it in new tab. It is available in Managament -> Documents too.
 9. You can delete all or some protocols by selecting them and click "Delete".
 
-![Generate](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/generate-new.gif)
+![Generate](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/config-new.gif)
 
 ## Notes
 
