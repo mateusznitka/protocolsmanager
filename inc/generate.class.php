@@ -222,6 +222,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<input type='hidden' name='otherserial[]' value='$otherserial'>";
 							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
 							echo "<input type='hidden' name='state_name[]' value='" . htmlspecialchars($state_name_val, ENT_QUOTES) . "'>";
+							echo "<input type='hidden' name='itemtype[]' value='" . htmlspecialchars($itemtype, ENT_QUOTES) . "'>";
+							echo "<input type='hidden' name='items_id[]' value='" . (int)$data["id"] . "'>";
 							echo "<input type='text' name='comments[]' class='form-control form-control-sm'>";
 							echo "</td>";
 							echo "</tr>";
@@ -384,6 +386,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$serial = $_POST['serial'];
 			$otherserial = $_POST['otherserial'];
 			$item_name = $_POST['item_name'];
+			$itemtype_arr = $_POST['itemtype'] ?? [];
+			$items_id_arr = $_POST['items_id'] ?? [];
 			$owner = $_POST['owner'];
 			$author = $_POST['author'];
 			$doc_no = $_POST['list'];
@@ -504,7 +508,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$output = $html2pdf->output();
 			file_put_contents(GLPI_UPLOAD_DIR .'/'.$doc_name, $output);
 			
-			$doc_id = self::createDoc($doc_name, $notes, $id);
+			$linked_items = [];
+			foreach ($number as $key) {
+				if (!empty($itemtype_arr[$key]) && !empty($items_id_arr[$key])) {
+					$linked_items[] = ['itemtype' => $itemtype_arr[$key], 'items_id' => (int)$items_id_arr[$key]];
+				}
+			}
+
+			$doc_id = self::createDoc($doc_name, $notes, $id, $linked_items);
 			
 			if ($email_mode == 1 && !empty($recipients)) {
 				self::sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id);
@@ -535,15 +546,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		}
 		
 		//create GLPI document
-		static function createDoc($doc_name, $notes, $id) {
+		static function createDoc($doc_name, $notes, $id, $linked_items = []) {
 			global $DB, $CFG_GLPI;
-			
+
 			$entity = 0;
 			foreach ($DB->request(['FROM' => 'glpi_users', 'WHERE' => ['id' => $id]]) as $row) {
 				$entity = $row["entities_id"];
 				break;
 			}
-			
+
 			$input = [];
 			$doc = new Document();
 			$input["entities_id"] = $entity;
@@ -567,6 +578,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'date_mod'     => date("Y-m-d H:i:s"),
 				'users_id'     => Session::getLoginUserID(),
 			]);
+
+			foreach ($linked_items as $link) {
+				$asset_link = new Document_Item();
+				$asset_link->add([
+					'documents_id' => $document_id,
+					'itemtype'     => $link['itemtype'],
+					'items_id'     => $link['items_id'],
+					'entities_id'  => $entity,
+					'is_recursive' => 0,
+					'date_mod'     => date("Y-m-d H:i:s"),
+					'users_id'     => Session::getLoginUserID(),
+				]);
+			}
 
 			return $document_id;
 		}
@@ -789,7 +813,7 @@ $(function() {
         cols += '<td><input type="text" class="form-control form-control-sm" name="item_name[]"></td>';
         cols += '<td><input type="text" class="form-control form-control-sm" name="serial[]"></td>';
         cols += '<td><input type="text" class="form-control form-control-sm" name="otherserial[]"></td>';
-        cols += '<td><input type="text" class="form-control form-control-sm" name="comments[]"><input type="hidden" name="state_name[]" value=""><input type="hidden" name="number[]" value="' + counter + '"></td>';
+        cols += '<td><input type="text" class="form-control form-control-sm" name="comments[]"><input type="hidden" name="state_name[]" value=""><input type="hidden" name="itemtype[]" value=""><input type="hidden" name="items_id[]" value=""><input type="hidden" name="number[]" value="' + counter + '"></td>';
 
         newRow.append(cols);
         $("#additional_table").append(newRow);
