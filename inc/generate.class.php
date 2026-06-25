@@ -67,8 +67,21 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$owner = $Owner->getName();
 			$author = $Author->getName();
 
+			$can_assign_types = [];
+			foreach ($type_user as $assign_itemtype) {
+				if (class_exists($assign_itemtype) && $assign_itemtype::canUpdate()) {
+					$can_assign_types[] = $assign_itemtype;
+				}
+			}
+
 			echo "<div class='card mb-4'>";
-			echo "<div class='card-header'><i class='ti ti-clipboard-plus'></i> ".__('Generate new document')."</div>";
+			echo "<div class='card-header d-flex justify-content-between align-items-center'>";
+			echo "<span><i class='ti ti-clipboard-plus'></i> ".__('Generate new document')."</span>";
+			if (!empty($can_assign_types)) {
+				echo "<button type='button' class='btn btn-sm btn-outline-primary' data-bs-toggle='modal' data-bs-target='#modal-assign-asset'>"
+					. "<i class='ti ti-link me-1'></i>".__('Assign devices')."</button>";
+			}
+			echo "</div>";
 			echo "<div class='card-body'>";
 			echo "<form method='post' name='protocolsmanager_form$rand' id='protocolsmanager_form$rand' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/protocolsmanager/front/generate.form.php\">";
 			echo "<p class='text-muted small mb-2'><strong>1.</strong> ".__('Choose a template and add an optional comment')."</p>";
@@ -250,6 +263,46 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "</div>"; // card-body
 				echo "</div>"; // card
 
+				//assign asset modal
+				if (!empty($can_assign_types)) {
+					echo "<div class='modal fade' id='modal-assign-asset' tabindex='-1'"
+					. " data-user-id='".(int)$id."'"
+					. " data-base-url='".$CFG_GLPI['root_doc']."/plugins/protocolsmanager/front'>";
+					echo "<div class='modal-dialog modal-lg'>";
+					echo "<div class='modal-content'>";
+					echo "<div class='modal-header'>";
+					echo "<h5 class='modal-title'>".__('Assign devices to user')."</h5>";
+					echo "<button type='button' class='btn-close' data-bs-dismiss='modal'></button>";
+					echo "</div>";
+					echo "<div class='modal-body'>";
+
+					echo "<div id='assign-step-types'>";
+					echo "<label class='form-label'>".__('Select an item type')."</label>";
+					echo "<div class='list-group'>";
+					foreach ($can_assign_types as $assign_itemtype) {
+						$tmp_item = getItemForItemtype($assign_itemtype);
+						$type_label = $tmp_item ? $tmp_item->getTypeName(Session::getPluralNumber()) : $assign_itemtype;
+						echo "<button type='button' class='list-group-item list-group-item-action btn-pick-type' data-itemtype='".htmlspecialchars($assign_itemtype, ENT_QUOTES)."'>"
+							. htmlspecialchars($type_label) . "</button>";
+					}
+					echo "</div></div>"; // assign-step-types
+
+					echo "<div id='assign-step-search' style='display:none'>";
+					echo "<button type='button' class='btn btn-sm btn-link mb-2 ps-0' id='btn-back-types'><i class='ti ti-arrow-left'></i> ".__('Back')."</button>";
+					echo "<div class='input-group mb-3'>";
+					echo "<span class='input-group-text'><i class='ti ti-search'></i></span>";
+					echo "<input type='text' class='form-control' id='asset-search-input' placeholder='".__('Search or pick from the list...')."'>";
+					echo "</div>";
+					echo "<div id='asset-search-results' class='list-group' style='max-height:300px; overflow-y:auto;'></div>";
+					echo "</div>"; // assign-step-search
+
+					echo "</div>"; // modal-body
+					echo "<div class='modal-footer'>";
+					echo "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>".__('Cancel')."</button>";
+					echo "<button type='button' class='btn btn-primary' id='btn-confirm-assign' disabled>".__('Assign')."</button>";
+					echo "</div>";
+					echo "</div></div></div>"; // modal-content, dialog, modal
+				}
 
 				//send email modal
 				echo "<div class='modal fade' id='emailModal' tabindex='-1'>";
@@ -822,7 +875,7 @@ $(function() {
     });
 	
     $("#additional_table").on("click", ".ibtnDel", function (event) {
-        $(this).closest("tr").remove();       
+        $(this).closest("tr").remove();
         ctr -= 1
     });
 
@@ -830,5 +883,129 @@ $(function() {
 });
 
 
+$(function () {
+    var modalEl = document.getElementById('modal-assign-asset');
+    if (!modalEl) {
+        return;
+    }
+
+    var targetUserId   = modalEl.dataset.userId;
+    var baseUrl        = modalEl.dataset.baseUrl;
+    var stepTypes      = document.getElementById('assign-step-types');
+    var stepSearch     = document.getElementById('assign-step-search');
+    var searchInput    = document.getElementById('asset-search-input');
+    var resultsBox     = document.getElementById('asset-search-results');
+    var btnConfirm     = document.getElementById('btn-confirm-assign');
+    var btnBack        = document.getElementById('btn-back-types');
+    var selectedItemtype = null;
+    var selectedItemsId  = null;
+    var searchTimer      = null;
+
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        stepSearch.style.display = 'none';
+        stepTypes.style.display  = 'block';
+        searchInput.value = '';
+        resultsBox.innerHTML = '';
+        btnConfirm.disabled = true;
+        selectedItemtype = null;
+        selectedItemsId  = null;
+    });
+
+    function doSearch(term) {
+        var url = baseUrl + '/asset_search.php?itemtype=' + encodeURIComponent(selectedItemtype)
+            + '&search=' + encodeURIComponent(term) + '&user_id=' + encodeURIComponent(targetUserId);
+        fetch(url)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                resultsBox.innerHTML = '';
+                if (!data.length) {
+                    resultsBox.innerHTML = '<div class="text-muted p-2">No results</div>';
+                    return;
+                }
+                data.forEach(function (item) {
+                    var row = document.createElement('button');
+                    row.type = 'button';
+                    row.className = 'list-group-item list-group-item-action';
+                    var info = item.name + (item.serial ? ' — ' + item.serial : '');
+                    if (item.current_user_name) {
+                        info += ' <span class="text-muted small">(currently: ' + item.current_user_name + ')</span>';
+                    }
+                    row.innerHTML = info;
+                    row.dataset.id = item.id;
+                    row.addEventListener('click', function () {
+                        resultsBox.querySelectorAll('.list-group-item').forEach(function (r) {
+                            r.classList.remove('active');
+                        });
+                        row.classList.add('active');
+                        selectedItemsId = item.id;
+                        btnConfirm.disabled = false;
+                    });
+                    resultsBox.appendChild(row);
+                });
+            });
+    }
+
+    document.querySelectorAll('.btn-pick-type').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            selectedItemtype = this.dataset.itemtype;
+            stepTypes.style.display  = 'none';
+            stepSearch.style.display = 'block';
+            searchInput.value = '';
+            resultsBox.innerHTML = '';
+            btnConfirm.disabled = true;
+            selectedItemsId = null;
+            searchInput.focus();
+            doSearch('');
+        });
+    });
+
+    if (btnBack) {
+        btnBack.addEventListener('click', function () {
+            stepSearch.style.display = 'none';
+            stepTypes.style.display  = 'block';
+            selectedItemtype = null;
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            var term = this.value.trim();
+            btnConfirm.disabled = true;
+            selectedItemsId = null;
+            searchTimer = setTimeout(function () {
+                doSearch(term);
+            }, 300);
+        });
+    }
+
+    if (btnConfirm) {
+        btnConfirm.addEventListener('click', function () {
+            if (!selectedItemtype || !selectedItemsId) {
+                return;
+            }
+            btnConfirm.disabled = true;
+            fetch(baseUrl + '/csrf_token.php')
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var fd = new FormData();
+                    fd.append('itemtype', selectedItemtype);
+                    fd.append('items_id', selectedItemsId);
+                    fd.append('user_id', targetUserId);
+                    fd.append('_glpi_csrf_token', data.token);
+                    return fetch(baseUrl + '/asset_assign.php', { method: 'POST', body: fd });
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Assignment failed');
+                        btnConfirm.disabled = false;
+                    }
+                });
+        });
+    }
+});
 
 </script>
