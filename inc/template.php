@@ -46,7 +46,7 @@ footer
 ?>
 	<table style="border: none; width: 100%;">
 		<td style="height: 8mm; width: 70%;"><?php echo $prot_num; echo "-"; echo date('dmY'); ?></td>
-		<td style="height: 8mm; width: 30%; text-align: right;"><?php echo $city." "; $date=date('d.m.Y'); echo $date; ?></td>
+		<td style="height: 8mm; width: 30%; text-align: right;"><?php echo $city." "; $date=date($date_format ?? 'd.m.Y'); echo $date; ?></td>
 	</table>
 	
 	<table style="border:none; width: 100%;">

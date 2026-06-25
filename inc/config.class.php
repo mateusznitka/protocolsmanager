@@ -143,6 +143,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             $show_state     = (int)($conf['show_state']     ?? 0);
             $logo_height    = (int)($conf['logo_height']    ?? 20);
             $logo_align     = htmlspecialchars($conf['logo_align']    ?? 'left', ENT_QUOTES);
+            $date_format    = htmlspecialchars($conf['date_format']   ?? 'd.m.Y', ENT_QUOTES);
 
             $email_badge = $email_mode == 1
                 ? '<span class="badge bg-success">ON</span>'
@@ -184,6 +185,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
                 . " data-show-state='$show_state'"
                 . " data-logo-height='$logo_height'"
                 . " data-logo-align='$logo_align'"
+                . " data-date-format='$date_format'"
                 . " data-bs-toggle='modal' data-bs-target='#modal-template'>"
                 . "<i class='ti ti-edit'></i></button>";
             echo "<button type='button' class='btn btn-sm btn-outline-danger btn-delete'"
@@ -419,6 +421,18 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<input type="text" class="form-control" name="city" id="tpl-city">';
         echo '</div>';
 
+        echo '<div class="col-md-6">';
+        $date_formats = ['d.m.Y', 'd/m/Y', 'm/d/Y', 'Y-m-d'];
+        $date_tip = htmlspecialchars('Used for the header date next to the city and for the {cur_date} placeholder.');
+        echo '<label class="form-label">' . __('Date format')
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $date_tip . '"></i></label>';
+        echo '<select class="form-select" name="date_format" id="tpl-date-format">';
+        foreach ($date_formats as $fmt) {
+            echo '<option value="' . htmlspecialchars($fmt, ENT_QUOTES) . '">'
+                . htmlspecialchars(date($fmt) . ' (' . $fmt . ')') . '</option>';
+        }
+        echo '</select></div>';
+
         $ph_tip = htmlspecialchars('{cur_date} — current date, {owner} — asset owner name, {admin} — logged-in user name');
 
         echo '<div class="col-12">';
@@ -631,6 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('tpl-show-state').checked = false;
             document.getElementById('tpl-logo-height').value = '20';
             var laLeft = document.getElementById('logo-align-left'); if (laLeft) laLeft.checked = true;
+            document.getElementById('tpl-date-format').value = 'd.m.Y';
         });
     }
 
@@ -676,6 +691,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('tpl-logo-height').value = d.logoHeight || '20';
             var laEl = document.querySelector('input[name="logo_align"][value="' + (d.logoAlign || 'left') + '"]');
             if (laEl) laEl.checked = true;
+            document.getElementById('tpl-date-format').value = d.dateFormat || 'd.m.Y';
         });
     });
 
@@ -766,7 +782,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 logo_existing:         logoInfo ? (logoInfo.dataset.logo || '') : '',
                 show_state:            document.getElementById('tpl-show-state').checked ? '1' : '0',
                 logo_height:           document.getElementById('tpl-logo-height').value,
-                logo_align:            (function(){ var r = document.querySelector('input[name="logo_align"]:checked'); return r ? r.value : 'left'; })()
+                logo_align:            (function(){ var r = document.querySelector('input[name="logo_align"]:checked'); return r ? r.value : 'left'; })(),
+                date_format:           document.getElementById('tpl-date-format').value
             };
 
             // Get a fresh CSRF token, then POST to preview
@@ -841,6 +858,7 @@ JS;
         $show_state            = !empty($_POST["show_state"]) ? 1 : 0;
         $logo_height           = !empty($_POST["logo_height"]) ? (int)$_POST["logo_height"] : 20;
         $logo_align            = in_array($_POST["logo_align"] ?? '', ['left','center','right']) ? $_POST["logo_align"] : 'left';
+        $date_format           = in_array($_POST["date_format"] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $_POST["date_format"] : 'd.m.Y';
         $orientation           = $_POST["orientation"];
         $breakword             = $_POST["breakword"];
         $email_mode            = $_POST["email_mode"];
@@ -864,6 +882,7 @@ JS;
             'show_state'     => $show_state,
             'logo_height'    => $logo_height,
             'logo_align'     => $logo_align,
+            'date_format'    => $date_format,
             'orientation'    => $orientation,
             'breakword'      => $breakword,
             'email_mode'     => $email_mode,

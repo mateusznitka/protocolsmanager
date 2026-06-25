@@ -35,6 +35,7 @@ function plugin_protocolsmanager_install() {
 			show_state tinyint(1) NOT NULL DEFAULT 0,
 			logo_height tinyint NOT NULL DEFAULT 20,
 			logo_align varchar(10) NOT NULL DEFAULT 'left',
+			date_format varchar(10) NOT NULL DEFAULT 'd.m.Y',
 			PRIMARY KEY (id)
 		) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
@@ -55,7 +56,11 @@ function plugin_protocolsmanager_install() {
 			'show_state'   => 0,
 			'logo_height'  => 20,
 			'logo_align'   => 'left',
+			'date_format'  => 'd.m.Y',
 		]);
+	} elseif (!$DB->fieldExists('glpi_plugin_protocolsmanager_configs', 'date_format')) {
+		$DB->doQuery("ALTER TABLE glpi_plugin_protocolsmanager_configs
+			ADD COLUMN date_format varchar(10) NOT NULL DEFAULT 'd.m.Y'");
 	}
 
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
