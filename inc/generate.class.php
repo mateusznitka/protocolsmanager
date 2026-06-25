@@ -450,12 +450,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$prot_num = self::getDocNumber();
 			
 			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'WHERE' => ['id' => $doc_no]]) as $row) {
+				$date_format = in_array($row["date_format"] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $row["date_format"] : 'd.m.Y';
 				$content = nl2br($row["content"]);
-				$content = str_replace("{cur_date}", date("d.m.Y"), $content);
+				$content = str_replace("{cur_date}", date($date_format), $content);
 				$content = str_replace("{owner}", $owner, $content);
 				$content = str_replace("{admin}", $author, $content);
 				$upper_content = nl2br($row["upper_content"]);
-				$upper_content = str_replace("{cur_date}", date("d.m.Y"), $upper_content);
+				$upper_content = str_replace("{cur_date}", date($date_format), $upper_content);
 				$upper_content = str_replace("{owner}", $owner, $upper_content);
 				$upper_content = str_replace("{admin}", $author, $upper_content);
 				$footer = nl2br($row["footer"]);
@@ -509,15 +510,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 			$email_content = str_replace("{owner}", $owner, $email_content);
 			$email_content = str_replace("{admin}", $author, $email_content);
-			$email_content = str_replace("{cur_date}", date("d.m.Y"), $email_content);
-			
+			$email_content = str_replace("{cur_date}", date($date_format), $email_content);
+
 			if (!isset($email_subject) || empty($email_subject)) {
 				$email_subject = '';
 			}
-			
+
 			$email_subject = str_replace("{owner}", $owner, $email_subject);
 			$email_subject = str_replace("{admin}", $author, $email_subject);
-			$email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
+			$email_subject = str_replace("{cur_date}", date($date_format), $email_subject);
 
 			if (!isset($recipients) || empty($recipients)) {
 				$recipients = '';

@@ -24,6 +24,7 @@ $man_mode     = !empty($_POST['man_mode'])       ? (int)$_POST['man_mode']    : 
 $show_state   = !empty($_POST['show_state'])     ? 1 : 0;
 $logo_height  = !empty($_POST['logo_height'])    ? (int)$_POST['logo_height'] : 20;
 $logo_align   = in_array($_POST['logo_align'] ?? '', ['left','center','right']) ? $_POST['logo_align'] : 'left';
+$date_format  = in_array($_POST['date_format'] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $_POST['date_format'] : 'd.m.Y';
 $title        = !empty($_POST['template_name'])  ? nl2br(htmlspecialchars($_POST['template_name'])) : 'Preview';
 $upper_content = !empty($_POST['template_uppercontent']) ? nl2br($_POST['template_uppercontent']) : '';
 $content      = !empty($_POST['template_content'])       ? nl2br($_POST['template_content'])      : '';
@@ -34,7 +35,7 @@ $logo_existing = $_POST['logo_existing'] ?? '';
 $sample_owner  = 'Jan Kowalski';
 $sample_author = 'Admin';
 foreach (['upper_content', 'content', 'footer'] as $var) {
-    $$var = str_replace('{cur_date}', date('d.m.Y'), $$var);
+    $$var = str_replace('{cur_date}', date($date_format), $$var);
     $$var = str_replace('{owner}',    $sample_owner,  $$var);
     $$var = str_replace('{admin}',    $sample_author, $$var);
 }
