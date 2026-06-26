@@ -53,7 +53,7 @@ If you have an idea, bug or problem - please create an issue.
 
 ![Setup](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/setup-new.gif)
 
-> [!INFO]
+> [!NOTE]
 > Use release files instead of cloning repo.
 
 ## Updating
