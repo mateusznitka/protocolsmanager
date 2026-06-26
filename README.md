@@ -47,11 +47,15 @@ If you have an idea, bug or problem - please create an issue.
 
 ## Installation
 
-1. Download and extract package
+1. Download and extract zip package from [release](https://github.com/mateusznitka/protocolsmanager/releases)
 2. Copy protocolsmanager folder to GLPI plugins directory
 3. Go to GLPI Plugin Menu and click 'install' and then 'activate'
 
 ![Setup](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/setup-new.gif)
+
+*Note*
+
+Use release files instead of cloning repo.
 
 ## Updating
 
