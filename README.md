@@ -53,9 +53,8 @@ If you have an idea, bug or problem - please create an issue.
 
 ![Setup](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/setup-new.gif)
 
-*Note*
-
-Use release files instead of cloning repo.
+> [!INFO]
+> Use release files instead of cloning repo.
 
 ## Updating
 
@@ -98,6 +97,8 @@ Use release files instead of cloning repo.
 Plugin is under active maintenance. 
 
 To do: 
+- Digital confirmation of document by user
+- Assign items directly from plugin
 - Update Wiki, GIFs on Github
 - Put it in GLPI Marketplace
 
