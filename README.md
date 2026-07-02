@@ -115,7 +115,7 @@ Plugin is under active maintenance.
 
 To do: 
 - Digital confirmation of document by user
-- Assign items directly from plugin
+- ~~Assign items directly from plugin~~
 - Update Wiki, GIFs on Github
 - Put it in GLPI Marketplace
 
