@@ -144,6 +144,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             $logo_height    = (int)($conf['logo_height']    ?? 20);
             $logo_align     = htmlspecialchars($conf['logo_align']    ?? 'left', ENT_QUOTES);
             $date_format    = htmlspecialchars($conf['date_format']   ?? 'd.m.Y', ENT_QUOTES);
+            $name_format    = (int)($conf['name_format']   ?? 0);
 
             $email_badge = $email_mode == 1
                 ? '<span class="badge bg-success">ON</span>'
@@ -186,6 +187,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
                 . " data-logo-height='$logo_height'"
                 . " data-logo-align='$logo_align'"
                 . " data-date-format='$date_format'"
+                . " data-name-format='$name_format'"
                 . " data-bs-toggle='modal' data-bs-target='#modal-template'>"
                 . "<i class='ti ti-edit'></i></button>";
             echo "<button type='button' class='btn btn-sm btn-outline-danger btn-delete'"
@@ -377,6 +379,16 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<input class="form-check-input" type="checkbox" name="show_state" id="tpl-show-state" value="1">';
         echo '<label class="form-check-label" for="tpl-show-state">' . __('Show in PDF') . '</label>';
         echo '</div>';
+        echo '</div>';
+
+        echo '<div class="col-md-4">';
+        echo '<label class="form-label d-block">' . __('Name format') . '</label>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="name_format" id="name-format-0" value="0" checked>';
+        echo '<label class="form-check-label" for="name-format-0">Jan Kowalski</label></div>';
+        echo '<div class="form-check form-check-inline">';
+        echo '<input class="form-check-input" type="radio" name="name_format" id="name-format-1" value="1">';
+        echo '<label class="form-check-label" for="name-format-1">Kowalski Jan</label></div>';
         echo '</div>';
 
         echo '<div class="col-md-6">';
@@ -692,6 +704,8 @@ document.addEventListener('DOMContentLoaded', function () {
             var laEl = document.querySelector('input[name="logo_align"][value="' + (d.logoAlign || 'left') + '"]');
             if (laEl) laEl.checked = true;
             document.getElementById('tpl-date-format').value = d.dateFormat || 'd.m.Y';
+            var nf = document.querySelector('input[name="name_format"][value="' + (d.nameFormat || '0') + '"]');
+            if (nf) nf.checked = true;
         });
     });
 
@@ -783,7 +797,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 show_state:            document.getElementById('tpl-show-state').checked ? '1' : '0',
                 logo_height:           document.getElementById('tpl-logo-height').value,
                 logo_align:            (function(){ var r = document.querySelector('input[name="logo_align"]:checked'); return r ? r.value : 'left'; })(),
-                date_format:           document.getElementById('tpl-date-format').value
+                date_format:           document.getElementById('tpl-date-format').value,
+                name_format:           (function(){ var r = document.querySelector('input[name="name_format"]:checked'); return r ? r.value : '0'; })()
             };
 
             // Get a fresh CSRF token, then POST to preview
@@ -859,6 +874,7 @@ JS;
         $logo_height           = !empty($_POST["logo_height"]) ? (int)$_POST["logo_height"] : 20;
         $logo_align            = in_array($_POST["logo_align"] ?? '', ['left','center','right']) ? $_POST["logo_align"] : 'left';
         $date_format           = in_array($_POST["date_format"] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $_POST["date_format"] : 'd.m.Y';
+        $name_format           = in_array((int)($_POST["name_format"] ?? 0), [0, 1]) ? (int)$_POST["name_format"] : 0;
         $orientation           = $_POST["orientation"];
         $breakword             = $_POST["breakword"];
         $email_mode            = $_POST["email_mode"];
@@ -883,6 +899,7 @@ JS;
             'logo_height'    => $logo_height,
             'logo_align'     => $logo_align,
             'date_format'    => $date_format,
+            'name_format'    => $name_format,
             'orientation'    => $orientation,
             'breakword'      => $breakword,
             'email_mode'     => $email_mode,

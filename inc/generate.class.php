@@ -461,8 +461,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$user_mobile = '';
 			$user_number = '';
 			$user_title  = '';
+			$user_firstname = '';
+			$user_realname  = '';
 			foreach ($DB->request([
 				'SELECT'    => [
+					'glpi_users.firstname',
+					'glpi_users.realname',
 					'glpi_users.phone',
 					'glpi_users.mobile',
 					'glpi_users.registration_number',
@@ -474,10 +478,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				],
 				'WHERE'     => ['glpi_users.id' => $id],
 			]) as $_urow) {
-				$user_phone  = $_urow['phone']               ?? '';
-				$user_mobile = $_urow['mobile']              ?? '';
-				$user_number = $_urow['registration_number'] ?? '';
-				$user_title  = $_urow['title_name']          ?? '';
+				$user_firstname = $_urow['firstname']           ?? '';
+				$user_realname  = $_urow['realname']            ?? '';
+				$user_phone     = $_urow['phone']               ?? '';
+				$user_mobile    = $_urow['mobile']              ?? '';
+				$user_number    = $_urow['registration_number'] ?? '';
+				$user_title     = $_urow['title_name']          ?? '';
 				break;
 			}
 			$user_email = '';
@@ -485,16 +491,24 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$user_email = $_er['email'];
 				break;
 			}
-			$admin_title = '';
+			$admin_title     = '';
+			$admin_firstname = '';
+			$admin_realname  = '';
 			foreach ($DB->request([
-				'SELECT'    => ['glpi_usertitles.name AS title_name'],
+				'SELECT'    => [
+					'glpi_users.firstname',
+					'glpi_users.realname',
+					'glpi_usertitles.name AS title_name',
+				],
 				'FROM'      => 'glpi_users',
 				'LEFT JOIN' => [
 					'glpi_usertitles' => ['ON' => ['glpi_users' => 'usertitles_id', 'glpi_usertitles' => 'id']],
 				],
 				'WHERE'     => ['glpi_users.id' => Session::getLoginUserID()],
 			]) as $_arow) {
-				$admin_title = $_arow['title_name'] ?? '';
+				$admin_firstname = $_arow['firstname']  ?? '';
+				$admin_realname  = $_arow['realname']   ?? '';
+				$admin_title     = $_arow['title_name'] ?? '';
 				break;
 			}
 			
@@ -502,6 +516,17 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'WHERE' => ['id' => $doc_no]]) as $row) {
 				$date_format = in_array($row["date_format"] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $row["date_format"] : 'd.m.Y';
+				$name_format = (int)($row["name_format"] ?? 0);
+				if ($user_firstname !== '' || $user_realname !== '') {
+					$owner = $name_format === 1
+						? trim($user_realname . ' ' . $user_firstname)
+						: trim($user_firstname . ' ' . $user_realname);
+				}
+				if ($admin_firstname !== '' || $admin_realname !== '') {
+					$author = $name_format === 1
+						? trim($admin_realname . ' ' . $admin_firstname)
+						: trim($admin_firstname . ' ' . $admin_realname);
+				}
 				$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
 				$ph_replace = [date($date_format), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
 				$content       = str_replace($ph_search, $ph_replace, nl2br($row["content"]));
@@ -810,8 +835,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$user_mobile = '';
 			$user_number = '';
 			$user_title  = '';
+			$user_firstname = '';
+			$user_realname  = '';
 			foreach ($DB->request([
 				'SELECT'    => [
+					'glpi_users.firstname',
+					'glpi_users.realname',
 					'glpi_users.phone',
 					'glpi_users.mobile',
 					'glpi_users.registration_number',
@@ -823,10 +852,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				],
 				'WHERE'     => ['glpi_users.id' => $id],
 			]) as $_urow) {
-				$user_phone  = $_urow['phone']               ?? '';
-				$user_mobile = $_urow['mobile']              ?? '';
-				$user_number = $_urow['registration_number'] ?? '';
-				$user_title  = $_urow['title_name']          ?? '';
+				$user_firstname = $_urow['firstname']           ?? '';
+				$user_realname  = $_urow['realname']            ?? '';
+				$user_phone     = $_urow['phone']               ?? '';
+				$user_mobile    = $_urow['mobile']              ?? '';
+				$user_number    = $_urow['registration_number'] ?? '';
+				$user_title     = $_urow['title_name']          ?? '';
 				break;
 			}
 			$user_email = '';
@@ -834,19 +865,33 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$user_email = $_er['email'];
 				break;
 			}
-			$admin_title = '';
+			$admin_title     = '';
+			$admin_firstname = '';
+			$admin_realname  = '';
 			foreach ($DB->request([
-				'SELECT'    => ['glpi_usertitles.name AS title_name'],
+				'SELECT'    => [
+					'glpi_users.firstname',
+					'glpi_users.realname',
+					'glpi_usertitles.name AS title_name',
+				],
 				'FROM'      => 'glpi_users',
 				'LEFT JOIN' => [
 					'glpi_usertitles' => ['ON' => ['glpi_users' => 'usertitles_id', 'glpi_usertitles' => 'id']],
 				],
 				'WHERE'     => ['glpi_users.id' => Session::getLoginUserID()],
 			]) as $_arow) {
-				$admin_title = $_arow['title_name'] ?? '';
+				$admin_firstname = $_arow['firstname']  ?? '';
+				$admin_realname  = $_arow['realname']   ?? '';
+				$admin_title     = $_arow['title_name'] ?? '';
 				break;
 			}
 
+			if ($user_firstname !== '' || $user_realname !== '') {
+				$owner = trim($user_firstname . ' ' . $user_realname);
+			}
+			if ($admin_firstname !== '' || $admin_realname !== '') {
+				$author = trim($admin_firstname . ' ' . $admin_realname);
+			}
 			$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
 			$ph_replace = [date("d.m.Y"), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
 

@@ -58,9 +58,16 @@ function plugin_protocolsmanager_install() {
 			'logo_align'   => 'left',
 			'date_format'  => 'd.m.Y',
 		]);
-	} elseif (!$DB->fieldExists('glpi_plugin_protocolsmanager_configs', 'date_format')) {
-		$DB->doQuery("ALTER TABLE glpi_plugin_protocolsmanager_configs
-			ADD COLUMN date_format varchar(10) NOT NULL DEFAULT 'd.m.Y'");
+	} else {
+		// migration from 2.0.0
+		if (!$DB->fieldExists('glpi_plugin_protocolsmanager_configs', 'date_format')) {
+			$DB->doQuery("ALTER TABLE glpi_plugin_protocolsmanager_configs
+				ADD COLUMN date_format varchar(10) NOT NULL DEFAULT 'd.m.Y'");
+		}
+		if (!$DB->fieldExists('glpi_plugin_protocolsmanager_configs', 'name_format')) {
+			$DB->doQuery("ALTER TABLE glpi_plugin_protocolsmanager_configs
+				ADD COLUMN name_format tinyint(1) NOT NULL DEFAULT 0");
+		}
 	}
 
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
