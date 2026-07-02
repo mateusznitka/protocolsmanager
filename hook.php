@@ -36,6 +36,7 @@ function plugin_protocolsmanager_install() {
 			logo_height tinyint NOT NULL DEFAULT 20,
 			logo_align varchar(10) NOT NULL DEFAULT 'left',
 			date_format varchar(10) NOT NULL DEFAULT 'd.m.Y',
+			name_format tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id)
 		) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
