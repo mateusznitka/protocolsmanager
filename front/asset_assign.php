@@ -12,7 +12,8 @@ $itemtype = $_POST['itemtype'] ?? '';
 $items_id = (int) ($_POST['items_id'] ?? 0);
 $user_id  = (int) ($_POST['user_id'] ?? 0);
 
-if (empty($itemtype) || !in_array($itemtype, $CFG_GLPI['linkuser_types']) || empty($items_id) || empty($user_id)) {
+$is_custom_asset = class_exists('\\Glpi\\Asset\\Asset') && is_subclass_of($itemtype, '\\Glpi\\Asset\\Asset');
+if (empty($itemtype) || (!in_array($itemtype, $CFG_GLPI['linkuser_types']) && !$is_custom_asset) || empty($items_id) || empty($user_id)) {
     http_response_code(400);
     echo json_encode(['success' => false]);
     exit;

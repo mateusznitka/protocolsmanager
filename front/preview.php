@@ -34,10 +34,10 @@ $logo_existing = $_POST['logo_existing'] ?? '';
 // Replace placeholders with sample values
 $sample_owner  = 'Jan Kowalski';
 $sample_author = 'Admin';
+$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
+$ph_replace = [date($date_format), $sample_owner, $sample_owner, $sample_author, '+48 123 456 789', '+48 987 654 321', 'jan.kowalski@firma.pl', 'Inżynier', 'Administrator', 'EMP-001'];
 foreach (['upper_content', 'content', 'footer'] as $var) {
-    $$var = str_replace('{cur_date}', date($date_format), $$var);
-    $$var = str_replace('{owner}',    $sample_owner,  $$var);
-    $$var = str_replace('{admin}',    $sample_author, $$var);
+    $$var = str_replace($ph_search, $ph_replace, $$var);
 }
 
 // Logo

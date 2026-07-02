@@ -433,23 +433,23 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         }
         echo '</select></div>';
 
-        $ph_tip = htmlspecialchars('{cur_date} — current date, {owner} — asset owner name, {admin} — logged-in user name');
+        $ph_tip = '{cur_date} - current date<br>{owner}/{user} - owner name<br>{admin} - admin name<br>{user_phone} - phone<br>{user_mobile} - mobile<br>{user_email} - email<br>{user_title} - user title<br>{admin_title} - admin title<br>{user_number} - registration number';
 
         echo '<div class="col-12">';
         echo '<label class="form-label">' . __('Upper Content')
-            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $ph_tip . '"></i></label>';
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" title="' . $ph_tip . '"></i></label>';
         echo '<textarea class="form-control" name="template_uppercontent" id="tpl-upper-content" rows="3"></textarea>';
         echo '</div>';
 
         echo '<div class="col-12">';
         echo '<label class="form-label">' . __('Content')
-            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $ph_tip . '"></i></label>';
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" title="' . $ph_tip . '"></i></label>';
         echo '<textarea class="form-control" name="template_content" id="tpl-content" rows="3"></textarea>';
         echo '</div>';
 
         echo '<div class="col-12">';
         echo '<label class="form-label">' . __('Footer')
-            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" title="' . $ph_tip . '"></i></label>';
+            . ' <i class="ti ti-info-circle text-muted" data-bs-toggle="tooltip" data-bs-html="true" title="' . $ph_tip . '"></i></label>';
         echo '<textarea class="form-control" name="footer_text" id="tpl-footer" rows="2"></textarea>';
         echo '</div>';
 

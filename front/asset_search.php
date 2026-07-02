@@ -12,7 +12,8 @@ $itemtype = $_GET['itemtype'] ?? '';
 $search   = trim($_GET['search'] ?? '');
 $user_id  = (int) ($_GET['user_id'] ?? 0);
 
-if (empty($itemtype) || !in_array($itemtype, $CFG_GLPI['linkuser_types'])) {
+$is_custom_asset = class_exists('\\Glpi\\Asset\\Asset') && is_subclass_of($itemtype, '\\Glpi\\Asset\\Asset');
+if (empty($itemtype) || (!in_array($itemtype, $CFG_GLPI['linkuser_types']) && !$is_custom_asset)) {
     echo json_encode([]);
     exit;
 }
@@ -29,9 +30,17 @@ if (!$item) {
     exit;
 }
 
-$itemtable = getTableForItemType($itemtype);
+$itemtable = $item->getTable();
 
 $where = [];
+// For GLPI 11+ custom assets on shared table: filter by definition FK
+if ($is_custom_asset && method_exists($itemtype, 'getDefinition')) {
+    $_def_fk = \Glpi\Asset\AssetDefinition::getForeignKeyField();
+    if ($DB->fieldExists($itemtable, $_def_fk)) {
+        $_def = $itemtype::getDefinition();
+        $where["$itemtable.$_def_fk"] = $_def->getID();
+    }
+}
 if ($search !== '') {
     $where['OR'] = [
         "$itemtable.name"   => ['LIKE', "%$search%"],

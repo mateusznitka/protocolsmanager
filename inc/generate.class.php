@@ -55,6 +55,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			global $DB, $CFG_GLPI;
 			$id = $item->getField('id');
 			$type_user   = $CFG_GLPI['linkuser_types'];
+			// GLPI 11+: custom Asset Definitions are in assignable_types, not linkuser_types
+			foreach ($CFG_GLPI['assignable_types'] ?? [] as $_at) {
+				if (class_exists($_at) && is_subclass_of($_at, 'Glpi\\Asset\\Asset') && !in_array($_at, $type_user)) {
+					$type_user[] = $_at;
+				}
+			}
 			$field_user  = 'users_id';
 			$rand = mt_rand();
 			
@@ -125,10 +131,14 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					   'FROM'   => $itemtable,
 					   'WHERE'  => [$field_user => $id]
 					];
+					// Custom Asset Definitions share one table — filter by definition FK
+					if (is_subclass_of($itemtype, 'Glpi\\Asset\\Asset')) {
+						$iterator_params['WHERE']['assets_assetdefinitions_id'] = $itemtype::getDefinition()->getID();
+					}
 					if ($item->maybeTemplate()) {
 					   $iterator_params['WHERE']['is_template'] = 0;
 					}
-					
+
 					if ($item->maybeDeleted()) {
 					   $iterator_params['WHERE']['is_deleted'] = 0;
 					}
@@ -446,19 +456,56 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$doc_no = $_POST['list'];
 			$id = $_POST['user_id'];
 			$notes = $_POST['notes'];
+
+			$user_phone  = '';
+			$user_mobile = '';
+			$user_number = '';
+			$user_title  = '';
+			foreach ($DB->request([
+				'SELECT'    => [
+					'glpi_users.phone',
+					'glpi_users.mobile',
+					'glpi_users.registration_number',
+					'glpi_usertitles.name AS title_name',
+				],
+				'FROM'      => 'glpi_users',
+				'LEFT JOIN' => [
+					'glpi_usertitles' => ['ON' => ['glpi_users' => 'usertitles_id', 'glpi_usertitles' => 'id']],
+				],
+				'WHERE'     => ['glpi_users.id' => $id],
+			]) as $_urow) {
+				$user_phone  = $_urow['phone']               ?? '';
+				$user_mobile = $_urow['mobile']              ?? '';
+				$user_number = $_urow['registration_number'] ?? '';
+				$user_title  = $_urow['title_name']          ?? '';
+				break;
+			}
+			$user_email = '';
+			foreach ($DB->request(['FROM' => 'glpi_useremails', 'WHERE' => ['users_id' => $id, 'is_default' => 1]]) as $_er) {
+				$user_email = $_er['email'];
+				break;
+			}
+			$admin_title = '';
+			foreach ($DB->request([
+				'SELECT'    => ['glpi_usertitles.name AS title_name'],
+				'FROM'      => 'glpi_users',
+				'LEFT JOIN' => [
+					'glpi_usertitles' => ['ON' => ['glpi_users' => 'usertitles_id', 'glpi_usertitles' => 'id']],
+				],
+				'WHERE'     => ['glpi_users.id' => Session::getLoginUserID()],
+			]) as $_arow) {
+				$admin_title = $_arow['title_name'] ?? '';
+				break;
+			}
 			
 			$prot_num = self::getDocNumber();
 			
 			foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_configs', 'WHERE' => ['id' => $doc_no]]) as $row) {
 				$date_format = in_array($row["date_format"] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $row["date_format"] : 'd.m.Y';
-				$content = nl2br($row["content"]);
-				$content = str_replace("{cur_date}", date($date_format), $content);
-				$content = str_replace("{owner}", $owner, $content);
-				$content = str_replace("{admin}", $author, $content);
-				$upper_content = nl2br($row["upper_content"]);
-				$upper_content = str_replace("{cur_date}", date($date_format), $upper_content);
-				$upper_content = str_replace("{owner}", $owner, $upper_content);
-				$upper_content = str_replace("{admin}", $author, $upper_content);
+				$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
+				$ph_replace = [date($date_format), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
+				$content       = str_replace($ph_search, $ph_replace, nl2br($row["content"]));
+				$upper_content = str_replace($ph_search, $ph_replace, nl2br($row["upper_content"]));
 				$footer = nl2br($row["footer"]);
 				$title = $row["name"];
 				$full_img_name = $row["logo"];
@@ -508,17 +555,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if (!isset($email_content) || empty($email_content)) {
 				$email_content = '';
 			}
-			$email_content = str_replace("{owner}", $owner, $email_content);
-			$email_content = str_replace("{admin}", $author, $email_content);
-			$email_content = str_replace("{cur_date}", date($date_format), $email_content);
+			$email_content = str_replace($ph_search, $ph_replace, $email_content);
 
 			if (!isset($email_subject) || empty($email_subject)) {
 				$email_subject = '';
 			}
 
-			$email_subject = str_replace("{owner}", $owner, $email_subject);
-			$email_subject = str_replace("{admin}", $author, $email_subject);
-			$email_subject = str_replace("{cur_date}", date($date_format), $email_subject);
+			$email_subject = str_replace($ph_search, $ph_replace, $email_subject);
 
 			if (!isset($recipients) || empty($recipients)) {
 				$recipients = '';
@@ -762,14 +805,53 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$owner = $_POST["owner"];
 			$author = $_POST["author"];
-			
-			$email_content = str_replace("{owner}", $owner, $email_content);
-			$email_content = str_replace("{admin}", $author, $email_content);
-			$email_content = str_replace("{cur_date}", date("d.m.Y"), $email_content);
-			
-			$email_subject = str_replace("{owner}", $owner, $email_subject);
-			$email_subject = str_replace("{admin}", $author, $email_subject);
-			$email_subject = str_replace("{cur_date}", date("d.m.Y"), $email_subject);
+
+			$user_phone  = '';
+			$user_mobile = '';
+			$user_number = '';
+			$user_title  = '';
+			foreach ($DB->request([
+				'SELECT'    => [
+					'glpi_users.phone',
+					'glpi_users.mobile',
+					'glpi_users.registration_number',
+					'glpi_usertitles.name AS title_name',
+				],
+				'FROM'      => 'glpi_users',
+				'LEFT JOIN' => [
+					'glpi_usertitles' => ['ON' => ['glpi_users' => 'usertitles_id', 'glpi_usertitles' => 'id']],
+				],
+				'WHERE'     => ['glpi_users.id' => $id],
+			]) as $_urow) {
+				$user_phone  = $_urow['phone']               ?? '';
+				$user_mobile = $_urow['mobile']              ?? '';
+				$user_number = $_urow['registration_number'] ?? '';
+				$user_title  = $_urow['title_name']          ?? '';
+				break;
+			}
+			$user_email = '';
+			foreach ($DB->request(['FROM' => 'glpi_useremails', 'WHERE' => ['users_id' => $id, 'is_default' => 1]]) as $_er) {
+				$user_email = $_er['email'];
+				break;
+			}
+			$admin_title = '';
+			foreach ($DB->request([
+				'SELECT'    => ['glpi_usertitles.name AS title_name'],
+				'FROM'      => 'glpi_users',
+				'LEFT JOIN' => [
+					'glpi_usertitles' => ['ON' => ['glpi_users' => 'usertitles_id', 'glpi_usertitles' => 'id']],
+				],
+				'WHERE'     => ['glpi_users.id' => Session::getLoginUserID()],
+			]) as $_arow) {
+				$admin_title = $_arow['title_name'] ?? '';
+				break;
+			}
+
+			$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
+			$ph_replace = [date("d.m.Y"), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
+
+			$email_content = str_replace($ph_search, $ph_replace, $email_content);
+			$email_subject = str_replace($ph_search, $ph_replace, $email_subject);
 			
 			$recipients_array = explode(';',$recipients);
 
