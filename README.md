@@ -28,21 +28,21 @@ If you have an idea, bug or problem - please create an issue.
 
 ## Changelog
 
-## Version 2.1.0
+### Version 2.1.0
 
 - added functionality to assign assets directly from plugin view (assign devices button)
 - custom assets (from asset definitions) are visible in plugin now
 - documents are associated also with items now
 - added choosing date format and name format in template
 - added more auto placeholders: 
- - {user_phone} 
- - {user_mobile} 
- - {user_email} 
- - {user_title} 
- - {admin_title} 
- - {user_number} (administrative number)
+  - {user_phone} 
+  - {user_mobile} 
+  - {user_email} 
+  - {user_title} 
+  - {admin_title} 
+  - {user_number} (administrative number)
 
-## Version 2.0.0
+### Version 2.0.0
 
 Plugin reworked for GLPI 11 and PHP 8.1+.
 - Fixed all depreceated code, added new functions and methods
