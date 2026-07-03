@@ -2,7 +2,7 @@
 	<name>Protocols Manager</name>
 	<key>protocolsmanager</key>
 	<state>stable</state> <!-- stable | unstable | beta | alpha -->
-	<logo>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/pdf_ico.png</logo>
+	<logo>https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/logo.png</logo>
 	<description>
 	   <short>
 		  <en>Plugin to make configurable PDF reports with selected user inventory</en>
