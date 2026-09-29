@@ -485,22 +485,22 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				Html::back();
 				return;
 			}
-			$number = $_POST['number'];
-			$type_name = $_POST['type_name'];
-			$man_name = $_POST['man_name'];
-			$mod_name = $_POST['mod_name'];
-			$serial = $_POST['serial'];
-			$otherserial = $_POST['otherserial'];
-			$item_name = $_POST['item_name'];
-			$itemtype_arr = $_POST['itemtype'] ?? [];
-			$items_id_arr = $_POST['items_id'] ?? [];
-			$owner = $_POST['owner'];
-			$author = $_POST['author'];
-			$doc_no = $_POST['list'];
+			$number = (array) $_POST['number'];
+			$type_name = (array) ($_POST['type_name'] ?? []);
+			$man_name = (array) ($_POST['man_name'] ?? []);
+			$mod_name = (array) ($_POST['mod_name'] ?? []);
+			$serial = (array) ($_POST['serial'] ?? []);
+			$otherserial = (array) ($_POST['otherserial'] ?? []);
+			$item_name = (array) ($_POST['item_name'] ?? []);
+			$itemtype_arr = (array) ($_POST['itemtype'] ?? []);
+			$items_id_arr = (array) ($_POST['items_id'] ?? []);
+			$owner = $_POST['owner'] ?? '';
+			$author = $_POST['author'] ?? '';
+			$doc_no = (int) ($_POST['list'] ?? 0);
 			$id = (int) ($_POST['user_id'] ?? 0);
-			$notes = $_POST['notes'];
+			$notes = $_POST['notes'] ?? '';
 
-			if (!countElementsInTable('glpi_plugin_protocolsmanager_configs', ['id' => (int) $doc_no])) {
+			if (!countElementsInTable('glpi_plugin_protocolsmanager_configs', ['id' => $doc_no])) {
 				Session::addMessageAfterRedirect(__('Item not found'), false, ERROR);
 				Html::back();
 				return;
@@ -620,8 +620,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				break;
 			}
 			
-			$comments   = $_POST['comments'];
-			$state_name = $_POST['state_name'] ?? [];
+			$comments   = (array) ($_POST['comments'] ?? []);
+			$state_name = (array) ($_POST['state_name'] ?? []);
 		
 			if (!isset($font) || empty($font)) {
 				$font = 'DejaVu Sans';
