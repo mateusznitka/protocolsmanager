@@ -71,12 +71,7 @@ include dirname(__DIR__) . '/inc/template.php';
 $html = ob_get_clean();
 
 $fd = PluginProtocolsmanagerGenerate::prepareFontDir();
-$html = str_replace('</head>', "<style>
-    @font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Regular.ttf');font-weight:normal;}
-    @font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Bold.ttf');font-weight:bold;}
-    @font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Regular.ttf');font-weight:normal;}
-    @font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Bold.ttf');font-weight:bold;}
-</style></head>", $html);
+$html = str_replace('</head>', "<style>\n" . PluginProtocolsmanagerGenerate::getFontFaceCss($fd, $font) . "</style></head>", $html);
 
 $options = new Options();
 $options->set('defaultFont', $font);

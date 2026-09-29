@@ -2,7 +2,7 @@
 // Values that end up in CSS / HTML come from templates (DB) or POST: whitelist or escape them here
 $e = function ($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); };
 $fontsize = in_array((string) $fontsize, ['7', '8', '9', '10', '11', '12'], true) ? (string) $fontsize : '9';
-$font = in_array($font, ['DejaVu Sans', 'DejaVu Serif', 'DejaVu Sans Mono', 'Roboto', 'Noto Serif', 'Helvetica'], true) ? $font : 'DejaVu Sans';
+$font = preg_match('/^[A-Za-z0-9 -]{1,40}$/', (string) $font) ? $font : 'DejaVu Sans';
 $header_color = preg_match('/^#[0-9a-fA-F]{6}$/', (string) $header_color) ? $header_color : '#dee2e6';
 ?>
 <!DOCTYPE html>

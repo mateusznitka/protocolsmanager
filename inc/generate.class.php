@@ -59,6 +59,28 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			return $doc->can($doc_id, $right);
 		}
 
+		// @font-face rules for the PDF. Roboto and Noto Serif are always declared. The larger fonts only when
+		// selected, because dompdf parses every declared font the first time it sees it.
+		static function getFontFaceCss($fd, $font) {
+			$fonts = [
+				'Roboto'            => 'Roboto',
+				'Noto Serif'        => 'NotoSerif',
+				'Inter'             => 'Inter',
+				'Roboto Mono'       => 'RobotoMono',
+				'Hahmlet'           => 'Hahmlet',
+				'Chiron GoRound TC' => 'ChironGoRoundTC',
+			];
+			$css = '';
+			foreach ($fonts as $family => $file) {
+				if (!in_array($family, ['Roboto', 'Noto Serif']) && $family !== $font) {
+					continue;
+				}
+				$css .= "@font-face{font-family:'$family';src:url('file://{$fd}{$file}-Regular.ttf');font-weight:normal;}\n";
+				$css .= "@font-face{font-family:'$family';src:url('file://{$fd}{$file}-Bold.ttf');font-weight:bold;}\n";
+			}
+			return $css;
+		}
+
 		// Copies TTF font files to a writable cache dir and returns the dir path.
 		// php-font-lib writes .ufm metrics alongside TTF files, so FontDir must be writable.
 		static function prepareFontDir() {
@@ -644,12 +666,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$html = ob_get_clean();
 
 			$fd = self::prepareFontDir();
-			$html = str_replace('</head>', "<style>
-				@font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Regular.ttf');font-weight:normal;}
-				@font-face{font-family:'Roboto';src:url('file://{$fd}Roboto-Bold.ttf');font-weight:bold;}
-				@font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Regular.ttf');font-weight:normal;}
-				@font-face{font-family:'Noto Serif';src:url('file://{$fd}NotoSerif-Bold.ttf');font-weight:bold;}
-			</style></head>", $html);
+			$html = str_replace('</head>', "<style>\n".self::getFontFaceCss($fd, $font)."</style></head>", $html);
 
 			$font_cache_dir = $fd;
 			$options = new Options();

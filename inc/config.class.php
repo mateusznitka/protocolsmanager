@@ -265,12 +265,16 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         global $DB;
 
         $fonts = [
-            'DejaVu Sans'      => 'DejaVu Sans',
-            'DejaVu Serif'     => 'DejaVu Serif',
-            'DejaVu Sans Mono' => 'DejaVu Sans Mono',
-            'Roboto'           => 'Roboto',
-            'Noto Serif'       => 'Noto Serif',
-            'Helvetica'        => 'Helvetica',
+            'DejaVu Sans'       => 'DejaVu Sans',
+            'DejaVu Serif'      => 'DejaVu Serif',
+            'DejaVu Sans Mono'  => 'DejaVu Sans Mono',
+            'Roboto'            => 'Roboto',
+            'Noto Serif'        => 'Noto Serif',
+            'Helvetica'         => 'Helvetica',
+            'Inter'             => 'Inter',
+            'Roboto Mono'       => 'Roboto Mono',
+            'Hahmlet'           => 'Hahmlet',
+            'Chiron GoRound TC' => 'Chiron GoRound TC',
         ];
         $fontsizes    = ['7'=>'7','8'=>'8','9'=>'9','10'=>'10','11'=>'11','12'=>'12'];
         $orientations = ['Portrait'=>__('Portrait'),'Landscape'=>__('Landscape')];
