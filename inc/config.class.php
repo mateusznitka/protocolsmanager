@@ -874,7 +874,8 @@ JS;
         $logo_height           = !empty($_POST["logo_height"]) ? (int)$_POST["logo_height"] : 20;
         $logo_align            = in_array($_POST["logo_align"] ?? '', ['left','center','right']) ? $_POST["logo_align"] : 'left';
         $date_format           = in_array($_POST["date_format"] ?? '', ['d.m.Y','d/m/Y','m/d/Y','Y-m-d']) ? $_POST["date_format"] : 'd.m.Y';
-        $name_format           = in_array((int)($_POST["name_format"] ?? 0), [0, 1]) ? (int)$_POST["name_format"] : 0;
+        $nf                    = (int)($_POST["name_format"] ?? 0);
+        $name_format           = in_array($nf, [0, 1], true) ? $nf : 0;
         $orientation           = $_POST["orientation"];
         $breakword             = $_POST["breakword"];
         $email_mode            = $_POST["email_mode"];
@@ -883,6 +884,10 @@ JS;
         $full_img_name = null;
         if (!empty($_FILES['logo']['name'])) {
             $full_img_name = self::uploadImage();
+            if ($full_img_name === null) {
+                // upload rejected (message already queued) - do not save the template half-way
+                return;
+            }
         }
 
         $data = [
@@ -959,11 +964,12 @@ JS;
         if (!empty($_FILES['logo']['name'])) {
             if ($_FILES['logo']['error'] !== UPLOAD_ERR_FORM_SIZE) {
                 if (!$_FILES['logo']['error']) {
-                    $type = $_FILES['logo']['type'];
-                    if (in_array($type, ['image/jpeg', 'image/jpg', 'image/png'])) {
-                        $ext           = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
-                        $full_img_name = 'logo' . time() . '.' . $ext;
-                        move_uploaded_file($_FILES['logo']['tmp_name'], GLPI_ROOT . '/files/_pictures/' . $full_img_name);
+                    // type and extension are decided by the file content, not by what the client sent
+                    $image = @getimagesize($_FILES['logo']['tmp_name']);
+                    $exts  = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png'];
+                    if ($image !== false && isset($exts[$image[2]]) && is_uploaded_file($_FILES['logo']['tmp_name'])) {
+                        $full_img_name = 'logo' . time() . '_' . bin2hex(random_bytes(3)) . '.' . $exts[$image[2]];
+                        move_uploaded_file($_FILES['logo']['tmp_name'], GLPI_PICTURE_DIR . '/' . $full_img_name);
                         return $full_img_name;
                     } else {
                         Session::addMessageAfterRedirect('Wrong file type. Only .jpg and .png files accepted', 'WARNING', true);

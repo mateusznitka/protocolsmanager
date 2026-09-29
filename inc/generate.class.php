@@ -32,10 +32,37 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			return Session::haveRight('plugin_protocolsmanager_tab', READ);
 		}
 
+		// Itemtypes that can be listed in a protocol (linkuser_types + custom asset definitions)
+		static function getProtocolItemtypes() {
+			global $CFG_GLPI;
+			$types = $CFG_GLPI['linkuser_types'];
+			foreach ($CFG_GLPI['assignable_types'] ?? [] as $_at) {
+				if (class_exists($_at) && is_subclass_of($_at, 'Glpi\\Asset\\Asset') && !in_array($_at, $types)) {
+					$types[] = $_at;
+				}
+			}
+			return $types;
+		}
+
+		// The user the protocol is about must exist and be readable by the current user
+		static function canReadUser($users_id) {
+			$user = new User();
+			return $users_id > 0 && $user->getFromDB($users_id) && $user->can($users_id, READ);
+		}
+
+		// Only documents created by this plugin, and only if the current user has $right on them
+		static function canHandleDocument($doc_id, $right) {
+			if ($doc_id <= 0 || !countElementsInTable('glpi_plugin_protocolsmanager_protocols', ['document_id' => $doc_id])) {
+				return false;
+			}
+			$doc = new Document();
+			return $doc->can($doc_id, $right);
+		}
+
 		// Copies TTF font files to a writable cache dir and returns the dir path.
 		// php-font-lib writes .ufm metrics alongside TTF files, so FontDir must be writable.
 		static function prepareFontDir() {
-			$src = GLPI_ROOT . '/plugins/protocolsmanager/fonts/';
+			$src = dirname(__DIR__) . '/fonts/';
 			$dst = GLPI_UPLOAD_DIR . '/protocolsmanager/fonts/';
 			if (!is_dir($dst)) {
 				mkdir($dst, 0755, true);
@@ -54,13 +81,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		function showContent($item) {
 			global $DB, $CFG_GLPI;
 			$id = $item->getField('id');
-			$type_user   = $CFG_GLPI['linkuser_types'];
-			// GLPI 11+: custom Asset Definitions are in assignable_types, not linkuser_types
-			foreach ($CFG_GLPI['assignable_types'] ?? [] as $_at) {
-				if (class_exists($_at) && is_subclass_of($_at, 'Glpi\\Asset\\Asset') && !in_array($_at, $type_user)) {
-					$type_user[] = $_at;
-				}
-			}
+			$type_user   = self::getProtocolItemtypes();
 			$field_user  = 'users_id';
 			$rand = mt_rand();
 			
@@ -154,7 +175,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								if (!empty($_SESSION["glpiis_ids_visible"]) || empty($link)) {
 								 $link = sprintf(__('%1$s (%2$s)'), $link, $data["id"]);
 								}
-								$link = "<a href='".$link_item."'>".$link."</a>";
+								$link = "<a href='".$link_item."'>".htmlspecialchars($link)."</a>";
 							}
 							$linktype = "";
 							if ($data[$field_user] == $id) {
@@ -165,7 +186,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							echo "<td width='10'>";
 							echo "<input type='checkbox' name='number[]' value='$counter' class='form-check-input massive_action_checkbox' checked>";
 							echo "</td>";	
-							echo "<td>$type_name</td>";
+							echo "<td>".htmlspecialchars($type_name)."</td>";
 							echo "<td>";
 							
 							if (isset($data["manufacturers_id"]) && !empty($data["manufacturers_id"])) {
@@ -193,7 +214,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 								}
 								
 								$man_name = explode(' ',trim($man_name))[0];
-								echo $man_name.' '.$mod_name;
+								echo htmlspecialchars($man_name.' '.$mod_name);
 								
 							} 
 							else {
@@ -207,7 +228,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							
 							if (isset($data["serial"]) && !empty($data["serial"])) {
 								$serial = $data["serial"];
-								echo $serial;
+								echo htmlspecialchars($serial);
 							} else {
 								echo '&nbsp;';
 								$serial = '';
@@ -218,7 +239,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							
 							if (isset($data["otherserial"]) && !empty($data["otherserial"])) {
 								$otherserial = $data["otherserial"];
-								echo $otherserial;
+								echo htmlspecialchars($otherserial);
 							} else {
 								echo '&nbsp;';
 								$otherserial = '';
@@ -238,12 +259,12 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 							}
 
 							echo "<td>";
-							echo "<input type='hidden' name='type_name[]' value='$type_name'>";
-							echo "<input type='hidden' name='man_name[]' value='$man_name'>";
-							echo "<input type='hidden' name='mod_name[]' value='$mod_name'>";
-							echo "<input type='hidden' name='serial[]' value='$serial'>";
-							echo "<input type='hidden' name='otherserial[]' value='$otherserial'>";
-							echo "<input type='hidden' name='item_name[]' value='$item_name'>";
+							echo "<input type='hidden' name='type_name[]' value='".htmlspecialchars($type_name, ENT_QUOTES)."'>";
+							echo "<input type='hidden' name='man_name[]' value='".htmlspecialchars($man_name, ENT_QUOTES)."'>";
+							echo "<input type='hidden' name='mod_name[]' value='".htmlspecialchars($mod_name, ENT_QUOTES)."'>";
+							echo "<input type='hidden' name='serial[]' value='".htmlspecialchars($serial, ENT_QUOTES)."'>";
+							echo "<input type='hidden' name='otherserial[]' value='".htmlspecialchars($otherserial, ENT_QUOTES)."'>";
+							echo "<input type='hidden' name='item_name[]' value='".htmlspecialchars($item_name, ENT_QUOTES)."'>";
 							echo "<input type='hidden' name='state_name[]' value='" . htmlspecialchars($state_name_val, ENT_QUOTES) . "'>";
 							echo "<input type='hidden' name='itemtype[]' value='" . htmlspecialchars($itemtype, ENT_QUOTES) . "'>";
 							echo "<input type='hidden' name='items_id[]' value='" . (int)$data["id"] . "'>";
@@ -266,8 +287,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "<div class='d-flex justify-content-end mt-3'>";
 				echo "<button type='submit' name='generate' class='btn btn-primary'><i class='ti ti-file-plus'></i> ".__('Generate document')."</button>";
 				echo "</div>";
-				echo "<input type='hidden' name='owner' value='$owner'>";
-				echo "<input type='hidden' name='author' value='$author'>";
+				echo "<input type='hidden' name='owner' value='".htmlspecialchars($owner, ENT_QUOTES)."'>";
+				echo "<input type='hidden' name='author' value='".htmlspecialchars($author, ENT_QUOTES)."'>";
 				echo "<input type='hidden' name='user_id' value='$id'>";
 				Html::closeForm();
 				echo "</div>"; // card-body
@@ -333,15 +354,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				echo "<select name='e_list' id='auto_recs' disabled='disabled' class='form-select mb-3'>";
 				foreach ($DB->request(['FROM' => 'glpi_plugin_protocolsmanager_emailconfig']) as $uid => $list) {
 					echo '<option value="';
-					echo $list["recipients"]."|".$list["email_subject"]."|".$list["email_content"]."|".$list["send_user"];
+					echo htmlspecialchars($list["recipients"]."|".$list["email_subject"]."|".$list["email_content"]."|".$list["send_user"], ENT_QUOTES);
 					echo '">';
-					echo $list["tname"]." - ".$list["recipients"];
+					echo htmlspecialchars($list["tname"]." - ".$list["recipients"]);
 					echo '</option>';
 				}
 				echo "</select>";
 				echo "<input type='submit' name='send' class='btn btn-primary' value='".__('Send')."'>";
-				echo "<input type='hidden' name='author' value='$author'>";
-				echo "<input type='hidden' name='owner' value='$owner'>";
+				echo "<input type='hidden' name='author' value='".htmlspecialchars($author, ENT_QUOTES)."'>";
+				echo "<input type='hidden' name='owner' value='".htmlspecialchars($owner, ENT_QUOTES)."'>";
 				echo "<input type='hidden' name='user_id' value='$id'>";
 				Html::closeForm();
 				echo "</div>";
@@ -400,7 +421,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "</td>";
 					
 					echo "<td>";
-					echo $exports['document_type'];
+					echo htmlspecialchars($exports['document_type'] ?? '');
 					echo "</td>";
 					
 					echo "<td>";
@@ -412,7 +433,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "</td>";
 					
 					echo "<td>";
-					echo $exports['author'];
+					echo htmlspecialchars($exports['author'] ?? '');
 					echo "</td>";
 					
 					echo "<td>";
@@ -454,8 +475,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$owner = $_POST['owner'];
 			$author = $_POST['author'];
 			$doc_no = $_POST['list'];
-			$id = $_POST['user_id'];
+			$id = (int) ($_POST['user_id'] ?? 0);
 			$notes = $_POST['notes'];
+
+			if (!countElementsInTable('glpi_plugin_protocolsmanager_configs', ['id' => (int) $doc_no])) {
+				Session::addMessageAfterRedirect(__('Item not found'), false, ERROR);
+				Html::back();
+				return;
+			}
+
+			if (!self::canReadUser($id) || !Document::canCreate()) {
+				Session::addMessageAfterRedirect(__('Access denied'), false, ERROR);
+				Html::back();
+				return;
+			}
 
 			$user_phone  = '';
 			$user_mobile = '';
@@ -529,10 +562,13 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				}
 				$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
 				$ph_replace = [date($date_format), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
-				$content       = str_replace($ph_search, $ph_replace, nl2br($row["content"]));
-				$upper_content = str_replace($ph_search, $ph_replace, nl2br($row["upper_content"]));
-				$footer = nl2br($row["footer"]);
-				$title = $row["name"];
+				// user-controlled values (names, phone...) are escaped before they get into the PDF HTML
+				$ph_replace_html = array_map(function ($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }, $ph_replace);
+				$content       = str_replace($ph_search, $ph_replace_html, nl2br($row["content"]));
+				$upper_content = str_replace($ph_search, $ph_replace_html, nl2br($row["upper_content"]));
+				$footer = str_replace($ph_search, $ph_replace_html, nl2br($row["footer"]));
+				$title_raw = $row["name"];
+				$title = nl2br(htmlspecialchars($title_raw));
 				$full_img_name = $row["logo"];
 				$font = $row["font"];
 				$fontsize = $row["fontsize"];
@@ -597,7 +633,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$backtop = "20mm";
 				$islogo = 0;
 			} else {
-				$logo = GLPI_ROOT.'/files/_pictures/'.$full_img_name;
+				$logo = GLPI_PICTURE_DIR.'/'.basename($full_img_name);
 				$backtop = "40mm";
 				$islogo = 1;
 			}
@@ -618,7 +654,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$font_cache_dir = $fd;
 			$options = new Options();
 			$options->set('defaultFont', $font);
-			$options->setChroot('/');
+			$options->setChroot([$fd, GLPI_PICTURE_DIR, dirname(__DIR__)]);
 			$options->setFontDir($fd);
 			$options->setFontCache($fd);
 			$html2pdf = new Dompdf($options);
@@ -631,9 +667,19 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			file_put_contents(GLPI_UPLOAD_DIR .'/'.$doc_name, $output);
 			
 			$linked_items = [];
-			foreach ($number as $key) {
-				if (!empty($itemtype_arr[$key]) && !empty($items_id_arr[$key])) {
-					$linked_items[] = ['itemtype' => $itemtype_arr[$key], 'items_id' => (int)$items_id_arr[$key]];
+			$allowed_types = self::getProtocolItemtypes();
+			foreach ((array) $number as $key) {
+				if (empty($itemtype_arr[$key]) || empty($items_id_arr[$key])) {
+					continue;
+				}
+				$link_type = $itemtype_arr[$key];
+				$link_id   = (int) $items_id_arr[$key];
+				if (!in_array($link_type, $allowed_types, true) || !class_exists($link_type)) {
+					continue;
+				}
+				$link_item = new $link_type();
+				if ($link_item->getFromDB($link_id) && $link_item->can($link_id, READ)) {
+					$linked_items[] = ['itemtype' => $link_type, 'items_id' => $link_id];
 				}
 			}
 
@@ -651,7 +697,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				'author' => $author,
 				'user_id' => $id,
 				'document_id' => $doc_id,
-				'document_type' => $title
+				'document_type' => $title_raw
 				]
 			);
 				
@@ -721,10 +767,15 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		static function deleteDocs() {
 			global $DB, $CFG_GLPI;
 			
-			$docnumber = $_POST['docnumber'];
-			
+			$docnumber = array_map('intval', (array) ($_POST['docnumber'] ?? []));
+
 			foreach ($docnumber as $del_key) {
-				
+
+				if (!self::canHandleDocument($del_key, PURGE)) {
+					Session::addMessageAfterRedirect(__('Access denied'), false, ERROR);
+					continue;
+				}
+
 				$DB->delete(
 					'glpi_plugin_protocolsmanager_protocols', [
 						'document_id' => $del_key
@@ -745,7 +796,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			$nmail->setFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
 			
-			$recipients_array = explode(';',$recipients);
+			$is_mail = function ($mail) { return filter_var($mail, FILTER_VALIDATE_EMAIL) !== false; };
+			$recipients_array = array_values(array_filter(array_map('trim', explode(';', $recipients)), $is_mail));
 			
 			$path = '';
 			$filename = '';
@@ -755,7 +807,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				break;
 			}
 
-			$fullpath = GLPI_ROOT."/files/".$path;
+			$fullpath = GLPI_DOC_DIR."/".$path;
 
 			$owner_email = '';
 			foreach ($DB->request(['FROM' => 'glpi_useremails', 'WHERE' => ['users_id' => $id, 'is_default' => 1]]) as $row2) {
@@ -763,12 +815,18 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				break;
 			}
 
-			if ($send_user == 1) {
+			$send_to_owner = ($send_user == 1 && $is_mail($owner_email));
+			if (empty($recipients_array) && !$send_to_owner) {
+				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				return false;
+			}
+
+			if ($send_to_owner) {
 				$nmail->addAddress($owner_email, '');
 			}
 
 			foreach($recipients_array as $recipient) {
-				$nmail->addAddress(trim($recipient), '');
+				$nmail->addAddress($recipient, '');
 			}
 
 			$nmail->Subject = $email_subject;
@@ -796,12 +854,20 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			
 			global $CFG_GLPI, $DB;
 			
+			$doc_id = (int) ($_POST["doc_id"] ?? 0);
+
+			if (!self::canReadUser((int) $id) || !self::canHandleDocument($doc_id, READ)) {
+				Session::addMessageAfterRedirect(__('Access denied'), false, ERROR);
+				return false;
+			}
+
 			$nmail = new GLPIMailer();
-			
+
 			$nmail->setFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
-			
-			$doc_id = $_POST["doc_id"];
-			
+
+			$recipients = '';
+			$send_user  = 2;
+
 			//if email is filled manually
 			if (isset($_POST["em_list"])) {
 				$recipients = $_POST["em_list"];
@@ -828,8 +894,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$send_user =  $result[3];
 			}
 			
-			$owner = $_POST["owner"];
-			$author = $_POST["author"];
+			$owner = $_POST["owner"] ?? '';
+			$author = $_POST["author"] ?? '';
 
 			$user_phone  = '';
 			$user_mobile = '';
@@ -898,20 +964,28 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$email_content = str_replace($ph_search, $ph_replace, $email_content);
 			$email_subject = str_replace($ph_search, $ph_replace, $email_subject);
 			
-			$recipients_array = explode(';',$recipients);
+			$recipients_array = array_values(array_filter(
+				array_map('trim', explode(';', $recipients)),
+				function ($mail) { return filter_var($mail, FILTER_VALIDATE_EMAIL) !== false; }
+			));
 
 			$owner_email = '';
 			foreach ($DB->request(['FROM' => 'glpi_useremails', 'WHERE' => ['users_id' => $id, 'is_default' => 1]]) as $row2) {
 				$owner_email = $row2["email"];
 				break;
 			}
-			
+
+			if (empty($recipients_array) && !($send_user == 1 && $owner_email !== '')) {
+				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
+				return false;
+			}
+
 			if ($send_user == 1) {
 				$nmail->addAddress($owner_email, '');
 			}
 
 			foreach($recipients_array as $recipient) {
-				$nmail->addAddress(trim($recipient), '');
+				$nmail->addAddress($recipient, '');
 			}
 
 			$path = '';
@@ -922,7 +996,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				break;
 			}
 
-			$fullpath = GLPI_ROOT."/files/".$path;
+			$fullpath = GLPI_DOC_DIR."/".$path;
 
 			$nmail->isHTML(true);
 			
@@ -1054,11 +1128,13 @@ $(function () {
                     var row = document.createElement('button');
                     row.type = 'button';
                     row.className = 'list-group-item list-group-item-action';
-                    var info = item.name + (item.serial ? ' — ' + item.serial : '');
+                    row.appendChild(document.createTextNode(item.name + (item.serial ? ' — ' + item.serial : '')));
                     if (item.current_user_name) {
-                        info += ' <span class="text-muted small">(currently: ' + item.current_user_name + ')</span>';
+                        var cur = document.createElement('span');
+                        cur.className = 'text-muted small ms-1';
+                        cur.textContent = '(currently: ' + item.current_user_name + ')';
+                        row.appendChild(cur);
                     }
-                    row.innerHTML = info;
                     row.dataset.id = item.id;
                     row.addEventListener('click', function () {
                         resultsBox.querySelectorAll('.list-group-item').forEach(function (r) {
@@ -1070,6 +1146,13 @@ $(function () {
                     });
                     resultsBox.appendChild(row);
                 });
+            })
+            .catch(function () {
+                resultsBox.innerHTML = '';
+                var err = document.createElement('div');
+                err.className = 'text-danger p-2';
+                err.textContent = 'Search failed';
+                resultsBox.appendChild(err);
             });
     }
 
@@ -1131,6 +1214,10 @@ $(function () {
                         alert('Assignment failed');
                         btnConfirm.disabled = false;
                     }
+                })
+                .catch(function () {
+                    alert('Assignment failed');
+                    btnConfirm.disabled = false;
                 });
         });
     }

@@ -1,3 +1,10 @@
+<?php
+// Values that end up in CSS / HTML come from templates (DB) or POST: whitelist or escape them here
+$e = function ($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); };
+$fontsize = in_array((string) $fontsize, ['7', '8', '9', '10', '11', '12'], true) ? (string) $fontsize : '9';
+$font = in_array($font, ['DejaVu Sans', 'DejaVu Serif', 'DejaVu Sans Mono', 'Roboto', 'Noto Serif', 'Helvetica'], true) ? $font : 'DejaVu Sans';
+$header_color = preg_match('/^#[0-9a-fA-F]{6}$/', (string) $header_color) ? $header_color : '#dee2e6';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,13 +47,13 @@ footer
 		$logo_height = $logo_height ?? 20;
 		$logo_align  = $logo_align  ?? 'left';
 		echo '<div style="text-align: ' . htmlspecialchars($logo_align) . ';">';
-		echo '<img src="' . $logo . '" style="height: ' . (int)$logo_height . 'mm; width: auto; max-width: 100%;">';
+		echo '<img src="' . $e($logo) . '" style="height: ' . (int)$logo_height . 'mm; width: auto; max-width: 100%;">';
 		echo '</div>';
 	}
 ?>
 	<table style="border: none; width: 100%;">
-		<td style="height: 8mm; width: 70%;"><?php echo $prot_num; echo "-"; echo date('dmY'); ?></td>
-		<td style="height: 8mm; width: 30%; text-align: right;"><?php echo $city." "; $date=date($date_format ?? 'd.m.Y'); echo $date; ?></td>
+		<td style="height: 8mm; width: 70%;"><?php echo $e($prot_num); echo "-"; echo date('dmY'); ?></td>
+		<td style="height: 8mm; width: 30%; text-align: right;"><?php echo $e($city)." "; $date=date($date_format ?? 'd.m.Y'); echo $date; ?></td>
 	</table>
 	
 	<table style="border:none; width: 100%;">
@@ -109,25 +116,25 @@ footer
 		}
 
 		echo '<tr><td>' . $lp . '</td>';
-		echo '<td>' . ($type_name[$key] ?? '') . '</td>';
+		echo '<td>' . $e($type_name[$key] ?? '') . '</td>';
 		if ($man_mode == 2) {
-			echo '<td>' . ($man_name[$key] ?? '') . '</td>';
-			echo '<td>' . ($mod_name[$key] ?? '') . '</td>';
+			echo '<td>' . $e($man_name[$key] ?? '') . '</td>';
+			echo '<td>' . $e($mod_name[$key] ?? '') . '</td>';
 		} else {
-			echo '<td>' . ($man_name[$key] ?? '') . ' ' . ($mod_name[$key] ?? '') . '</td>';
+			echo '<td>' . $e($man_name[$key] ?? '') . ' ' . $e($mod_name[$key] ?? '') . '</td>';
 		}
-		echo '<td>' . ($item_name[$key] ?? '') . '</td>';
+		echo '<td>' . $e($item_name[$key] ?? '') . '</td>';
 		if ($serial_mode == 1) {
-			echo '<td>' . ($serial[$key] ?? '') . '</td>';
-			echo '<td>' . ($otherserial[$key] ?? '') . '</td>';
+			echo '<td>' . $e($serial[$key] ?? '') . '</td>';
+			echo '<td>' . $e($otherserial[$key] ?? '') . '</td>';
 		} else {
-			echo '<td>' . $serial_val . '</td>';
+			echo '<td>' . $e($serial_val) . '</td>';
 		}
 		if ($show_state) {
 			echo '<td>' . htmlspecialchars($state_name[$key] ?? '') . '</td>';
 		}
 		if ($has_comments) {
-			echo '<td>' . ($comments[$key] ?? '') . '</td>';
+			echo '<td>' . $e($comments[$key] ?? '') . '</td>';
 		}
 		echo '</tr>';
 		$lp++;
@@ -166,10 +173,10 @@ footer
 	</tr>
 	<tr>
 		<td style="border: 1px solid black; width:50%; vertical-align:top; height: 20mm">
-			<?php echo $author; ?>
+			<?php echo $e($author); ?>
 		</td>
 		<td style="border: 1px solid black; width:50%; vertical-align:top; height: 20mm">
-			<?php echo $owner; ?>
+			<?php echo $e($owner); ?>
 		</td>
 	</tr>
 </table>

@@ -2,7 +2,7 @@
 
 include('../../../inc/includes.php');
 
-if (!Session::haveRight("config", READ)) {
+if (!Session::getLoginUserID() || !Session::haveRight('plugin_protocolsmanager_config', READ)) {
     http_response_code(403);
     exit;
 }
@@ -42,7 +42,7 @@ foreach (['upper_content', 'content', 'footer'] as $var) {
 
 // Logo
 if (!empty($logo_existing)) {
-    $logo   = GLPI_ROOT . '/files/_pictures/' . $logo_existing;
+    $logo   = GLPI_PICTURE_DIR . '/' . basename($logo_existing);
     $backtop = '40mm';
     $islogo  = 1;
 } else {
@@ -80,7 +80,7 @@ $html = str_replace('</head>', "<style>
 
 $options = new Options();
 $options->set('defaultFont', $font);
-$options->setChroot('/');
+$options->setChroot([$fd, GLPI_PICTURE_DIR, dirname(__DIR__)]);
 $options->setFontDir($fd);
 $options->setFontCache($fd);
 

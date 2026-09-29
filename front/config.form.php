@@ -2,7 +2,8 @@
 
 include('../../../inc/includes.php');
 
-Session::haveRight("config", UPDATE);
+Session::checkLoginUser();
+Session::checkRight('plugin_protocolsmanager_config', READ);
 
 Html::header(PluginProtocolsmanagerConfig::getTypeName(1),
              $_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");

@@ -19,13 +19,22 @@ if (empty($itemtype) || (!in_array($itemtype, $CFG_GLPI['linkuser_types']) && !$
     exit;
 }
 
-if (!class_exists($itemtype) || !$itemtype::canUpdate()) {
+// Class-level right, then per-item right (can() also checks entity access)
+// and read access to the target user.
+$item = class_exists($itemtype) && $itemtype::canUpdate() ? new $itemtype() : null;
+$target_user = new User();
+if (
+    $item === null
+    || !$item->getFromDB($items_id)
+    || !$item->can($items_id, UPDATE)
+    || !$target_user->getFromDB($user_id)
+    || !$target_user->can($user_id, READ)
+) {
     http_response_code(403);
     echo json_encode(['success' => false]);
     exit;
 }
 
-$item = new $itemtype();
 $success = $item->update(['id' => $items_id, 'users_id' => $user_id]);
 
 echo json_encode(['success' => (bool) $success]);

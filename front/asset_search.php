@@ -53,6 +53,9 @@ if ($item->maybeTemplate()) {
 if ($item->maybeDeleted()) {
     $where["$itemtable.is_deleted"] = 0;
 }
+if ($item->isEntityAssign()) {
+    $where[] = getEntitiesRestrictCriteria($itemtable, '', '', $item->maybeRecursive());
+}
 if ($user_id) {
     $where['NOT'] = ["$itemtable.users_id" => $user_id];
 }
