@@ -74,6 +74,12 @@ If you have an idea, bug or problem - please create an issue.
 
 ## Changelog
 
+### Version 2.1.7
+
+- security fixes according to Teclib audit report
+- new fonts - Inter, Hahmlet, ChironGoRound, RobotoMono
+- other small fixes
+
 ### Version 2.1.0
 
 - added functionality to assign assets directly from plugin view (assign devices button)
