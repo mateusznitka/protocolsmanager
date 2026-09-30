@@ -161,11 +161,14 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
             echo "<td>$email_badge</td>";
             $star_btn_class = $is_default ? 'btn-warning' : 'btn-outline-secondary';
             $star_btn_icon  = $is_default ? 'ti-star-filled' : 'ti-star';
-            $toggle_url = $action . '?toggle_default=1&id=' . $id . '&_glpi_csrf_token=' . Session::getNewCSRFToken();
             echo '<td class="text-nowrap">';
-            echo "<a href='" . htmlspecialchars($toggle_url) . "' class='btn btn-sm $star_btn_class me-1'"
+            echo "<form method='post' action='" . htmlspecialchars($action) . "' class='d-inline'>";
+            echo Html::hidden('toggle_default', ['value' => 1]);
+            echo Html::hidden('id', ['value' => $id]);
+            echo "<button type='submit' class='btn btn-sm $star_btn_class me-1'"
                 . " title='" . ($is_default ? __('Unset default') : __('Set as default')) . "'>"
-                . "<i class='ti $star_btn_icon'></i></a>";
+                . "<i class='ti $star_btn_icon'></i></button>";
+            Html::closeForm();
             echo "<button type='button' class='btn btn-sm btn-outline-secondary me-1 btn-edit-template'"
                 . " data-id='$id'"
                 . " data-name='$name'"

@@ -13,28 +13,28 @@ $PluginProtocolsmanagerConfig = new PluginProtocolsmanagerConfig();
 global $CFG_GLPI;
 $base_url = $CFG_GLPI['root_doc'] . '/plugins/protocolsmanager/front/config.form.php';
 
-if (!empty($_REQUEST['save'])) {
+if (!empty($_POST['save'])) {
     $PluginProtocolsmanagerConfig::saveConfigs();
     Html::redirect($base_url);
 }
 
-if (!empty($_REQUEST['delete'])) {
+if (!empty($_POST['delete'])) {
     $PluginProtocolsmanagerConfig::deleteConfigs();
     Html::redirect($base_url);
 }
 
-if (!empty($_REQUEST['save_email'])) {
+if (!empty($_POST['save_email'])) {
     $PluginProtocolsmanagerConfig::saveEmailConfigs();
     Html::redirect($base_url . '?tab=email');
 }
 
-if (!empty($_REQUEST['delete_email'])) {
+if (!empty($_POST['delete_email'])) {
     $PluginProtocolsmanagerConfig::deleteEmailConfigs();
     Html::redirect($base_url . '?tab=email');
 }
 
-if (!empty($_REQUEST['toggle_default'])) {
-    $PluginProtocolsmanagerConfig::toggleDefault((int)$_REQUEST['id']);
+if (!empty($_POST['toggle_default'])) {
+    $PluginProtocolsmanagerConfig::toggleDefault((int)$_POST['id']);
     Html::redirect($base_url);
 }
 

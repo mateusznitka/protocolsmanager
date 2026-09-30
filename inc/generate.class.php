@@ -191,6 +191,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					
 					foreach ($item_iterator as $data) {
 						$cansee = $item->can($data["id"], READ);
+						if (!$cansee) {
+							continue;
+						}
 						   $link   = $data["name"];
 							if ($cansee) {
 								$link_item = $item::getFormURLWithID($data['id']);
@@ -459,7 +462,7 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 					echo "</td>";
 					
 					echo "<td>";
-					echo $Doc->getField("comment");
+					echo htmlspecialchars($Doc->getField("comment") ?? '');
 					echo "</td>";					
 					
 					echo "<td>";
@@ -856,10 +859,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			} else {
 				
 				if ($send_user == 1) {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+					Session::addMessageAfterRedirect(__('Email sent')." to ".htmlspecialchars(implode(", ", $recipients_array)." ".$owner_email));
 					return true;
 				} else {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array));
+					Session::addMessageAfterRedirect(__('Email sent')." to ".htmlspecialchars(implode(", ", $recipients_array)));
 					return true;
 				}
 			}
@@ -978,7 +981,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$ph_search  = ['{cur_date}', '{owner}', '{user}', '{admin}', '{user_phone}', '{user_mobile}', '{user_email}', '{user_title}', '{admin_title}', '{user_number}'];
 			$ph_replace = [date("d.m.Y"), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
 
-			$email_content = str_replace($ph_search, $ph_replace, $email_content);
+			$ph_replace_html = array_map(function ($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }, $ph_replace);
+			$email_content = str_replace($ph_search, $ph_replace_html, $email_content);
 			$email_subject = str_replace($ph_search, $ph_replace, $email_subject);
 			
 			$recipients_array = array_values(array_filter(
@@ -1027,10 +1031,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			} else {
 				
 				if ($send_user == 1) {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array)." ".$owner_email);
+					Session::addMessageAfterRedirect(__('Email sent')." to ".htmlspecialchars(implode(", ", $recipients_array)." ".$owner_email));
 					return true;
 				} else {
-					Session::addMessageAfterRedirect(__('Email sent')." to ".implode(", ", $recipients_array));
+					Session::addMessageAfterRedirect(__('Email sent')." to ".htmlspecialchars(implode(", ", $recipients_array)));
 					return true;
 				}
 			}
