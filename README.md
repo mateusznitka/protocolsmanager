@@ -82,13 +82,9 @@ If you have an idea, bug or problem - please create an issue.
 
 ### Version 2.1.9
 
-- plugin logo shown in the GLPI plugin list
-- badges in README
-
-### Version 2.1.8
-
 - more security fixes from a second review of the plugin
-- items registered by other plugins (for example Badges) are now listed on the Protocols tab and can be assigned
+- items registered by other plugins are now listed on the Protocols tab and can be assigned
+- plugin logo shown in the GLPI plugin list
 
 ### Version 2.1.7
 
