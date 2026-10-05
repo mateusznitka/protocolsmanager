@@ -32,16 +32,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			return Session::haveRight('plugin_protocolsmanager_tab', READ);
 		}
 
-		// Itemtypes that can be listed in a protocol (linkuser_types + custom asset definitions)
+		// Itemtypes that can be listed in a protocol: everything GLPI 11 lets you assign to a user.
+		// This includes custom asset definitions and classes registered by other plugins.
 		static function getProtocolItemtypes() {
 			global $CFG_GLPI;
-			$types = $CFG_GLPI['linkuser_types'];
-			foreach ($CFG_GLPI['assignable_types'] ?? [] as $_at) {
-				if (class_exists($_at) && is_subclass_of($_at, 'Glpi\\Asset\\Asset') && !in_array($_at, $types)) {
-					$types[] = $_at;
-				}
-			}
-			return $types;
+			return array_values(array_filter(array_unique($CFG_GLPI['assignable_types'] ?? []), 'class_exists'));
 		}
 
 		// The user the protocol is about must exist and be readable by the current user
