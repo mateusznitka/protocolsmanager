@@ -48,9 +48,9 @@
 	</authors>
 	<versions>
 	   <version>
-		  <num>2.1.8</num>
+		  <num>2.1.9</num>
 		  <compatibility>11.0</compatibility>
-		  <download_url>https://github.com/mateusznitka/protocolsmanager/releases/download/v2.1.8/protocolsmanager-v2.1.8.zip</download_url>
+		  <download_url>https://github.com/mateusznitka/protocolsmanager/releases/download/v2.1.9/protocolsmanager-v2.1.9.zip</download_url>
 	   </version>
 	</versions>
 	<langs>

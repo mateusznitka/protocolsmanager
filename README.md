@@ -1,5 +1,11 @@
 # Protocols Manager
 
+![Release](https://img.shields.io/github/v/release/mateusznitka/protocolsmanager)
+![GLPI](https://img.shields.io/badge/GLPI-11.0%2B-brightgreen)
+![PHP](https://img.shields.io/badge/PHP-8.1%2B-777bb4)
+![License](https://img.shields.io/github/license/mateusznitka/protocolsmanager)
+![Downloads](https://img.shields.io/github/downloads/mateusznitka/protocolsmanager/total)
+
 GLPI Plugin for making PDF reports with user inventory.
 
 *Compatibile with GLPI 11*
@@ -73,6 +79,16 @@ If you have an idea, bug or problem - please create an issue.
 ![Generate](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/config-new.gif)
 
 ## Changelog
+
+### Version 2.1.9
+
+- plugin logo shown in the GLPI plugin list
+- badges in README
+
+### Version 2.1.8
+
+- more security fixes from a second review of the plugin
+- items registered by other plugins (for example Badges) are now listed on the Protocols tab and can be assigned
 
 ### Version 2.1.7
 
