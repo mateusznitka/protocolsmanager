@@ -1,10 +1,10 @@
 # Protocols Manager
 
-![Release](https://img.shields.io/github/v/release/mateusznitka/protocolsmanager)
-![GLPI](https://img.shields.io/badge/GLPI-11.0%2B-brightgreen)
-![PHP](https://img.shields.io/badge/PHP-8.1%2B-777bb4)
-![License](https://img.shields.io/github/license/mateusznitka/protocolsmanager)
-![Downloads](https://img.shields.io/github/downloads/mateusznitka/protocolsmanager/total)
+[![Release](https://img.shields.io/github/v/release/mateusznitka/protocolsmanager)](https://github.com/mateusznitka/protocolsmanager/releases/latest)
+[![GLPI](https://img.shields.io/badge/GLPI-11.0%2B-brightgreen)](https://glpi-project.org/)
+[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777bb4)](https://www.php.net/)
+[![License](https://img.shields.io/github/license/mateusznitka/protocolsmanager)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/mateusznitka/protocolsmanager/total)](https://github.com/mateusznitka/protocolsmanager/releases)
 
 GLPI Plugin for making PDF reports with user inventory.
 
