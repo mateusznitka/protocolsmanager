@@ -497,8 +497,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			$item_name = (array) ($_POST['item_name'] ?? []);
 			$itemtype_arr = (array) ($_POST['itemtype'] ?? []);
 			$items_id_arr = (array) ($_POST['items_id'] ?? []);
-			$owner = $_POST['owner'] ?? '';
-			$author = $_POST['author'] ?? '';
+			// names come from the database, not from the request (fallback when first and last name are empty)
+			$owner = getUserName((int) ($_POST['user_id'] ?? 0));
+			$author = getUserName(Session::getLoginUserID());
 			$doc_no = (int) ($_POST['list'] ?? 0);
 			$id = (int) ($_POST['user_id'] ?? 0);
 			$notes = $_POST['notes'] ?? '';
@@ -641,7 +642,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			if (!isset($email_content) || empty($email_content)) {
 				$email_content = '';
 			}
-			$email_content = str_replace($ph_search, $ph_replace, $email_content);
+			// the mail body is sent as HTML, so the values are escaped here; the subject is plain text
+			$email_content = str_replace($ph_search, $ph_replace_html, $email_content);
 
 			if (!isset($email_subject) || empty($email_subject)) {
 				$email_subject = '';
@@ -914,8 +916,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$send_user =  $result[3];
 			}
 			
-			$owner = $_POST["owner"] ?? '';
-			$author = $_POST["author"] ?? '';
+			// names come from the database, not from the request (fallback when first and last name are empty)
+			$owner = getUserName((int) $id);
+			$author = getUserName(Session::getLoginUserID());
 
 			$user_phone  = '';
 			$user_mobile = '';

@@ -5,9 +5,6 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 Session::checkRight('plugin_protocolsmanager_config', READ);
 
-Html::header(PluginProtocolsmanagerConfig::getTypeName(1),
-             $_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");
-
 $PluginProtocolsmanagerConfig = new PluginProtocolsmanagerConfig();
 
 global $CFG_GLPI;
@@ -37,6 +34,9 @@ if (!empty($_POST['toggle_default'])) {
     $PluginProtocolsmanagerConfig::toggleDefault((int)$_POST['id']);
     Html::redirect($base_url);
 }
+
+Html::header(PluginProtocolsmanagerConfig::getTypeName(1),
+             $_SERVER['PHP_SELF'], "plugins", "protocolsmanager", "config");
 
 $PluginProtocolsmanagerConfig->showFormProtocolsmanager();
 
