@@ -8,7 +8,7 @@
 
 GLPI Plugin for making PDF reports with user inventory.
 
-*Compatibile with GLPI 11+*
+*Compatibile with GLPI 11+ and 12+*
 
 ## Features
 
