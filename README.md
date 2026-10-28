@@ -54,7 +54,8 @@ If you have an idea, bug or problem - please create an issue.
 2. Go to GLPI Plugin Menu, you should see 'to update' status.
 3. Click on 'install' and then 'activate'
 
-Upgrading GLPI from 11 to 12: GLPI suspends all plugins after a major upgrade. Replace the plugin with version 2.2.0 or newer **before** resuming plugin execution.
+> [!NOTE]
+> Upgrading GLPI from 11 to 12: GLPI suspends all plugins after a major upgrade. Replace the plugin with version 2.2.0 or newer **before** resuming plugin execution.
 
 ## Configuration
 
