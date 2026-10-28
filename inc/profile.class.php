@@ -2,7 +2,8 @@
 
 class PluginProtocolsmanagerProfile extends Profile
 {
-    public static $rightname = 'profile';
+    // $rightname ('profile') is inherited from Profile. Redeclaring it breaks on one of GLPI 11 / 12,
+    // because the property is untyped in 11 and typed "string" in 12.
 
     public static function getAllRights()
     {

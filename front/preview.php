@@ -1,7 +1,5 @@
 <?php
 
-include('../../../inc/includes.php');
-
 if (!Session::getLoginUserID() || !Session::haveRight('plugin_protocolsmanager_config', READ)) {
     http_response_code(403);
     exit;

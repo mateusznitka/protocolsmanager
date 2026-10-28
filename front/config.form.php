@@ -1,7 +1,5 @@
 <?php
 
-include('../../../inc/includes.php');
-
 Session::checkLoginUser();
 Session::checkRight('plugin_protocolsmanager_config', READ);
 

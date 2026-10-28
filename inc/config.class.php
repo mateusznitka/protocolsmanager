@@ -1,8 +1,18 @@
 <?php
 
-class PluginProtocolsmanagerConfig extends CommonDBTM {
+// GLPI 12 declares CommonGLPI::$rightname as "string", GLPI 11 leaves it untyped, and PHP requires a subclass
+// to repeat the parent's type exactly. So the property is declared in a version-matching base class.
+if ((new ReflectionProperty(CommonGLPI::class, 'rightname'))->hasType()) {
+    abstract class PluginProtocolsmanagerConfigBase extends CommonDBTM {
+        public static string $rightname = 'plugin_protocolsmanager_config';
+    }
+} else {
+    abstract class PluginProtocolsmanagerConfigBase extends CommonDBTM {
+        public static $rightname = 'plugin_protocolsmanager_config';
+    }
+}
 
-    static $rightname = 'plugin_protocolsmanager_config';
+class PluginProtocolsmanagerConfig extends PluginProtocolsmanagerConfigBase {
 
     static function getTypeName($nb = 0) {
         return 'Protocols Manager';
@@ -295,7 +305,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<input type="hidden" name="MAX_FILE_SIZE" value="1948000">';
         echo '<input type="hidden" name="save" value="1">';
         echo '<input type="hidden" name="mode" id="tpl-mode" value="0">';
-        echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+        echo plugin_protocolsmanager_csrf_field();
 
         echo '<div class="modal-body">';
 
@@ -533,7 +543,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
         echo '<form method="post" action="' . $action . '">';
         echo '<input type="hidden" name="save_email" value="1">';
         echo '<input type="hidden" name="email_edit_id" id="email-id" value="0">';
-        echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+        echo plugin_protocolsmanager_csrf_field();
 
         echo '<div class="modal-body">';
         echo '<div class="row g-3">';
@@ -595,7 +605,7 @@ class PluginProtocolsmanagerConfig extends CommonDBTM {
 
         echo '<div class="modal-footer">';
         echo '<form method="post" action="' . $action . '" id="form-delete">';
-        echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+        echo plugin_protocolsmanager_csrf_field();
         echo '<input type="hidden" name="conf_id"       id="delete-conf-id"   value="">';
         echo '<input type="hidden" name="email_conf_id" id="delete-email-id"  value="">';
         echo '<input type="hidden" name="delete"        id="delete-tpl"       value="">';
@@ -812,7 +822,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(_tokenUrl)
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
-                    payload._glpi_csrf_token = data.token;
+                    if (data.token) { payload._glpi_csrf_token = data.token; }
                     var fd = new FormData();
                     Object.keys(payload).forEach(function (k) { fd.append(k, payload[k]); });
                     return fetch(_previewUrl, { method: 'POST', body: fd });
@@ -1000,7 +1010,7 @@ JS;
         if ($current) {
             $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], ['id' => $id]);
         } else {
-            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], [true]);
+            $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 0], ['id' => ['>', 0]]);
             $DB->update('glpi_plugin_protocolsmanager_configs', ['is_default' => 1], ['id' => $id]);
         }
     }

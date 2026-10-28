@@ -8,7 +8,7 @@
 
 GLPI Plugin for making PDF reports with user inventory.
 
-*Compatibile with GLPI 11*
+*Compatibile with GLPI 11+*
 
 ## Features
 
@@ -34,8 +34,8 @@ If you have an idea, bug or problem - please create an issue.
 
 ## Compatibility
 
-- GLPI 11+
-- PHP 8.1+ 
+- GLPI 11/12
+- PHP 8.2+ 
 
 ## Installation
 
@@ -53,6 +53,8 @@ If you have an idea, bug or problem - please create an issue.
 1. Extract package and copy to plguins directory (replace old protocolsmanager folder)
 2. Go to GLPI Plugin Menu, you should see 'to update' status.
 3. Click on 'install' and then 'activate'
+
+Upgrading GLPI from 11 to 12: GLPI suspends all plugins after a major upgrade. Replace the plugin with version 2.2.0 or newer **before** resuming plugin execution.
 
 ## Configuration
 
@@ -79,6 +81,15 @@ If you have an idea, bug or problem - please create an issue.
 ![Generate](https://raw.githubusercontent.com/mateusznitka/protocolsmanager/master/docs/img/config-new.gif)
 
 ## Changelog
+
+### Version 2.2.0
+
+- compatible with GLPI 12 (and still with GLPI 11) - fixes the fatal error on activation reported in issue 71
+- the plugin declares the supported GLPI range (all 11.x and 12.x versions) and GLPI blocks activation outside of it
+- no more deprecated GLPI calls: CSRF tokens are used only where GLPI 11 needs them, mails are built with the new mailer API
+- the "default template" switch works on GLPI 12
+- new installations create tables with unsigned keys, as GLPI recommends
+- fixed a PHP deprecation when a template has an empty header or footer text
 
 ### Version 2.1.9
 
@@ -141,8 +152,8 @@ To do:
 
 [mtnt.pl](https://mtnt.pl/#contact)
 
-## Buy me a coffee :)
-If you like my work, you can support me by a donate here:
+## Support
+If you like my work, consider leaving a Github Star. You can also support me by a donate here:
 
 <a href="https://www.buymeacoffee.com/mateusznitka" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
 

@@ -13,7 +13,7 @@ function plugin_protocolsmanager_install() {
 
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_configs')) {
 		$DB->doQuery("CREATE TABLE glpi_plugin_protocolsmanager_configs (
-			id int NOT NULL auto_increment,
+			id int unsigned NOT NULL auto_increment,
 			name varchar(255),
 			font varchar(255),
 			fontsize varchar(255),
@@ -73,7 +73,7 @@ function plugin_protocolsmanager_install() {
 
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_emailconfig')) {
 		$DB->doQuery("CREATE TABLE glpi_plugin_protocolsmanager_emailconfig (
-			id int NOT NULL auto_increment,
+			id int unsigned NOT NULL auto_increment,
 			tname varchar(255),
 			send_user int,
 			email_content text,
@@ -86,12 +86,12 @@ function plugin_protocolsmanager_install() {
 
 	if (!$DB->tableExists('glpi_plugin_protocolsmanager_protocols')) {
 		$DB->doQuery("CREATE TABLE glpi_plugin_protocolsmanager_protocols (
-			id int NOT NULL auto_increment,
+			id int unsigned NOT NULL auto_increment,
 			name varchar(255),
-			user_id int,
+			user_id int unsigned,
 			gen_date datetime,
 			author varchar(255),
-			document_id int,
+			document_id int unsigned,
 			document_type varchar(255),
 			PRIMARY KEY (id)
 		) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");

@@ -1,7 +1,5 @@
 <?php
 
-include('../../../inc/includes.php');
-
 Session::checkLoginUser();
 
 header('Content-Type: application/json');

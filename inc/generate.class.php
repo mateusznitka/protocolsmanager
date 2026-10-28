@@ -3,6 +3,7 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Symfony\Component\Mime\Address;
 
 class PluginProtocolsmanagerGenerate extends CommonDBTM {
 	
@@ -585,9 +586,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 				$ph_replace = [date($date_format), $owner, $owner, $author, $user_phone, $user_mobile, $user_email, $user_title, $admin_title, $user_number];
 				// user-controlled values (names, phone...) are escaped before they get into the PDF HTML
 				$ph_replace_html = array_map(function ($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }, $ph_replace);
-				$content       = str_replace($ph_search, $ph_replace_html, nl2br($row["content"]));
-				$upper_content = str_replace($ph_search, $ph_replace_html, nl2br($row["upper_content"]));
-				$footer = str_replace($ph_search, $ph_replace_html, nl2br($row["footer"]));
+				$content       = str_replace($ph_search, $ph_replace_html, nl2br((string) $row["content"]));
+				$upper_content = str_replace($ph_search, $ph_replace_html, nl2br((string) $row["upper_content"]));
+				$footer = str_replace($ph_search, $ph_replace_html, nl2br((string) $row["footer"]));
 				$title_raw = $row["name"];
 				$title = nl2br(htmlspecialchars($title_raw));
 				$full_img_name = $row["logo"];
@@ -809,9 +810,10 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 		static function sendMail($doc_id, $send_user, $email_subject, $email_content, $recipients, $id) {
 			
 			global $CFG_GLPI, $DB;
+			// the PHPMailer-style GLPIMailer methods and properties are deprecated; build the Symfony Email instead
 			$nmail = new GLPIMailer();
-			
-			$nmail->setFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$email = $nmail->getEmail();
+			$email->from(new Address($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"]));
 			
 			$is_mail = function ($mail) { return filter_var($mail, FILTER_VALIDATE_EMAIL) !== false; };
 			$recipients_array = array_values(array_filter(array_map('trim', explode(';', $recipients)), $is_mail));
@@ -839,16 +841,16 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 
 			if ($send_to_owner) {
-				$nmail->addAddress($owner_email, '');
+				$email->addTo(new Address($owner_email));
 			}
 
 			foreach($recipients_array as $recipient) {
-				$nmail->addAddress($recipient, '');
+				$email->addTo(new Address($recipient));
 			}
 
-			$nmail->Subject = $email_subject;
-			$nmail->addAttachment($fullpath, $filename);
-			$nmail->Body = $email_content;
+			$email->subject($email_subject);
+			$email->attachFromPath($fullpath, $filename);
+			$email->html($email_content);
 			
 			if (!$nmail->send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
@@ -879,8 +881,8 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 
 			$nmail = new GLPIMailer();
-
-			$nmail->setFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+			$email = $nmail->getEmail();
+			$email->from(new Address($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"]));
 
 			$recipients = '';
 			$send_user  = 2;
@@ -1000,11 +1002,11 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 			}
 
 			if ($send_user == 1) {
-				$nmail->addAddress($owner_email, '');
+				$email->addTo(new Address($owner_email));
 			}
 
 			foreach($recipients_array as $recipient) {
-				$nmail->addAddress($recipient, '');
+				$email->addTo(new Address($recipient));
 			}
 
 			$path = '';
@@ -1017,11 +1019,9 @@ class PluginProtocolsmanagerGenerate extends CommonDBTM {
 
 			$fullpath = GLPI_DOC_DIR."/".$path;
 
-			$nmail->isHTML(true);
-			
-			$nmail->Subject = $email_subject; //do konfiguracji
-			$nmail->addAttachment($fullpath, $filename);
-			$nmail->Body = nl2br(stripcslashes($email_content));
+			$email->subject($email_subject); //do konfiguracji
+			$email->attachFromPath($fullpath, $filename);
+			$email->html(nl2br(stripcslashes($email_content)));
 			
 			if (!$nmail->send()) {
 				Session::addMessageAfterRedirect(__('Failed to send email'), false, ERROR);
@@ -1222,7 +1222,7 @@ $(function () {
                     fd.append('itemtype', selectedItemtype);
                     fd.append('items_id', selectedItemsId);
                     fd.append('user_id', targetUserId);
-                    fd.append('_glpi_csrf_token', data.token);
+                    if (data.token) { fd.append('_glpi_csrf_token', data.token); }
                     return fetch(baseUrl + '/asset_assign.php', { method: 'POST', body: fd });
                 })
                 .then(function (r) { return r.json(); })
