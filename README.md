@@ -84,12 +84,8 @@ Upgrading GLPI from 11 to 12: GLPI suspends all plugins after a major upgrade. R
 
 ### Version 2.2.0
 
-- compatible with GLPI 12 (and still with GLPI 11) - fixes the fatal error on activation reported in issue 71
-- the plugin declares the supported GLPI range (all 11.x and 12.x versions) and GLPI blocks activation outside of it
-- no more deprecated GLPI calls: CSRF tokens are used only where GLPI 11 needs them, mails are built with the new mailer API
-- the "default template" switch works on GLPI 12
-- new installations create tables with unsigned keys, as GLPI recommends
-- fixed a PHP deprecation when a template has an empty header or footer text
+- compatible with GLPI 12 and still with 11
+- updated depreceated functions
 
 ### Version 2.1.9
 
